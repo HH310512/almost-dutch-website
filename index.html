@@ -350,13 +350,31 @@ function setLang(l) {
 // Browser op NL? Start dan in het Nederlands
 if ((navigator.language || "").toLowerCase().startsWith("nl")) setLang("nl");
 
-function joinList(e) {
+// Wachtlijst via Formspree — vervang JOUW_FORM_ID door je eigen code (de 8 tekens achter /f/)
+const FORMSPREE_ENDPOINT = "https://formspree.io/f/maqrwlnl";
+
+async function joinList(e) {
   e.preventDefault();
-  // TODO: vervang dit door een echte koppeling (Formspree / Supabase / e-maildienst)
-  const btn = e.target.querySelector("button");
-  btn.textContent = document.documentElement.lang === "nl" ? "✓ Je staat op de lijst!" : "✓ You're on the list!";
+  const form = e.target;
+  const input = form.querySelector("input");
+  const btn = form.querySelector("button");
+  const nl = document.documentElement.lang === "nl";
   btn.disabled = true;
-  btn.style.background = "var(--green)";
+  btn.textContent = nl ? "Even geduld…" : "One sec…";
+  try {
+    const res = await fetch(FORMSPREE_ENDPOINT, {
+      method: "POST",
+      headers: { "Accept": "application/json", "Content-Type": "application/json" },
+      body: JSON.stringify({ email: input.value })
+    });
+    if (!res.ok) throw new Error("submit failed");
+    btn.textContent = nl ? "✓ Je staat op de lijst!" : "✓ You're on the list!";
+    btn.style.background = "var(--green)";
+    input.disabled = true;
+  } catch (err) {
+    btn.disabled = false;
+    btn.textContent = nl ? "Mislukt — probeer opnieuw" : "Failed — try again";
+  }
 }
 </script>
 </body>
