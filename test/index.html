@@ -11,14 +11,84 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
   body { margin:0; background:#FAFBFD; }
+  #root { padding-bottom:52px; }
   #loading { font-family:system-ui,sans-serif; color:#5B6B92; text-align:center; padding-top:40vh; font-size:15px; }
-  .testbar { position:fixed; bottom:0; left:0; right:0; z-index:50; background:#14203E; color:#DCE4F9; font-family:system-ui,sans-serif; font-size:12px; text-align:center; padding:8px 14px; }
+  .testbar { position:fixed; bottom:0; left:0; right:0; z-index:50; background:#14203E; color:#DCE4F9; font-family:system-ui,sans-serif; font-size:12px; display:flex; align-items:center; justify-content:center; gap:12px; padding:8px 14px; }
   .testbar b { color:#FF6B35; }
+  .fb-open { flex-shrink:0; font-family:inherit; font-size:12px; font-weight:700; color:#14203E; background:#FF6B35; color:#fff; border:0; border-radius:99px; padding:6px 14px; cursor:pointer; }
+  /* ---- feedback-paneel ---- */
+  #fb-overlay { position:fixed; inset:0; z-index:60; background:rgba(20,32,62,.5); display:none; align-items:flex-end; justify-content:center; }
+  #fb-overlay.open { display:flex; }
+  .fb-panel { background:#FAFBFD; width:100%; max-width:520px; max-height:88vh; overflow-y:auto; border-radius:22px 22px 0 0; padding:22px 20px 30px; font-family:'Schibsted Grotesk',system-ui,sans-serif; color:#14203E; }
+  .fb-panel h2 { font-size:19px; font-weight:800; margin:0 0 2px; }
+  .fb-panel .sub { font-size:13px; color:#5B6B92; margin:0 0 16px; }
+  .fb-q { font-size:13.5px; font-weight:700; margin:16px 0 8px; }
+  .fb-opts { display:flex; flex-wrap:wrap; gap:8px; }
+  .fb-chip { font-family:inherit; font-size:13px; font-weight:600; background:#fff; border:1.5px solid #D9E2F2; border-radius:99px; padding:8px 14px; cursor:pointer; color:#14203E; }
+  .fb-chip.on { border-color:#2743B0; background:#EAF0FB; color:#2743B0; }
+  .fb-panel textarea, .fb-panel input[type=text] { width:100%; box-sizing:border-box; font-family:inherit; font-size:16px; border:1.5px solid #D9E2F2; border-radius:12px; padding:10px 12px; background:#fff; color:#14203E; resize:vertical; }
+  .fb-icons { display:flex; gap:12px; }
+  .fb-icon { flex:1; background:#fff; border:2px solid #D9E2F2; border-radius:16px; padding:12px; text-align:center; cursor:pointer; }
+  .fb-icon.on { border-color:#2743B0; background:#EAF0FB; }
+  .fb-icon svg { width:64px; height:64px; border-radius:14px; }
+  .fb-icon div { font-size:12px; font-weight:700; margin-top:6px; color:#5B6B92; }
+  .fb-send { width:100%; margin-top:20px; font-family:inherit; font-size:15px; font-weight:700; color:#fff; background:#2743B0; border:0; border-radius:14px; padding:14px; cursor:pointer; }
+  .fb-close { position:sticky; top:0; float:right; font-size:22px; background:none; border:0; color:#5B6B92; cursor:pointer; line-height:1; }
 </style>
 </head>
 <body>
 <div id="root"><div id="loading">Loading Almost Dutch… 🧀</div></div>
-<div class="testbar"><b>TEST VERSION</b> — nothing is saved · your honest feedback is the whole point</div>
+
+<div class="testbar">
+  <span><b>TEST VERSION</b> — nothing is saved</span>
+  <button class="fb-open" onclick="fbToggle(true)">💬 Feedback</button>
+</div>
+
+<!-- ---- feedback-paneel ---- -->
+<div id="fb-overlay" onclick="if(event.target===this)fbToggle(false)">
+  <div class="fb-panel">
+    <button class="fb-close" onclick="fbToggle(false)">✕</button>
+    <h2>Your honest opinion 🧀</h2>
+    <p class="sub">Two minutes, Dutch-level directness encouraged.</p>
+    <form id="fb-form" onsubmit="fbSend(event)">
+
+      <div class="fb-q">1. Who are you?</div>
+      <div class="fb-opts" data-name="who">
+        <button type="button" class="fb-chip">Expat, &lt; 1 year in NL</button>
+        <button type="button" class="fb-chip">Expat, 1–5 years</button>
+        <button type="button" class="fb-chip">Expat, 5+ years</button>
+        <button type="button" class="fb-chip">Dutchie</button>
+      </div>
+
+      <div class="fb-q">2. Which scenario made you laugh (or nod hardest)?</div>
+      <input type="text" name="best" placeholder="e.g. the birthday cake one" />
+
+      <div class="fb-q">3. What didn't work? Wrong, unfunny, unclear — say it.</div>
+      <textarea name="worst" rows="3" placeholder="Be direct. It's the Dutch way."></textarea>
+
+      <div class="fb-q">4. Would you pay €19,99 once for all 10 worlds + KNM exam practice?</div>
+      <div class="fb-opts" data-name="pay">
+        <button type="button" class="fb-chip">Yes</button>
+        <button type="button" class="fb-chip">Maybe</button>
+        <button type="button" class="fb-chip">No</button>
+      </div>
+
+      <div class="fb-q">5. Which app icon would you tap?</div>
+      <div class="fb-icons" data-name="icon">
+        <div class="fb-icon" data-v="golf">
+          <svg viewBox="0 0 96 96"><rect width="96" height="96" fill="#FF6B35"/><path d="M-8 54 Q 20 44 48 50 T 104 46 L 104 104 L -8 104 Z" fill="#2743B0"/><path d="M-8 54 Q 20 44 48 50 T 104 46" stroke="#FAFBFD" stroke-width="12" fill="none"/></svg>
+          <div>The Wave</div>
+        </div>
+        <div class="fb-icon" data-v="molen">
+          <svg viewBox="0 0 96 96"><rect width="96" height="96" fill="#FF6B35"/><path d="M39 72 L57 72 L53 32 L43 32 Z" fill="#FAFBFD"/><rect x="42" y="26" width="12" height="7" rx="3.5" fill="#FAFBFD"/><g stroke="#FAFBFD" stroke-width="6" stroke-linecap="square" transform="rotate(33 48 30)"><line x1="48" y1="11" x2="48" y2="49"/><line x1="29" y1="30" x2="67" y2="30"/></g><circle cx="48" cy="30" r="4.5" fill="#FF6B35" stroke="#FAFBFD" stroke-width="3"/><path d="M-4 63 Q 10 56 24 61 T 50 61 T 76 61 T 100 59 L 100 100 L -4 100 Z" fill="#5B76D9"/><path d="M-4 75 Q 12 68 28 73 T 58 73 T 88 73 T 100 71 L 100 100 L -4 100 Z" fill="#2743B0"/></svg>
+          <div>The Windmill</div>
+        </div>
+      </div>
+
+      <button class="fb-send" type="submit">Send feedback →</button>
+    </form>
+  </div>
+</div>
 
 <script>
 // Foutmelding zichtbaar op de pagina i.p.v. stil hangen
@@ -26,7 +96,64 @@ window.addEventListener("error", function (e) {
   var el = document.getElementById("loading");
   if (el) el.textContent = "Oops — technical hiccup: " + e.message;
 });
+
+// ---- feedback-logica ----
+var FB_ENDPOINT = "https://formspree.io/f/xdaqogow"; // TODO: vervang FEEDBACK_ID
+
+function fbToggle(open) {
+  document.getElementById("fb-overlay").classList.toggle("open", open);
+}
+
+// chip- en icoonselectie
+document.querySelectorAll(".fb-opts").forEach(function (group) {
+  group.querySelectorAll(".fb-chip").forEach(function (chip) {
+    chip.addEventListener("click", function () {
+      group.querySelectorAll(".fb-chip").forEach(function (c) { c.classList.remove("on"); });
+      chip.classList.add("on");
+    });
+  });
+});
+document.querySelectorAll(".fb-icon").forEach(function (ic) {
+  ic.addEventListener("click", function () {
+    document.querySelectorAll(".fb-icon").forEach(function (i) { i.classList.remove("on"); });
+    ic.classList.add("on");
+  });
+});
+
+function pick(sel) {
+  var el = document.querySelector(sel + " .on");
+  return el ? (el.dataset.v || el.textContent) : "";
+}
+
+async function fbSend(e) {
+  e.preventDefault();
+  var f = e.target;
+  var btn = f.querySelector(".fb-send");
+  btn.disabled = true; btn.textContent = "Sending…";
+  var data = {
+    who: pick('[data-name="who"]'),
+    best: f.best.value,
+    worst: f.worst.value,
+    pay: pick('[data-name="pay"]'),
+    icon: pick('.fb-icons')
+  };
+  try {
+    var res = await fetch(FB_ENDPOINT, {
+      method: "POST",
+      headers: { "Accept": "application/json", "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    });
+    if (!res.ok) throw new Error("failed");
+    btn.textContent = "✓ Dank je wel! Very Dutch of you.";
+    btn.style.background = "#1E9E6A";
+    setTimeout(function () { fbToggle(false); }, 1800);
+  } catch (err) {
+    btn.disabled = false;
+    btn.textContent = "Failed — try again";
+  }
+}
 </script>
+
 <script>
 "use strict";
 // @ts-nocheck
