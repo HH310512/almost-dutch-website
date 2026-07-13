@@ -6,9 +6,8 @@
 <title>Almost Dutch — Test version</title>
 <meta name="robots" content="noindex, nofollow" />
 <meta name="theme-color" content="#2743B0" />
-<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script crossorigin src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
   body { margin:0; background:#FAFBFD; }
@@ -21,935 +20,783 @@
 <div id="root"><div id="loading">Loading Almost Dutch… 🧀</div></div>
 <div class="testbar"><b>TEST VERSION</b> — nothing is saved · your honest feedback is the whole point</div>
 
-<script type="text/babel" data-presets="react">
+<script>
+// Foutmelding zichtbaar op de pagina i.p.v. stil hangen
+window.addEventListener("error", function (e) {
+  var el = document.getElementById("loading");
+  if (el) el.textContent = "Oops — technical hiccup: " + e.message;
+});
+</script>
+<script>
+"use strict";
+// @ts-nocheck
 const { useState, useEffect } = React;
-
-
-
 // ---------- Design tokens ----------
 const C = {
-  bg: "#FAFBFD",
-  ink: "#14203E",
-  blue: "#2743B0",
-  sky: "#EAF0FB",
-  orange: "#FF6B35",
-  green: "#1E9E6A",
-  red: "#D95050",
-  line: "#D9E2F2",
+    bg: "#FAFBFD",
+    ink: "#14203E",
+    blue: "#2743B0",
+    sky: "#EAF0FB",
+    orange: "#FF6B35",
+    green: "#1E9E6A",
+    red: "#D95050",
+    line: "#D9E2F2",
 };
-
 // ---------- Content: 3 worlds x 15 scenarios x 4 options ----------
 const WORLDS = [
-  {
-    id: "work",
-    emoji: "💼",
-    title: "Work & The Office",
-    tagline: "Directness is a love language",
-    scenarios: [
-      {
-        q: "Your Dutch colleague reads your report and says, flatly: “This is not good.”",
-        options: [
-          { t: "Start updating your CV", ok: false, r: "Relax — you're not fired. You just received the highest form of Dutch respect: honesty." },
-          { t: "Thank them and ask what to improve", ok: true, r: "Exactly. Direct feedback means they take you seriously. Vague praise is for people they've given up on." },
-          { t: "File an HR complaint", ok: false, r: "HR will listen politely, then tell you — directly — that this is normal here." },
-          { t: "Assume they're joking", ok: false, r: "They are not joking. They are never joking about reports." },
+    {
+        id: "work",
+        emoji: "💼",
+        title: "Work & The Office",
+        tagline: "Directness is a love language",
+        scenarios: [
+            {
+                q: "Your Dutch colleague reads your report and says, flatly: “This is not good.”",
+                options: [
+                    { t: "Start updating your CV", ok: false, r: "Relax — you're not fired. You just received the highest form of Dutch respect: honesty." },
+                    { t: "Thank them and ask what to improve", ok: true, r: "Exactly. Direct feedback means they take you seriously. Vague praise is for people they've given up on." },
+                    { t: "File an HR complaint", ok: false, r: "HR will listen politely, then tell you — directly — that this is normal here." },
+                    { t: "Assume they're joking", ok: false, r: "They are not joking. They are never joking about reports." },
+                ],
+                real: "Dutch directness comes from a flat, egalitarian culture: everyone's opinion counts, so nobody wraps it in packaging.",
+            },
+            {
+                q: "It's 16:58. Tomorrow's deadline is looming. What do your Dutch colleagues do at 17:00?",
+                options: [
+                    { t: "Order pizza and push through the night", ok: false, r: "Pizza? At the office? After five? Someone call a doctor." },
+                    { t: "Stand up, say “fijne avond!”, and leave", ok: true, r: "Correct. Chairs empty by 17:02. Not laziness — they were ruthlessly efficient all day for exactly this moment." },
+                    { t: "Quietly expect you to stay late", ok: false, r: "Staying late doesn't signal dedication here. It signals poor planning." },
+                    { t: "Call an emergency crisis meeting", ok: false, r: "A meeting? Now? That would need to be scheduled at least a week ago." },
+                ],
+                real: "The Netherlands ranks among the best work-life balances in the world. Overtime is the exception, not a badge of honour.",
+            },
+            {
+                q: "It's lunchtime at the office. What's on the menu?",
+                options: [
+                    { t: "A leisurely two-course lunch with wine", ok: false, r: "Wine?! On a Tuesday?! This is not that kind of country." },
+                    { t: "Elaborate takeaway for everyone", ok: false, r: "Takeaway daily? That costs money. See the Money world for why that's unthinkable." },
+                    { t: "A cheese sandwich and a glass of milk, in 20 minutes", ok: true, r: "The legendary broodje kaas. Possibly with buttermilk. Every single day. Forever." },
+                    { t: "Nobody eats — lunch is weakness", ok: false, r: "Oh no, they eat. Precisely at 12:30. It's just... bread. Always bread." },
+                ],
+                real: "Dutch lunch culture is famously sober: bread from home, quick, practical. Hot meals are for dinner — at 18:00 sharp.",
+            },
+            {
+                q: "In a meeting, your manager presents a plan you think is flawed. You should…",
+                options: [
+                    { t: "Nod politely — she's the boss", ok: false, r: "Nodding along is seen as unhelpful. Your silence deprives the team of your brain." },
+                    { t: "Say you disagree, and explain why", ok: true, r: "Yes. She might even thank you. The best argument wins, not the biggest title." },
+                    { t: "Disagree later, privately, via email", ok: false, r: "Too indirect. If it matters, it's said in the room, to everyone." },
+                    { t: "Resign in protest", ok: false, r: "Dramatic! The Dutch prefer a 45-minute discussion ending in consensus and a shared agenda item." },
+                ],
+                real: "Dutch workplaces run on the ‘polder model’: decisions by open discussion and consensus, regardless of rank.",
+            },
+            {
+                q: "You'd like to grab a coffee with a colleague sometime. How does this happen?",
+                options: [
+                    { t: "You just walk over to their desk", ok: false, r: "Unannounced?! They have an agenda. You are not in it." },
+                    { t: "You text them that same morning", ok: false, r: "Same day? Bold. Their day was planned last Tuesday." },
+                    { t: "You open the agenda and find a slot in three weeks", ok: true, r: "Correct. Spontaneity exists here — it's just scheduled in advance." },
+                    { t: "Coffee happens organically, no planning", ok: false, r: "Nothing happens organically. Even the office plants are watered on a schedule." },
+                ],
+                real: "The Dutch agenda is sacred. Friendships, sports and ‘spontaneous’ drinks all live in it — often weeks ahead.",
+            },
+            {
+                q: "It's Friday, 16:30. Everyone moves toward the office kitchen. What is happening?",
+                options: [
+                    { t: "A fire drill", ok: false, r: "No alarm needed — beer o'clock announces itself." },
+                    { t: "The vrijmibo: Friday afternoon drinks", ok: true, r: "Vrijdagmiddagborrel. Beer, bitterballen, and colleagues suddenly becoming humans." },
+                    { t: "An emergency meeting", ok: false, r: "On Friday afternoon? Meetings are dead by then. Only the borrel survives." },
+                    { t: "Everyone's leaving early", ok: false, r: "Close! They ARE technically done working. But first: one structured hour of fun." },
+                ],
+                real: "The vrijmibo (vrij-dag-mid-dag-borrel) is a beloved institution: informal drinks that mark the sacred start of the weekend.",
+            },
+            {
+                q: "Your manager doesn't work on Fridays. Ever. Why?",
+                options: [
+                    { t: "He's secretly been fired", ok: false, r: "He's fine. He's at the petting zoo with his toddler." },
+                    { t: "He works part-time — totally normal, even for bosses", ok: true, r: "Correct. Four-day weeks are mainstream, and ‘papadag’ (daddy day) is a proud institution." },
+                    { t: "Religious reasons", ok: false, r: "The only thing sacred about Friday is that it's his papadag." },
+                    { t: "He has a second job", ok: false, r: "A second job would require... more work. You misunderstand the goal entirely." },
+                ],
+                real: "The Netherlands is world champion part-time work. Reduced hours carry no stigma — for men or women, junior or director.",
+            },
+            {
+                q: "The meeting starts at 10:00. You stroll in at 10:07. The room…",
+                options: [
+                    { t: "Hasn't started yet — relax", ok: false, r: "They started at 10:00:00. There are already action points." },
+                    { t: "Started exactly on time, and everyone noticed you", ok: true, r: "Correct. Nobody says anything. But it's in their agenda now. Under ‘observations’." },
+                    { t: "Applauds your arrival", ok: false, r: "The only applause is the passive-aggressive click of someone's pen." },
+                    { t: "Doesn't care — 7 minutes is nothing", ok: false, r: "Seven minutes is 7 minutes of other people's planned time. That's theft, basically." },
+                ],
+                real: "Punctuality is a serious virtue. ‘On time’ means slightly early — for meetings, parties and even coffee dates.",
+            },
+            {
+                q: "You receive an email: “Not possible. Groetjes, Kees.” How should you read this?",
+                options: [
+                    { t: "Kees is furious with you", ok: false, r: "Furious? He added ‘groetjes’ (little greetings)! That's practically a hug." },
+                    { t: "Normal, efficient Dutch communication", ok: true, r: "Correct. No fluff, no ‘hope this email finds you well’. Just the answer. Groetjes." },
+                    { t: "A prelude to legal action", ok: false, r: "If it were legal, it would say ‘Niet mogelijk. Met vriendelijke groet.’ THAT'S when you worry." },
+                    { t: "Kees's account was hacked", ok: false, r: "No hacker could write something this efficiently Dutch." },
+                ],
+                real: "Dutch professional emails are famously short. Brevity isn't rudeness — long polite padding is seen as wasting your time.",
+            },
+            {
+                q: "During the coffee break, colleagues openly compare their mortgage interest rates. This is…",
+                options: [
+                    { t: "Wildly inappropriate oversharing", ok: false, r: "Oversharing? They're just warming up. Wait until the pension deep-dive." },
+                    { t: "Completely normal conversation", ok: true, r: "Correct. Mortgages, salaries-ish, medical stuff — the Dutch discuss it all. It's called bespreekbaarheid." },
+                    { t: "A secret code", ok: false, r: "No code. 3.8% over 20 years means exactly what it says. Kees is very proud of it." },
+                    { t: "A recruitment tactic by a bank", ok: false, r: "No bank needed. The Dutch volunteer this information for free. Everything else costs money." },
+                ],
+                real: "‘Bespreekbaarheid’ — the ability to discuss anything openly — is a core Dutch value. Few topics are taboo.",
+            },
+            {
+                q: "At the vrijmibo, a tray of bitterballen arrives. The rules are:",
+                options: [
+                    { t: "Grab a handful — you're hungry", ok: false, r: "A HANDFUL? Security has been notified." },
+                    { t: "Take one, dip in mustard, and whisper “heet!”", ok: true, r: "Correct. One at a time, mustard mandatory, and yes — the inside is molten lava. It's always molten lava." },
+                    { t: "Wait to be personally served", ok: false, r: "This is an egalitarian country. The tray stops for no one — reach or regret." },
+                    { t: "Decline — fried food at work is unprofessional", ok: false, r: "Declining a bitterbal is the only genuinely rude move available to you here." },
+                ],
+                real: "The bitterbal is the official snack of Dutch social life. Burning your mouth on your first one is a rite of passage.",
+            },
+            {
+                q: "You propose working through the weekend to impress the boss. The reaction:",
+                options: [
+                    { t: "Deep admiration", ok: false, r: "Admiration? They're mostly worried about you now." },
+                    { t: "Genuine concern about your planning skills", ok: true, r: "Correct. If the work doesn't fit in the week, the plan was wrong. Also: it's the weekend." },
+                    { t: "A promotion", ok: false, r: "Promotions go to people who finish on time and leave at five. Efficiency, remember?" },
+                    { t: "Everyone joins you", ok: false, r: "On Saturday? They're at the hockey club, the market, and their in-laws. In that order. It's planned." },
+                ],
+                real: "Working long hours is often read as inefficiency, not commitment. Results count; visible suffering does not.",
+            },
+            {
+                q: "A colleague asks “How are you?” — what do they expect?",
+                options: [
+                    { t: "“Fine, thanks!” — it's just a greeting", ok: false, r: "That's the international version. Here, the question comes with a listening face." },
+                    { t: "An honest answer, possibly including complaints", ok: true, r: "Correct. A real answer — the leaking roof, the back pain, the weather. Especially the weather." },
+                    { t: "Silence — it's rhetorical", ok: false, r: "Silence would be alarming. They asked. Now deliver your report." },
+                    { t: "A compliment in return", ok: false, r: "Compliments make everyone suspicious. Just answer the question, ideally with mild grievances." },
+                ],
+                real: "‘Hoe gaat het?’ is usually a genuine question. Honest, even slightly negative answers are perfectly acceptable.",
+            },
+            {
+                q: "You spot the CEO in the lunch queue, holding a tray, waiting like everyone else. What's going on?",
+                options: [
+                    { t: "A PR stunt for LinkedIn", ok: false, r: "No cameras. Just a man and his cheese sandwich, waiting his turn." },
+                    { t: "Nothing — this is normal", ok: true, r: "Correct. He also cycled here, in the rain, and will make his own coffee. Hierarchy is flat, like the country." },
+                    { t: "He's lost", ok: false, r: "He knows exactly where he is: behind Ingrid from Finance, as the queue gods intended." },
+                    { t: "Undercover Boss is filming", ok: false, r: "There's no need for an undercover boss when the regular boss already queues for soup." },
+                ],
+                real: "Status displays are frowned upon. Executives cycle to work, queue for lunch, and are addressed by first name.",
+            },
+            {
+                q: "Your performance review verdict: “niet slecht” (not bad). This means:",
+                options: [
+                    { t: "You're on thin ice", ok: false, r: "Thin ice? ‘Niet slecht’ is the warm embrace of Dutch approval." },
+                    { t: "High praise — take the win", ok: true, r: "Correct. Dutch understatement peaks here: ‘not bad’ is glowing, ‘prima’ is fine, and actual compliments are for funerals." },
+                    { t: "They didn't read your work", ok: false, r: "Oh, they read it. Every word. And it was — brace yourself — not bad." },
+                    { t: "A translation error", ok: false, r: "No error. Enthusiasm is simply rationed here, like cookies." },
+                ],
+                real: "Dutch praise is famously understated. ‘Doe maar normaal’ applies to compliments too — modest words can hide real approval.",
+            },
         ],
-        real: "Dutch directness comes from a flat, egalitarian culture: everyone's opinion counts, so nobody wraps it in packaging.",
-      },
-      {
-        q: "It's 16:58. Tomorrow's deadline is looming. What do your Dutch colleagues do at 17:00?",
-        options: [
-          { t: "Order pizza and push through the night", ok: false, r: "Pizza? At the office? After five? Someone call a doctor." },
-          { t: "Stand up, say “fijne avond!”, and leave", ok: true, r: "Correct. Chairs empty by 17:02. Not laziness — they were ruthlessly efficient all day for exactly this moment." },
-          { t: "Quietly expect you to stay late", ok: false, r: "Staying late doesn't signal dedication here. It signals poor planning." },
-          { t: "Call an emergency crisis meeting", ok: false, r: "A meeting? Now? That would need to be scheduled at least a week ago." },
+    },
+    {
+        id: "birthday",
+        emoji: "🎂",
+        title: "Birthdays",
+        tagline: "Congratulations… to everyone",
+        scenarios: [
+            {
+                q: "It's your birthday. Who brings cake to the office?",
+                options: [
+                    { t: "Your colleagues, obviously", ok: false, r: "Sweet of you to think that. No. Absolutely not." },
+                    { t: "Your boss — it's a nice gesture", ok: false, r: "Your boss will happily eat the cake. The one you brought." },
+                    { t: "You. You bring your own cake", ok: true, r: "Correct! You treat *them* on *your* birthday. Forget it once and you'll hear about it for a year." },
+                    { t: "HR orders one automatically", ok: false, r: "HR manages contracts, not cake. The cake is on you. Literally." },
+                ],
+                real: "In the Netherlands the birthday person ‘trakteert’ (treats). Kids do it at school, adults at work. Nobody knows why. Everybody complies.",
+            },
+            {
+                q: "You arrive at a Dutch birthday party. Who do you congratulate?",
+                options: [
+                    { t: "The birthday person", ok: false, r: "A good start. But you are far, far from done." },
+                    { t: "Everyone in the room — parents, siblings, neighbours", ok: true, r: "Yes: “Gefeliciteerd met je moeder!” — congratulations on your mother. You congratulate people for *knowing* the birthday person." },
+                    { t: "Nobody — a card covers it", ok: false, r: "A card? Without a full round of handshakes? Chaos." },
+                    { t: "Only people you already know", ok: false, r: "Strangers too! That's the fun part. You'll shake hands with someone's uncle. Twice." },
+                ],
+                real: "Congratulating the whole family circle is standard etiquette. Yes, entering the room takes fifteen minutes.",
+            },
+            {
+                q: "You enter the living room at the party. What do you see?",
+                options: [
+                    { t: "People dancing, music pumping", ok: false, r: "Dancing? In a living room? On a birthday? Please sit down." },
+                    { t: "Chairs arranged in a neat circle", ok: true, r: "‘De kring’ — the circle. You will sit in it, receive one coffee and one slice of cake, and discuss traffic." },
+                    { t: "A buffet with unlimited food", ok: false, r: "Unlimited? You'll get one slice of vlaai and you'll be grateful." },
+                    { t: "A karaoke machine", ok: false, r: "The only performance tonight is Uncle Henk's monologue about the A2 roadworks." },
+                ],
+                real: "The Dutch circle party is a real institution: coffee first, then one round of cake, then maybe — maybe — a beer.",
+            },
+            {
+                q: "You visit the toilet and find a calendar hanging there, full of names and dates. This is…",
+                options: [
+                    { t: "A bit concerning, honestly", ok: false, r: "Concerning? It's organised! You should be taking notes." },
+                    { t: "The verjaardagskalender — completely normal", ok: true, r: "Correct. The birthday calendar lives in the toilet, where everyone has a quiet moment to check whose birthday is next." },
+                    { t: "A guest list for a party", ok: false, r: "No — it's every birthday they're socially obliged to remember. Forever." },
+                    { t: "Modern toilet art", ok: false, r: "It IS beautiful, in a deeply practical way. But no." },
+                ],
+                real: "The toilet birthday calendar is a genuine Dutch tradition — practical, unmissable, and never a page out of date.",
+            },
+            {
+                q: "You meet the birthday person's sister at the party. What do you say?",
+                options: [
+                    { t: "“Nice to meet you”", ok: false, r: "Polite! But incomplete. You've missed the crucial ritual." },
+                    { t: "“Gefeliciteerd met je zus!” — congrats on your sister", ok: true, r: "Correct. She didn't do anything. She was simply born adjacent to the birthday person. Congratulate her." },
+                    { t: "“Happy birthday!” — close enough", ok: false, r: "It's not HER birthday. Congratulate her ON the birthday of her sister. Yes, really." },
+                    { t: "Nothing — siblings don't count", ok: false, r: "Siblings count DOUBLE. Parents count triple. There may be a quiz later." },
+                ],
+                real: "‘Gefeliciteerd met…’ extends to relatives and friends of the birthday person. It baffles every newcomer, without exception.",
+            },
+            {
+                q: "Greeting time. A Dutch acquaintance leans in. How many cheek kisses?",
+                options: [
+                    { t: "One — efficient", ok: false, r: "One? Now you're both stranded mid-air. Awkward." },
+                    { t: "Two — like the French", ok: false, r: "Pulling back after two causes a low-speed head-on collision. Brace." },
+                    { t: "Three — right, left, right", ok: true, r: "Correct. Three kisses, alternating cheeks. Commit fully or don't start." },
+                    { t: "Zero — firm handshake only", ok: false, r: "Handshakes work for strangers. But at a birthday? Prepare the cheeks." },
+                ],
+                real: "Three cheek kisses is the standard Dutch greeting among friends and family — a frequent ambush for unprepared expats.",
+            },
+            {
+                q: "The invitation says “from 20:00”. When do you arrive?",
+                options: [
+                    { t: "20:45 — fashionably late", ok: false, r: "Fashionably late is not a concept here. It's just... late." },
+                    { t: "At 20:00, maybe 19:58", ok: true, r: "Correct. Punctuality applies to parties too. At 20:05 someone will wonder aloud where you are." },
+                    { t: "21:30 — parties need warming up", ok: false, r: "By 21:30 the cake round is over. You have missed the cake. There is no second cake." },
+                    { t: "Whenever — it's a party, not a meeting", ok: false, r: "Everything is a meeting if you take your agenda seriously enough." },
+                ],
+                real: "Arriving on time is respectful, even at parties. Dutch gatherings also *end* earlier than most expats expect.",
+            },
+            {
+                q: "What gift do you bring to a Dutch adult's birthday?",
+                options: [
+                    { t: "Something expensive — show you care", ok: false, r: "An expensive gift makes everyone uncomfortable. Now they owe you. The whole room is tense." },
+                    { t: "Something small and modest, €10–15", ok: true, r: "Correct. Flowers, wine, a book, a plant. Modest is thoughtful. Extravagance is suspicious." },
+                    { t: "Cash, generously", ok: false, r: "A small amount in a card can work — but ‘generous’ is doing a lot of illegal work in that sentence." },
+                    { t: "Nothing — your presence is the present", ok: false, r: "Bold. Your presence is lovely but it doesn't pair with coffee like a box of Merci does." },
+                ],
+                real: "Dutch gift culture is modest by design: small, practical, thoughtful. Grand gestures clash with ‘doe maar normaal’.",
+            },
+            {
+                q: "It's 22:30. The host starts collecting empty glasses and mentions “an early morning tomorrow.” This means:",
+                options: [
+                    { t: "More drinks are coming", ok: false, r: "The only thing coming is your coat. It's already being fetched." },
+                    { t: "The party is over — go home", ok: true, r: "Correct. This is the Dutch closing ceremony. Polite, efficient, non-negotiable." },
+                    { t: "You should help with dishes and stay longer", ok: false, r: "Help carry glasses to the kitchen — yes. Then continue directly to the front door." },
+                    { t: "The afterparty is starting", ok: false, r: "The afterparty is the host, alone, vacuuming crumbs at 22:47." },
+                ],
+                real: "Dutch parties end on the host's schedule, and the signals are wonderfully clear. Everyone is in bed by 23:30.",
+            },
+            {
+                q: "You're seated in the kring. Which conversation topics will dominate the next two hours?",
+                options: [
+                    { t: "Philosophy and art", ok: false, r: "Lovely idea. But no. Sit tight." },
+                    { t: "Traffic, house prices, and holidays to France", ok: true, r: "Correct. The A2 roadworks, what the neighbours' house sold for, and the campsite in the Dordogne. Every. Single. Party." },
+                    { t: "Politics — heated debate", ok: false, r: "Some light politics may occur, but it will lose to house prices within minutes." },
+                    { t: "Gossip about absent friends", ok: false, r: "Too indirect. If they had feedback about Piet, they'd have told Piet. Directly. At his own party." },
+                ],
+                real: "The Dutch holiday-to-France conversation is a national ritual. Bonus points if a caravan is involved.",
+            },
+            {
+                q: "You pass a house with a giant inflatable doll in the front garden. What happened?",
+                options: [
+                    { t: "A child's party got out of hand", ok: false, r: "No child could orchestrate this. It's far too organised." },
+                    { t: "Someone turned 50 — meet Abraham or Sarah", ok: true, r: "Correct. Turning 50 means the neighbours put a doll in your garden so the whole street knows. Congratulations, you're old now." },
+                    { t: "A protest", ok: false, r: "The only thing being protested is the ageing process, and it's losing." },
+                    { t: "Leftover Halloween decoration", ok: false, r: "Halloween barely exists here. This doll is celebrating something far scarier: your mortality." },
+                ],
+                real: "At 50, men ‘see Abraham’ and women ‘see Sarah’ — celebrated with garden dolls, banners, and zero subtlety.",
+            },
+            {
+                q: "A Dutch child turns 6. What happens at school?",
+                options: [
+                    { t: "The teacher brings a cake", ok: false, r: "The teacher brings enthusiasm. The cake logistics are on the six-year-old." },
+                    { t: "The child hands out treats to the whole class", ok: true, r: "Correct. ‘Trakteren’ starts young: the birthday kid distributes snacks to everyone. Training for a lifetime of bringing your own office cake." },
+                    { t: "Classes are cancelled", ok: false, r: "Cancelled? For a birthday? There are 28 kids. That would be 28 cancelled days. Do the math — the Dutch did." },
+                    { t: "The class sings and that's it", ok: false, r: "Oh, there's singing. Multiple songs. But the treats are the main event, and they'd better be there." },
+                ],
+                real: "Kids treat their own class on their birthday — often something small and (these days) semi-healthy. The system starts early.",
+            },
+            {
+                q: "You forgot a Dutch friend's birthday entirely. What are the consequences?",
+                options: [
+                    { t: "Nothing — adults don't mind", ok: false, r: "They mind. The calendar was IN THE TOILET. You had every chance." },
+                    { t: "They mention it, directly, possibly for years", ok: true, r: "Correct. “You forgot my birthday in 2023” will resurface at the 2026 barbecue. Directly. With eye contact." },
+                    { t: "Silent resentment forever", ok: false, r: "Silent? Have you met these people? The resentment will be extremely audible." },
+                    { t: "You're removed from the friend group", ok: false, r: "Removal is inefficient. Keeping you around to remind you is much more satisfying." },
+                ],
+                real: "Birthdays are taken surprisingly seriously. The famous toilet calendar exists precisely to make forgetting inexcusable.",
+            },
+            {
+                q: "Drinks at the party follow a strict order. Which one?",
+                options: [
+                    { t: "Beer from the start — it's a party", ok: false, r: "Beer at 20:00? Before coffee? The kring would gasp in unison." },
+                    { t: "Coffee first, then maybe alcohol later", ok: true, r: "Correct. One or two coffee rounds with cake, and only then does someone whisper the magic words: “een biertje?”" },
+                    { t: "Cocktails all night", ok: false, r: "The most exotic drink here is coffee with WHOLE milk. Adjust your expectations." },
+                    { t: "Whatever you grab from the fridge", ok: false, r: "You do not open the fridge. The host controls the fridge. The fridge is sovereign territory." },
+                ],
+                real: "Coffee opens every Dutch gathering. The switch to beer or wine happens later — usually announced as a group decision.",
+            },
+            {
+                q: "Time to leave the party. What's the correct exit procedure?",
+                options: [
+                    { t: "Wave from the door: “bye everyone!”", ok: false, r: "A group wave? After all those individual hellos? The math must balance." },
+                    { t: "Say goodbye to every single person, individually", ok: true, r: "Correct. Full circle, every hand, three kisses where applicable. Leaving takes 25 minutes. Plan for it. In your agenda." },
+                    { t: "Slip out unnoticed — the Irish exit", ok: false, r: "The Irish exit is considered a minor crime here. They will notice. See: birthday forgetting, consequences of." },
+                    { t: "Only say bye to the birthday person", ok: false, r: "You congratulated everyone on arrival. Symmetry demands you decongratulate— sorry, *say goodbye* to everyone too." },
+                ],
+                real: "Dutch goodbyes mirror Dutch hellos: personal, complete, and time-consuming. Factor it into your departure time.",
+            },
         ],
-        real: "The Netherlands ranks among the best work-life balances in the world. Overtime is the exception, not a badge of honour.",
-      },
-      {
-        q: "It's lunchtime at the office. What's on the menu?",
-        options: [
-          { t: "A leisurely two-course lunch with wine", ok: false, r: "Wine?! On a Tuesday?! This is not that kind of country." },
-          { t: "Elaborate takeaway for everyone", ok: false, r: "Takeaway daily? That costs money. See the Money world for why that's unthinkable." },
-          { t: "A cheese sandwich and a glass of milk, in 20 minutes", ok: true, r: "The legendary broodje kaas. Possibly with buttermilk. Every single day. Forever." },
-          { t: "Nobody eats — lunch is weakness", ok: false, r: "Oh no, they eat. Precisely at 12:30. It's just... bread. Always bread." },
+    },
+    {
+        id: "money",
+        emoji: "💶",
+        title: "Money & Tikkie",
+        tagline: "Every cent finds its way home",
+        scenarios: [
+            {
+                q: "A friend buys you a coffee. That evening you receive a payment request: €0.87. You…",
+                options: [
+                    { t: "Feel deeply insulted", ok: false, r: "Insulted? They did the math *for* you. That's friendship." },
+                    { t: "Pay it immediately, no hard feelings", ok: true, r: "Correct. A Tikkie is not stinginess — it's fairness with a decimal point. Pay within 24 hours or expect a reminder." },
+                    { t: "Ignore it — surely it's a joke", ok: false, r: "It is never a joke. There will be a reminder. Then a reminder about the reminder." },
+                    { t: "Send them a Tikkie for €0.87 back", ok: false, r: "Creative! But now you both owe €0.87 forever, locked in an infinite loop of fairness." },
+                ],
+                real: "Tikkie (a payment-request app) is so embedded in Dutch life that ‘tikkie’ became a verb. Splitting tiny amounts is normal.",
+            },
+            {
+                q: "Dinner with six Dutch friends. The bill arrives. What happens?",
+                options: [
+                    { t: "One person generously pays for all", ok: false, r: "That person would be a legend. That person does not exist." },
+                    { t: "The bill is split — precisely", ok: true, r: "‘Going Dutch’ exists for a reason. You had the salad, Joris had the steak: the Tikkies will reflect this reality." },
+                    { t: "Whoever earns most pays most", ok: false, r: "Income is irrelevant. Equality means everyone pays for exactly their own bitterballen." },
+                    { t: "You argue over who gets to pay", ok: false, r: "Fighting to PAY? That's a different continent. Here they fight over who had the extra cola." },
+                ],
+                real: "Splitting costs isn't rudeness — it keeps friendships free of debt and awkwardness. Equal footing is the whole point.",
+            },
+            {
+                q: "You're invited for ‘koffie drinken’. What are you actually getting?",
+                options: [
+                    { t: "Coffee, cake, snacks, maybe dinner", ok: false, r: "Dinner?! You were invited for coffee. Read the invitation again." },
+                    { t: "One coffee and exactly one cookie", ok: true, r: "Correct. The tin opens, you take ONE, and the lid goes straight back on. That click you hear is Dutch culture." },
+                    { t: "Just coffee — cookies cost extra", ok: false, r: "No no, you get a cookie. One. Singular. The tin closes at the speed of light." },
+                    { t: "An open buffet of treats", ok: false, r: "A buffet? The tin isn't even fully open. It hovers, briefly, then seals like an airlock." },
+                ],
+                real: "‘Eén koekje bij de koffie’ is legendary Calvinist thrift: hospitality yes, excess never. And leave before 18:00 — dinner is not implied.",
+            },
+            {
+                q: "Your Dutch friend shows off a new winter coat. What are they proudest of?",
+                options: [
+                    { t: "The designer brand", ok: false, r: "Brands are fine, but bragging about full price? Almost shameful." },
+                    { t: "That it was 70% off — “in de aanbieding!”", ok: true, r: "Correct! In most countries you brag about how much something cost. Here you brag about how little." },
+                    { t: "That it was expensive — quality!", ok: false, r: "Expensive is not the flex you think it is. ‘Gratis’ (free) is the most beautiful word in Dutch." },
+                    { t: "That it's this season's style", ok: false, r: "This season? It's LAST season — that's why it was 70% off. That's the whole achievement." },
+                ],
+                real: "Thrift is a genuine virtue — bonus points if it came from a sale, a second-hand app, or the neighbour's garage.",
+            },
+            {
+                q: "A supermarket hands out free cheese samples. Observed Dutch behaviour:",
+                options: [
+                    { t: "Politely take one and move on", ok: false, r: "One? On the FIRST lap, maybe." },
+                    { t: "Strategic laps past the stand, multiple samples", ok: true, r: "Correct. Different jacket, second lap. It's free. ‘Gratis’ activates something deep and ancient in the Dutch soul." },
+                    { t: "Ignore it — free stuff is suspicious", ok: false, r: "Suspicious? Free is the least suspicious price there is. Free is TRUTH." },
+                    { t: "Buy the cheese to be polite", ok: false, r: "Buy it? The sample WAS the transaction. The relationship is complete." },
+                ],
+                real: "‘Gratis’ has near-magical status. Free samples, free shipping, free anything — the Dutch will queue for it, cheerfully.",
+            },
+            {
+                q: "Your friend drives 25 minutes to a petrol station across the German border. Why?",
+                options: [
+                    { t: "German fuel is better quality", ok: false, r: "Quality? It's the same fuel. It's about the CENTS, keep up." },
+                    { t: "Fuel is cheaper there — obviously worth it", ok: true, r: "Correct. Yes, the drive costs fuel too. No, do not bring that up. The spreadsheet says it's worth it." },
+                    { t: "They're secretly moving to Germany", ok: false, r: "Move to Germany? And give up their 2.1% mortgage? Never." },
+                    { t: "They got lost", ok: false, r: "Lost? This route is optimised. There's a thermos of home-made coffee in the cupholder." },
+                ],
+                real: "Border fuel runs, bulk buying in Germany, and comparing per-litre prices are beloved national pastimes.",
+            },
+            {
+                q: "At the supermarket checkout: “Bonuskaart?” What is being asked?",
+                options: [
+                    { t: "Your ID", ok: false, r: "No papers needed — just proof you're not paying full price like some kind of tourist." },
+                    { t: "The loyalty card that unlocks discounts", ok: true, r: "Correct. Not having a Bonuskaart means voluntarily paying more, which is legally allowed but socially devastating." },
+                    { t: "A credit card", ok: false, r: "Credit?! Buying things with money you don't have? This country runs on debit and discipline." },
+                    { t: "A bonus payment for the cashier", ok: false, r: "A tip? At the SUPERMARKET? Someone get this person a chair." },
+                ],
+                real: "The Albert Heijn Bonuskaart is a cultural institution. The weekly ‘Bonus’ folder is studied like scripture.",
+            },
+            {
+                q: "First date. The bill arrives and your Dutch date suggests splitting it. This means:",
+                options: [
+                    { t: "They're not interested in you", ok: false, r: "Wrong! They might be planning the second date already. Which you'll also split." },
+                    { t: "Nothing — equality applies to romance too", ok: true, r: "Correct. Splitting signals you're equals, not that the spark is dead. The spark is fine. The spark is just financially independent." },
+                    { t: "They forgot their wallet", ok: false, r: "Forgot their wallet? They have Tikkie, two debit cards and Apple Pay. The wallet is FINE." },
+                    { t: "It's a test of your generosity", ok: false, r: "There's no test. There's no hidden layer. Dutch people say what they mean — even on dates." },
+                ],
+                real: "Going Dutch on dates is standard and carries no romantic verdict. Insisting on paying everything can even feel uncomfortable.",
+            },
+            {
+                q: "A friend borrowed €5 last month and forgot. You…",
+                options: [
+                    { t: "Let it go — it's only €5", ok: false, r: "ONLY €5? That's five entire euros. That's 500 cents. That's almost six coffees at work." },
+                    { t: "Send a Tikkie, obviously", ok: true, r: "Correct. No shame, no drama. They'll pay within the hour and thank you for the reminder. The system works." },
+                    { t: "Hint about it subtly for weeks", ok: false, r: "Subtle hints are wildly inefficient. There's an app that resolves this in 11 seconds." },
+                    { t: "End the friendship", ok: false, r: "End it? No no. You send the Tikkie AND keep the friend. That's the beauty of the system." },
+                ],
+                real: "Payment requests between friends are frictionless and normal. Money stays clean, friendships stay warm.",
+            },
+            {
+                q: "Your Dutch colleague furnished their entire apartment for €300. How?",
+                options: [
+                    { t: "They're a design genius", ok: false, r: "Genius, yes — but of a very specific, second-hand kind." },
+                    { t: "Marktplaats — the second-hand marketplace", ok: true, r: "Correct. Sofa: €50. Table: gratis, ‘af te halen’ (pick-up only). The Netherlands is one giant, well-organised garage sale." },
+                    { t: "IKEA sale", ok: false, r: "IKEA? That's practically luxury. Why buy new when Henk in Almere is selling his for a quarter of the price?" },
+                    { t: "Inheritance", ok: false, r: "Inherited? No — although that oak cabinet WAS someone's grandmother's. Now it's €35 on Marktplaats." },
+                ],
+                real: "Marktplaats is a national obsession. Buying second-hand is smart, sustainable, and something to be proud of.",
+            },
+            {
+                q: "Every day, your colleague unpacks bread from home. Every. Single. Day. Because:",
+                options: [
+                    { t: "They can't afford lunch", ok: false, r: "They can afford it fine. That's exactly why they don't buy it. Think about it." },
+                    { t: "Buying lunch daily is financially reckless", ok: true, r: "Correct. €8 a day is €160 a month is a weekend in the Ardennes. The sandwich is a lifestyle choice AND a spreadsheet." },
+                    { t: "The canteen food is bad", ok: false, r: "The canteen is fine. But it costs money, and the bread at home was in de aanbieding." },
+                    { t: "Doctor's orders", ok: false, r: "The only prescription here is fiscal discipline, taken daily, with cheese." },
+                ],
+                real: "Bringing lunch from home is the overwhelming norm at Dutch workplaces — across all salary levels.",
+            },
+            {
+                q: "You had a nice dinner out. The bill is €58. What's an appropriate tip?",
+                options: [
+                    { t: "20% minimum — service was good", ok: false, r: "20%?! The waiter will assume you made a math error and try to correct you." },
+                    { t: "Round up to €60, maybe a bit more", ok: true, r: "Correct. Rounding up is polite, 5–10% is generous, and nobody's rent depends on your tip — service wages are real wages here." },
+                    { t: "Nothing — tipping is offensive", ok: false, r: "Not offensive, just optional. A small round-up is appreciated, not demanded." },
+                    { t: "Whatever coins are in your pocket", ok: false, r: "Coins? Cash? What year is it? This country is 98% debit card and Tikkie." },
+                ],
+                real: "Tipping is modest in the Netherlands: rounding up is common, big percentages are not expected, and service staff earn proper wages.",
+            },
+            {
+                q: "You suggest taking a taxi to a party 4 km away. Your Dutch friends react with:",
+                options: [
+                    { t: "Enthusiasm — great idea", ok: false, r: "Enthusiasm? For paying €18 to avoid a 15-minute cycle? Read the room." },
+                    { t: "Horror — the bikes are right there", ok: true, r: "Correct. It's 4 km. There are bikes. There is rain gear. There is no debate. See you there in 14 minutes." },
+                    { t: "A compromise: the bus", ok: false, r: "The bus is acceptable for distances over 10 km, in hail, uphill. This is none of those. (Also nothing is uphill.)" },
+                    { t: "They order an Uber XL", ok: false, r: "An Uber XL. To a birthday. Four kilometres away. This message will be discussed in the group chat for weeks." },
+                ],
+                real: "Cycling is the default for any distance under ~10 km, in any weather. Taxis are for airports and emergencies — barely.",
+            },
+            {
+                q: "Your Dutch friend has insurance for: liability, travel, phone, bike, glasses, dental, funeral and legal aid. This is:",
+                options: [
+                    { t: "Paranoid over-insurance", ok: false, r: "Paranoid? Each policy was compared on three websites first. This is OPTIMISED anxiety." },
+                    { t: "Completely standard", ok: true, r: "Correct. The Dutch paradox: fiercely frugal with cents, yet insured against everything including apparently death. Risk is expensive; premiums are a bargain." },
+                    { t: "A scam they fell for", ok: false, r: "Fell for? They ran the numbers. The numbers said: insure the bike. (The bike WILL be stolen. It's a rite of passage.)" },
+                    { t: "Legally required", ok: false, r: "Only health insurance is mandatory (plus car insurance, if you drive). These eight are pure, voluntary, deeply Dutch prudence." },
+                ],
+                real: "The Netherlands has among the highest insurance density in the world. Frugality and risk-aversion turn out to be best friends.",
+            },
+            {
+                q: "You're about to throw away an empty water bottle. Your Dutch friend lunges. Why?",
+                options: [
+                    { t: "Environmental panic", ok: false, r: "The environment matters, sure. But look closer at their eyes: those are euro signs." },
+                    { t: "Statiegeld — that bottle is worth €0.15", ok: true, r: "Correct. Bottle deposits get returned. Always. There are people whose entire festival strategy is collecting other people's cups." },
+                    { t: "The bin was full", ok: false, r: "The bin's capacity is irrelevant. That bottle contains fifteen recoverable cents." },
+                    { t: "It's their bottle", ok: false, r: "Ownership transferred the moment money was involved. And money is ALWAYS involved. €0.15 of it." },
+                ],
+                real: "Statiegeld (deposit) applies to bottles and cans. Returning them is universal — thrift and sustainability in one satisfying clunk.",
+            },
         ],
-        real: "Dutch lunch culture is famously sober: bread from home, quick, practical. Hot meals are for dinner — at 18:00 sharp.",
-      },
-      {
-        q: "In a meeting, your manager presents a plan you think is flawed. You should…",
-        options: [
-          { t: "Nod politely — she's the boss", ok: false, r: "Nodding along is seen as unhelpful. Your silence deprives the team of your brain." },
-          { t: "Say you disagree, and explain why", ok: true, r: "Yes. She might even thank you. The best argument wins, not the biggest title." },
-          { t: "Disagree later, privately, via email", ok: false, r: "Too indirect. If it matters, it's said in the room, to everyone." },
-          { t: "Resign in protest", ok: false, r: "Dramatic! The Dutch prefer a 45-minute discussion ending in consensus and a shared agenda item." },
-        ],
-        real: "Dutch workplaces run on the ‘polder model’: decisions by open discussion and consensus, regardless of rank.",
-      },
-      {
-        q: "You'd like to grab a coffee with a colleague sometime. How does this happen?",
-        options: [
-          { t: "You just walk over to their desk", ok: false, r: "Unannounced?! They have an agenda. You are not in it." },
-          { t: "You text them that same morning", ok: false, r: "Same day? Bold. Their day was planned last Tuesday." },
-          { t: "You open the agenda and find a slot in three weeks", ok: true, r: "Correct. Spontaneity exists here — it's just scheduled in advance." },
-          { t: "Coffee happens organically, no planning", ok: false, r: "Nothing happens organically. Even the office plants are watered on a schedule." },
-        ],
-        real: "The Dutch agenda is sacred. Friendships, sports and ‘spontaneous’ drinks all live in it — often weeks ahead.",
-      },
-      {
-        q: "It's Friday, 16:30. Everyone moves toward the office kitchen. What is happening?",
-        options: [
-          { t: "A fire drill", ok: false, r: "No alarm needed — beer o'clock announces itself." },
-          { t: "The vrijmibo: Friday afternoon drinks", ok: true, r: "Vrijdagmiddagborrel. Beer, bitterballen, and colleagues suddenly becoming humans." },
-          { t: "An emergency meeting", ok: false, r: "On Friday afternoon? Meetings are dead by then. Only the borrel survives." },
-          { t: "Everyone's leaving early", ok: false, r: "Close! They ARE technically done working. But first: one structured hour of fun." },
-        ],
-        real: "The vrijmibo (vrij-dag-mid-dag-borrel) is a beloved institution: informal drinks that mark the sacred start of the weekend.",
-      },
-      {
-        q: "Your manager doesn't work on Fridays. Ever. Why?",
-        options: [
-          { t: "He's secretly been fired", ok: false, r: "He's fine. He's at the petting zoo with his toddler." },
-          { t: "He works part-time — totally normal, even for bosses", ok: true, r: "Correct. Four-day weeks are mainstream, and ‘papadag’ (daddy day) is a proud institution." },
-          { t: "Religious reasons", ok: false, r: "The only thing sacred about Friday is that it's his papadag." },
-          { t: "He has a second job", ok: false, r: "A second job would require... more work. You misunderstand the goal entirely." },
-        ],
-        real: "The Netherlands is world champion part-time work. Reduced hours carry no stigma — for men or women, junior or director.",
-      },
-      {
-        q: "The meeting starts at 10:00. You stroll in at 10:07. The room…",
-        options: [
-          { t: "Hasn't started yet — relax", ok: false, r: "They started at 10:00:00. There are already action points." },
-          { t: "Started exactly on time, and everyone noticed you", ok: true, r: "Correct. Nobody says anything. But it's in their agenda now. Under ‘observations’." },
-          { t: "Applauds your arrival", ok: false, r: "The only applause is the passive-aggressive click of someone's pen." },
-          { t: "Doesn't care — 7 minutes is nothing", ok: false, r: "Seven minutes is 7 minutes of other people's planned time. That's theft, basically." },
-        ],
-        real: "Punctuality is a serious virtue. ‘On time’ means slightly early — for meetings, parties and even coffee dates.",
-      },
-      {
-        q: "You receive an email: “Not possible. Groetjes, Kees.” How should you read this?",
-        options: [
-          { t: "Kees is furious with you", ok: false, r: "Furious? He added ‘groetjes’ (little greetings)! That's practically a hug." },
-          { t: "Normal, efficient Dutch communication", ok: true, r: "Correct. No fluff, no ‘hope this email finds you well’. Just the answer. Groetjes." },
-          { t: "A prelude to legal action", ok: false, r: "If it were legal, it would say ‘Niet mogelijk. Met vriendelijke groet.’ THAT'S when you worry." },
-          { t: "Kees's account was hacked", ok: false, r: "No hacker could write something this efficiently Dutch." },
-        ],
-        real: "Dutch professional emails are famously short. Brevity isn't rudeness — long polite padding is seen as wasting your time.",
-      },
-      {
-        q: "During the coffee break, colleagues openly compare their mortgage interest rates. This is…",
-        options: [
-          { t: "Wildly inappropriate oversharing", ok: false, r: "Oversharing? They're just warming up. Wait until the pension deep-dive." },
-          { t: "Completely normal conversation", ok: true, r: "Correct. Mortgages, salaries-ish, medical stuff — the Dutch discuss it all. It's called bespreekbaarheid." },
-          { t: "A secret code", ok: false, r: "No code. 3.8% over 20 years means exactly what it says. Kees is very proud of it." },
-          { t: "A recruitment tactic by a bank", ok: false, r: "No bank needed. The Dutch volunteer this information for free. Everything else costs money." },
-        ],
-        real: "‘Bespreekbaarheid’ — the ability to discuss anything openly — is a core Dutch value. Few topics are taboo.",
-      },
-      {
-        q: "At the vrijmibo, a tray of bitterballen arrives. The rules are:",
-        options: [
-          { t: "Grab a handful — you're hungry", ok: false, r: "A HANDFUL? Security has been notified." },
-          { t: "Take one, dip in mustard, and whisper “heet!”", ok: true, r: "Correct. One at a time, mustard mandatory, and yes — the inside is molten lava. It's always molten lava." },
-          { t: "Wait to be personally served", ok: false, r: "This is an egalitarian country. The tray stops for no one — reach or regret." },
-          { t: "Decline — fried food at work is unprofessional", ok: false, r: "Declining a bitterbal is the only genuinely rude move available to you here." },
-        ],
-        real: "The bitterbal is the official snack of Dutch social life. Burning your mouth on your first one is a rite of passage.",
-      },
-      {
-        q: "You propose working through the weekend to impress the boss. The reaction:",
-        options: [
-          { t: "Deep admiration", ok: false, r: "Admiration? They're mostly worried about you now." },
-          { t: "Genuine concern about your planning skills", ok: true, r: "Correct. If the work doesn't fit in the week, the plan was wrong. Also: it's the weekend." },
-          { t: "A promotion", ok: false, r: "Promotions go to people who finish on time and leave at five. Efficiency, remember?" },
-          { t: "Everyone joins you", ok: false, r: "On Saturday? They're at the hockey club, the market, and their in-laws. In that order. It's planned." },
-        ],
-        real: "Working long hours is often read as inefficiency, not commitment. Results count; visible suffering does not.",
-      },
-      {
-        q: "A colleague asks “How are you?” — what do they expect?",
-        options: [
-          { t: "“Fine, thanks!” — it's just a greeting", ok: false, r: "That's the international version. Here, the question comes with a listening face." },
-          { t: "An honest answer, possibly including complaints", ok: true, r: "Correct. A real answer — the leaking roof, the back pain, the weather. Especially the weather." },
-          { t: "Silence — it's rhetorical", ok: false, r: "Silence would be alarming. They asked. Now deliver your report." },
-          { t: "A compliment in return", ok: false, r: "Compliments make everyone suspicious. Just answer the question, ideally with mild grievances." },
-        ],
-        real: "‘Hoe gaat het?’ is usually a genuine question. Honest, even slightly negative answers are perfectly acceptable.",
-      },
-      {
-        q: "You spot the CEO in the lunch queue, holding a tray, waiting like everyone else. What's going on?",
-        options: [
-          { t: "A PR stunt for LinkedIn", ok: false, r: "No cameras. Just a man and his cheese sandwich, waiting his turn." },
-          { t: "Nothing — this is normal", ok: true, r: "Correct. He also cycled here, in the rain, and will make his own coffee. Hierarchy is flat, like the country." },
-          { t: "He's lost", ok: false, r: "He knows exactly where he is: behind Ingrid from Finance, as the queue gods intended." },
-          { t: "Undercover Boss is filming", ok: false, r: "There's no need for an undercover boss when the regular boss already queues for soup." },
-        ],
-        real: "Status displays are frowned upon. Executives cycle to work, queue for lunch, and are addressed by first name.",
-      },
-      {
-        q: "Your performance review verdict: “niet slecht” (not bad). This means:",
-        options: [
-          { t: "You're on thin ice", ok: false, r: "Thin ice? ‘Niet slecht’ is the warm embrace of Dutch approval." },
-          { t: "High praise — take the win", ok: true, r: "Correct. Dutch understatement peaks here: ‘not bad’ is glowing, ‘prima’ is fine, and actual compliments are for funerals." },
-          { t: "They didn't read your work", ok: false, r: "Oh, they read it. Every word. And it was — brace yourself — not bad." },
-          { t: "A translation error", ok: false, r: "No error. Enthusiasm is simply rationed here, like cookies." },
-        ],
-        real: "Dutch praise is famously understated. ‘Doe maar normaal’ applies to compliments too — modest words can hide real approval.",
-      },
-    ],
-  },
-  {
-    id: "birthday",
-    emoji: "🎂",
-    title: "Birthdays",
-    tagline: "Congratulations… to everyone",
-    scenarios: [
-      {
-        q: "It's your birthday. Who brings cake to the office?",
-        options: [
-          { t: "Your colleagues, obviously", ok: false, r: "Sweet of you to think that. No. Absolutely not." },
-          { t: "Your boss — it's a nice gesture", ok: false, r: "Your boss will happily eat the cake. The one you brought." },
-          { t: "You. You bring your own cake", ok: true, r: "Correct! You treat *them* on *your* birthday. Forget it once and you'll hear about it for a year." },
-          { t: "HR orders one automatically", ok: false, r: "HR manages contracts, not cake. The cake is on you. Literally." },
-        ],
-        real: "In the Netherlands the birthday person ‘trakteert’ (treats). Kids do it at school, adults at work. Nobody knows why. Everybody complies.",
-      },
-      {
-        q: "You arrive at a Dutch birthday party. Who do you congratulate?",
-        options: [
-          { t: "The birthday person", ok: false, r: "A good start. But you are far, far from done." },
-          { t: "Everyone in the room — parents, siblings, neighbours", ok: true, r: "Yes: “Gefeliciteerd met je moeder!” — congratulations on your mother. You congratulate people for *knowing* the birthday person." },
-          { t: "Nobody — a card covers it", ok: false, r: "A card? Without a full round of handshakes? Chaos." },
-          { t: "Only people you already know", ok: false, r: "Strangers too! That's the fun part. You'll shake hands with someone's uncle. Twice." },
-        ],
-        real: "Congratulating the whole family circle is standard etiquette. Yes, entering the room takes fifteen minutes.",
-      },
-      {
-        q: "You enter the living room at the party. What do you see?",
-        options: [
-          { t: "People dancing, music pumping", ok: false, r: "Dancing? In a living room? On a birthday? Please sit down." },
-          { t: "Chairs arranged in a neat circle", ok: true, r: "‘De kring’ — the circle. You will sit in it, receive one coffee and one slice of cake, and discuss traffic." },
-          { t: "A buffet with unlimited food", ok: false, r: "Unlimited? You'll get one slice of vlaai and you'll be grateful." },
-          { t: "A karaoke machine", ok: false, r: "The only performance tonight is Uncle Henk's monologue about the A2 roadworks." },
-        ],
-        real: "The Dutch circle party is a real institution: coffee first, then one round of cake, then maybe — maybe — a beer.",
-      },
-      {
-        q: "You visit the toilet and find a calendar hanging there, full of names and dates. This is…",
-        options: [
-          { t: "A bit concerning, honestly", ok: false, r: "Concerning? It's organised! You should be taking notes." },
-          { t: "The verjaardagskalender — completely normal", ok: true, r: "Correct. The birthday calendar lives in the toilet, where everyone has a quiet moment to check whose birthday is next." },
-          { t: "A guest list for a party", ok: false, r: "No — it's every birthday they're socially obliged to remember. Forever." },
-          { t: "Modern toilet art", ok: false, r: "It IS beautiful, in a deeply practical way. But no." },
-        ],
-        real: "The toilet birthday calendar is a genuine Dutch tradition — practical, unmissable, and never a page out of date.",
-      },
-      {
-        q: "You meet the birthday person's sister at the party. What do you say?",
-        options: [
-          { t: "“Nice to meet you”", ok: false, r: "Polite! But incomplete. You've missed the crucial ritual." },
-          { t: "“Gefeliciteerd met je zus!” — congrats on your sister", ok: true, r: "Correct. She didn't do anything. She was simply born adjacent to the birthday person. Congratulate her." },
-          { t: "“Happy birthday!” — close enough", ok: false, r: "It's not HER birthday. Congratulate her ON the birthday of her sister. Yes, really." },
-          { t: "Nothing — siblings don't count", ok: false, r: "Siblings count DOUBLE. Parents count triple. There may be a quiz later." },
-        ],
-        real: "‘Gefeliciteerd met…’ extends to relatives and friends of the birthday person. It baffles every newcomer, without exception.",
-      },
-      {
-        q: "Greeting time. A Dutch acquaintance leans in. How many cheek kisses?",
-        options: [
-          { t: "One — efficient", ok: false, r: "One? Now you're both stranded mid-air. Awkward." },
-          { t: "Two — like the French", ok: false, r: "Pulling back after two causes a low-speed head-on collision. Brace." },
-          { t: "Three — right, left, right", ok: true, r: "Correct. Three kisses, alternating cheeks. Commit fully or don't start." },
-          { t: "Zero — firm handshake only", ok: false, r: "Handshakes work for strangers. But at a birthday? Prepare the cheeks." },
-        ],
-        real: "Three cheek kisses is the standard Dutch greeting among friends and family — a frequent ambush for unprepared expats.",
-      },
-      {
-        q: "The invitation says “from 20:00”. When do you arrive?",
-        options: [
-          { t: "20:45 — fashionably late", ok: false, r: "Fashionably late is not a concept here. It's just... late." },
-          { t: "At 20:00, maybe 19:58", ok: true, r: "Correct. Punctuality applies to parties too. At 20:05 someone will wonder aloud where you are." },
-          { t: "21:30 — parties need warming up", ok: false, r: "By 21:30 the cake round is over. You have missed the cake. There is no second cake." },
-          { t: "Whenever — it's a party, not a meeting", ok: false, r: "Everything is a meeting if you take your agenda seriously enough." },
-        ],
-        real: "Arriving on time is respectful, even at parties. Dutch gatherings also *end* earlier than most expats expect.",
-      },
-      {
-        q: "What gift do you bring to a Dutch adult's birthday?",
-        options: [
-          { t: "Something expensive — show you care", ok: false, r: "An expensive gift makes everyone uncomfortable. Now they owe you. The whole room is tense." },
-          { t: "Something small and modest, €10–15", ok: true, r: "Correct. Flowers, wine, a book, a plant. Modest is thoughtful. Extravagance is suspicious." },
-          { t: "Cash, generously", ok: false, r: "A small amount in a card can work — but ‘generous’ is doing a lot of illegal work in that sentence." },
-          { t: "Nothing — your presence is the present", ok: false, r: "Bold. Your presence is lovely but it doesn't pair with coffee like a box of Merci does." },
-        ],
-        real: "Dutch gift culture is modest by design: small, practical, thoughtful. Grand gestures clash with ‘doe maar normaal’.",
-      },
-      {
-        q: "It's 22:30. The host starts collecting empty glasses and mentions “an early morning tomorrow.” This means:",
-        options: [
-          { t: "More drinks are coming", ok: false, r: "The only thing coming is your coat. It's already being fetched." },
-          { t: "The party is over — go home", ok: true, r: "Correct. This is the Dutch closing ceremony. Polite, efficient, non-negotiable." },
-          { t: "You should help with dishes and stay longer", ok: false, r: "Help carry glasses to the kitchen — yes. Then continue directly to the front door." },
-          { t: "The afterparty is starting", ok: false, r: "The afterparty is the host, alone, vacuuming crumbs at 22:47." },
-        ],
-        real: "Dutch parties end on the host's schedule, and the signals are wonderfully clear. Everyone is in bed by 23:30.",
-      },
-      {
-        q: "You're seated in the kring. Which conversation topics will dominate the next two hours?",
-        options: [
-          { t: "Philosophy and art", ok: false, r: "Lovely idea. But no. Sit tight." },
-          { t: "Traffic, house prices, and holidays to France", ok: true, r: "Correct. The A2 roadworks, what the neighbours' house sold for, and the campsite in the Dordogne. Every. Single. Party." },
-          { t: "Politics — heated debate", ok: false, r: "Some light politics may occur, but it will lose to house prices within minutes." },
-          { t: "Gossip about absent friends", ok: false, r: "Too indirect. If they had feedback about Piet, they'd have told Piet. Directly. At his own party." },
-        ],
-        real: "The Dutch holiday-to-France conversation is a national ritual. Bonus points if a caravan is involved.",
-      },
-      {
-        q: "You pass a house with a giant inflatable doll in the front garden. What happened?",
-        options: [
-          { t: "A child's party got out of hand", ok: false, r: "No child could orchestrate this. It's far too organised." },
-          { t: "Someone turned 50 — meet Abraham or Sarah", ok: true, r: "Correct. Turning 50 means the neighbours put a doll in your garden so the whole street knows. Congratulations, you're old now." },
-          { t: "A protest", ok: false, r: "The only thing being protested is the ageing process, and it's losing." },
-          { t: "Leftover Halloween decoration", ok: false, r: "Halloween barely exists here. This doll is celebrating something far scarier: your mortality." },
-        ],
-        real: "At 50, men ‘see Abraham’ and women ‘see Sarah’ — celebrated with garden dolls, banners, and zero subtlety.",
-      },
-      {
-        q: "A Dutch child turns 6. What happens at school?",
-        options: [
-          { t: "The teacher brings a cake", ok: false, r: "The teacher brings enthusiasm. The cake logistics are on the six-year-old." },
-          { t: "The child hands out treats to the whole class", ok: true, r: "Correct. ‘Trakteren’ starts young: the birthday kid distributes snacks to everyone. Training for a lifetime of bringing your own office cake." },
-          { t: "Classes are cancelled", ok: false, r: "Cancelled? For a birthday? There are 28 kids. That would be 28 cancelled days. Do the math — the Dutch did." },
-          { t: "The class sings and that's it", ok: false, r: "Oh, there's singing. Multiple songs. But the treats are the main event, and they'd better be there." },
-        ],
-        real: "Kids treat their own class on their birthday — often something small and (these days) semi-healthy. The system starts early.",
-      },
-      {
-        q: "You forgot a Dutch friend's birthday entirely. What are the consequences?",
-        options: [
-          { t: "Nothing — adults don't mind", ok: false, r: "They mind. The calendar was IN THE TOILET. You had every chance." },
-          { t: "They mention it, directly, possibly for years", ok: true, r: "Correct. “You forgot my birthday in 2023” will resurface at the 2026 barbecue. Directly. With eye contact." },
-          { t: "Silent resentment forever", ok: false, r: "Silent? Have you met these people? The resentment will be extremely audible." },
-          { t: "You're removed from the friend group", ok: false, r: "Removal is inefficient. Keeping you around to remind you is much more satisfying." },
-        ],
-        real: "Birthdays are taken surprisingly seriously. The famous toilet calendar exists precisely to make forgetting inexcusable.",
-      },
-      {
-        q: "Drinks at the party follow a strict order. Which one?",
-        options: [
-          { t: "Beer from the start — it's a party", ok: false, r: "Beer at 20:00? Before coffee? The kring would gasp in unison." },
-          { t: "Coffee first, then maybe alcohol later", ok: true, r: "Correct. One or two coffee rounds with cake, and only then does someone whisper the magic words: “een biertje?”" },
-          { t: "Cocktails all night", ok: false, r: "The most exotic drink here is coffee with WHOLE milk. Adjust your expectations." },
-          { t: "Whatever you grab from the fridge", ok: false, r: "You do not open the fridge. The host controls the fridge. The fridge is sovereign territory." },
-        ],
-        real: "Coffee opens every Dutch gathering. The switch to beer or wine happens later — usually announced as a group decision.",
-      },
-      {
-        q: "Time to leave the party. What's the correct exit procedure?",
-        options: [
-          { t: "Wave from the door: “bye everyone!”", ok: false, r: "A group wave? After all those individual hellos? The math must balance." },
-          { t: "Say goodbye to every single person, individually", ok: true, r: "Correct. Full circle, every hand, three kisses where applicable. Leaving takes 25 minutes. Plan for it. In your agenda." },
-          { t: "Slip out unnoticed — the Irish exit", ok: false, r: "The Irish exit is considered a minor crime here. They will notice. See: birthday forgetting, consequences of." },
-          { t: "Only say bye to the birthday person", ok: false, r: "You congratulated everyone on arrival. Symmetry demands you decongratulate— sorry, *say goodbye* to everyone too." },
-        ],
-        real: "Dutch goodbyes mirror Dutch hellos: personal, complete, and time-consuming. Factor it into your departure time.",
-      },
-    ],
-  },
-  {
-    id: "money",
-    emoji: "💶",
-    title: "Money & Tikkie",
-    tagline: "Every cent finds its way home",
-    scenarios: [
-      {
-        q: "A friend buys you a coffee. That evening you receive a payment request: €0.87. You…",
-        options: [
-          { t: "Feel deeply insulted", ok: false, r: "Insulted? They did the math *for* you. That's friendship." },
-          { t: "Pay it immediately, no hard feelings", ok: true, r: "Correct. A Tikkie is not stinginess — it's fairness with a decimal point. Pay within 24 hours or expect a reminder." },
-          { t: "Ignore it — surely it's a joke", ok: false, r: "It is never a joke. There will be a reminder. Then a reminder about the reminder." },
-          { t: "Send them a Tikkie for €0.87 back", ok: false, r: "Creative! But now you both owe €0.87 forever, locked in an infinite loop of fairness." },
-        ],
-        real: "Tikkie (a payment-request app) is so embedded in Dutch life that ‘tikkie’ became a verb. Splitting tiny amounts is normal.",
-      },
-      {
-        q: "Dinner with six Dutch friends. The bill arrives. What happens?",
-        options: [
-          { t: "One person generously pays for all", ok: false, r: "That person would be a legend. That person does not exist." },
-          { t: "The bill is split — precisely", ok: true, r: "‘Going Dutch’ exists for a reason. You had the salad, Joris had the steak: the Tikkies will reflect this reality." },
-          { t: "Whoever earns most pays most", ok: false, r: "Income is irrelevant. Equality means everyone pays for exactly their own bitterballen." },
-          { t: "You argue over who gets to pay", ok: false, r: "Fighting to PAY? That's a different continent. Here they fight over who had the extra cola." },
-        ],
-        real: "Splitting costs isn't rudeness — it keeps friendships free of debt and awkwardness. Equal footing is the whole point.",
-      },
-      {
-        q: "You're invited for ‘koffie drinken’. What are you actually getting?",
-        options: [
-          { t: "Coffee, cake, snacks, maybe dinner", ok: false, r: "Dinner?! You were invited for coffee. Read the invitation again." },
-          { t: "One coffee and exactly one cookie", ok: true, r: "Correct. The tin opens, you take ONE, and the lid goes straight back on. That click you hear is Dutch culture." },
-          { t: "Just coffee — cookies cost extra", ok: false, r: "No no, you get a cookie. One. Singular. The tin closes at the speed of light." },
-          { t: "An open buffet of treats", ok: false, r: "A buffet? The tin isn't even fully open. It hovers, briefly, then seals like an airlock." },
-        ],
-        real: "‘Eén koekje bij de koffie’ is legendary Calvinist thrift: hospitality yes, excess never. And leave before 18:00 — dinner is not implied.",
-      },
-      {
-        q: "Your Dutch friend shows off a new winter coat. What are they proudest of?",
-        options: [
-          { t: "The designer brand", ok: false, r: "Brands are fine, but bragging about full price? Almost shameful." },
-          { t: "That it was 70% off — “in de aanbieding!”", ok: true, r: "Correct! In most countries you brag about how much something cost. Here you brag about how little." },
-          { t: "That it was expensive — quality!", ok: false, r: "Expensive is not the flex you think it is. ‘Gratis’ (free) is the most beautiful word in Dutch." },
-          { t: "That it's this season's style", ok: false, r: "This season? It's LAST season — that's why it was 70% off. That's the whole achievement." },
-        ],
-        real: "Thrift is a genuine virtue — bonus points if it came from a sale, a second-hand app, or the neighbour's garage.",
-      },
-      {
-        q: "A supermarket hands out free cheese samples. Observed Dutch behaviour:",
-        options: [
-          { t: "Politely take one and move on", ok: false, r: "One? On the FIRST lap, maybe." },
-          { t: "Strategic laps past the stand, multiple samples", ok: true, r: "Correct. Different jacket, second lap. It's free. ‘Gratis’ activates something deep and ancient in the Dutch soul." },
-          { t: "Ignore it — free stuff is suspicious", ok: false, r: "Suspicious? Free is the least suspicious price there is. Free is TRUTH." },
-          { t: "Buy the cheese to be polite", ok: false, r: "Buy it? The sample WAS the transaction. The relationship is complete." },
-        ],
-        real: "‘Gratis’ has near-magical status. Free samples, free shipping, free anything — the Dutch will queue for it, cheerfully.",
-      },
-      {
-        q: "Your friend drives 25 minutes to a petrol station across the German border. Why?",
-        options: [
-          { t: "German fuel is better quality", ok: false, r: "Quality? It's the same fuel. It's about the CENTS, keep up." },
-          { t: "Fuel is cheaper there — obviously worth it", ok: true, r: "Correct. Yes, the drive costs fuel too. No, do not bring that up. The spreadsheet says it's worth it." },
-          { t: "They're secretly moving to Germany", ok: false, r: "Move to Germany? And give up their 2.1% mortgage? Never." },
-          { t: "They got lost", ok: false, r: "Lost? This route is optimised. There's a thermos of home-made coffee in the cupholder." },
-        ],
-        real: "Border fuel runs, bulk buying in Germany, and comparing per-litre prices are beloved national pastimes.",
-      },
-      {
-        q: "At the supermarket checkout: “Bonuskaart?” What is being asked?",
-        options: [
-          { t: "Your ID", ok: false, r: "No papers needed — just proof you're not paying full price like some kind of tourist." },
-          { t: "The loyalty card that unlocks discounts", ok: true, r: "Correct. Not having a Bonuskaart means voluntarily paying more, which is legally allowed but socially devastating." },
-          { t: "A credit card", ok: false, r: "Credit?! Buying things with money you don't have? This country runs on debit and discipline." },
-          { t: "A bonus payment for the cashier", ok: false, r: "A tip? At the SUPERMARKET? Someone get this person a chair." },
-        ],
-        real: "The Albert Heijn Bonuskaart is a cultural institution. The weekly ‘Bonus’ folder is studied like scripture.",
-      },
-      {
-        q: "First date. The bill arrives and your Dutch date suggests splitting it. This means:",
-        options: [
-          { t: "They're not interested in you", ok: false, r: "Wrong! They might be planning the second date already. Which you'll also split." },
-          { t: "Nothing — equality applies to romance too", ok: true, r: "Correct. Splitting signals you're equals, not that the spark is dead. The spark is fine. The spark is just financially independent." },
-          { t: "They forgot their wallet", ok: false, r: "Forgot their wallet? They have Tikkie, two debit cards and Apple Pay. The wallet is FINE." },
-          { t: "It's a test of your generosity", ok: false, r: "There's no test. There's no hidden layer. Dutch people say what they mean — even on dates." },
-        ],
-        real: "Going Dutch on dates is standard and carries no romantic verdict. Insisting on paying everything can even feel uncomfortable.",
-      },
-      {
-        q: "A friend borrowed €5 last month and forgot. You…",
-        options: [
-          { t: "Let it go — it's only €5", ok: false, r: "ONLY €5? That's five entire euros. That's 500 cents. That's almost six coffees at work." },
-          { t: "Send a Tikkie, obviously", ok: true, r: "Correct. No shame, no drama. They'll pay within the hour and thank you for the reminder. The system works." },
-          { t: "Hint about it subtly for weeks", ok: false, r: "Subtle hints are wildly inefficient. There's an app that resolves this in 11 seconds." },
-          { t: "End the friendship", ok: false, r: "End it? No no. You send the Tikkie AND keep the friend. That's the beauty of the system." },
-        ],
-        real: "Payment requests between friends are frictionless and normal. Money stays clean, friendships stay warm.",
-      },
-      {
-        q: "Your Dutch colleague furnished their entire apartment for €300. How?",
-        options: [
-          { t: "They're a design genius", ok: false, r: "Genius, yes — but of a very specific, second-hand kind." },
-          { t: "Marktplaats — the second-hand marketplace", ok: true, r: "Correct. Sofa: €50. Table: gratis, ‘af te halen’ (pick-up only). The Netherlands is one giant, well-organised garage sale." },
-          { t: "IKEA sale", ok: false, r: "IKEA? That's practically luxury. Why buy new when Henk in Almere is selling his for a quarter of the price?" },
-          { t: "Inheritance", ok: false, r: "Inherited? No — although that oak cabinet WAS someone's grandmother's. Now it's €35 on Marktplaats." },
-        ],
-        real: "Marktplaats is a national obsession. Buying second-hand is smart, sustainable, and something to be proud of.",
-      },
-      {
-        q: "Every day, your colleague unpacks bread from home. Every. Single. Day. Because:",
-        options: [
-          { t: "They can't afford lunch", ok: false, r: "They can afford it fine. That's exactly why they don't buy it. Think about it." },
-          { t: "Buying lunch daily is financially reckless", ok: true, r: "Correct. €8 a day is €160 a month is a weekend in the Ardennes. The sandwich is a lifestyle choice AND a spreadsheet." },
-          { t: "The canteen food is bad", ok: false, r: "The canteen is fine. But it costs money, and the bread at home was in de aanbieding." },
-          { t: "Doctor's orders", ok: false, r: "The only prescription here is fiscal discipline, taken daily, with cheese." },
-        ],
-        real: "Bringing lunch from home is the overwhelming norm at Dutch workplaces — across all salary levels.",
-      },
-      {
-        q: "You had a nice dinner out. The bill is €58. What's an appropriate tip?",
-        options: [
-          { t: "20% minimum — service was good", ok: false, r: "20%?! The waiter will assume you made a math error and try to correct you." },
-          { t: "Round up to €60, maybe a bit more", ok: true, r: "Correct. Rounding up is polite, 5–10% is generous, and nobody's rent depends on your tip — service wages are real wages here." },
-          { t: "Nothing — tipping is offensive", ok: false, r: "Not offensive, just optional. A small round-up is appreciated, not demanded." },
-          { t: "Whatever coins are in your pocket", ok: false, r: "Coins? Cash? What year is it? This country is 98% debit card and Tikkie." },
-        ],
-        real: "Tipping is modest in the Netherlands: rounding up is common, big percentages are not expected, and service staff earn proper wages.",
-      },
-      {
-        q: "You suggest taking a taxi to a party 4 km away. Your Dutch friends react with:",
-        options: [
-          { t: "Enthusiasm — great idea", ok: false, r: "Enthusiasm? For paying €18 to avoid a 15-minute cycle? Read the room." },
-          { t: "Horror — the bikes are right there", ok: true, r: "Correct. It's 4 km. There are bikes. There is rain gear. There is no debate. See you there in 14 minutes." },
-          { t: "A compromise: the bus", ok: false, r: "The bus is acceptable for distances over 10 km, in hail, uphill. This is none of those. (Also nothing is uphill.)" },
-          { t: "They order an Uber XL", ok: false, r: "An Uber XL. To a birthday. Four kilometres away. This message will be discussed in the group chat for weeks." },
-        ],
-        real: "Cycling is the default for any distance under ~10 km, in any weather. Taxis are for airports and emergencies — barely.",
-      },
-      {
-        q: "Your Dutch friend has insurance for: liability, travel, phone, bike, glasses, dental, funeral and legal aid. This is:",
-        options: [
-          { t: "Paranoid over-insurance", ok: false, r: "Paranoid? Each policy was compared on three websites first. This is OPTIMISED anxiety." },
-          { t: "Completely standard", ok: true, r: "Correct. The Dutch paradox: fiercely frugal with cents, yet insured against everything including apparently death. Risk is expensive; premiums are a bargain." },
-          { t: "A scam they fell for", ok: false, r: "Fell for? They ran the numbers. The numbers said: insure the bike. (The bike WILL be stolen. It's a rite of passage.)" },
-          { t: "Legally required", ok: false, r: "Only health insurance is mandatory (plus car insurance, if you drive). These eight are pure, voluntary, deeply Dutch prudence." },
-        ],
-        real: "The Netherlands has among the highest insurance density in the world. Frugality and risk-aversion turn out to be best friends.",
-      },
-      {
-        q: "You're about to throw away an empty water bottle. Your Dutch friend lunges. Why?",
-        options: [
-          { t: "Environmental panic", ok: false, r: "The environment matters, sure. But look closer at their eyes: those are euro signs." },
-          { t: "Statiegeld — that bottle is worth €0.15", ok: true, r: "Correct. Bottle deposits get returned. Always. There are people whose entire festival strategy is collecting other people's cups." },
-          { t: "The bin was full", ok: false, r: "The bin's capacity is irrelevant. That bottle contains fifteen recoverable cents." },
-          { t: "It's their bottle", ok: false, r: "Ownership transferred the moment money was involved. And money is ALWAYS involved. €0.15 of it." },
-        ],
-        real: "Statiegeld (deposit) applies to bottles and cans. Returning them is universal — thrift and sustainability in one satisfying clunk.",
-      },
-    ],
-  },
+    },
 ];
-
 const LOCKED = [
-  { emoji: "🚲", title: "Bikes & Traffic" },
-  { emoji: "🏠", title: "Neighbours & Home" },
-  { emoji: "🌧️", title: "Weather & Small Talk" },
-  { emoji: "🍟", title: "Food & Borrel" },
-  { emoji: "🎉", title: "Holidays & King's Day" },
-  { emoji: "🏥", title: "Healthcare & Bureaucracy" },
-  { emoji: "🗣️", title: "Language & Expressions" },
+    { emoji: "🚲", title: "Bikes & Traffic" },
+    { emoji: "🏠", title: "Neighbours & Home" },
+    { emoji: "🌧️", title: "Weather & Small Talk" },
+    { emoji: "🍟", title: "Food & Borrel" },
+    { emoji: "🎉", title: "Holidays & King's Day" },
+    { emoji: "🏥", title: "Healthcare & Bureaucracy" },
+    { emoji: "🗣️", title: "Language & Expressions" },
 ];
-
 const TOTAL_Q = WORLDS.reduce((n, w) => n + w.scenarios.length, 0);
-
 // Fun fact cards, shown after every 5 scenarios (2 per world)
 const factArt = {
-  height: (
-    <svg viewBox="0 0 220 100" style={{ width: "100%", height: 90 }}>
-      <line x1="30" y1="12" x2="30" y2="88" stroke="#DCE4F9" strokeWidth="2" />
-      {[12, 31, 50, 69, 88].map((y) => (
-        <line key={y} x1="24" y1={y} x2="36" y2={y} stroke="#DCE4F9" strokeWidth="2" />
-      ))}
-      <line x1="44" y1="12" x2="200" y2="12" stroke="#FF6B35" strokeWidth="2" strokeDasharray="5 5" />
-      <circle cx="95" cy="24" r="10" fill="none" stroke="#fff" strokeWidth="3" />
-      <rect x="85" y="38" width="20" height="46" rx="10" fill="none" stroke="#fff" strokeWidth="3" />
-      <circle cx="160" cy="46" r="9" fill="none" stroke="#DCE4F9" strokeWidth="3" />
-      <rect x="151" y="58" width="18" height="26" rx="9" fill="none" stroke="#DCE4F9" strokeWidth="3" />
-    </svg>
-  ),
-  parttime: (
-    <svg viewBox="0 0 220 100" style={{ width: "100%", height: 90 }}>
-      <rect x="55" y="14" width="110" height="72" rx="8" fill="none" stroke="#fff" strokeWidth="3" />
-      <line x1="55" y1="34" x2="165" y2="34" stroke="#fff" strokeWidth="3" />
-      <circle cx="70" cy="24" r="3" fill="#FF6B35" />
-      {[0, 1, 2, 3, 4].map((c) =>
-        [0, 1].map((r) => (
-          <rect key={`${c}-${r}`} x={64 + c * 20} y={42 + r * 20} width="13" height="13" rx="3"
-            fill={c < 2 || (c === 2 && r === 0) ? "#fff" : "none"} stroke="#DCE4F9" strokeWidth="2" />
-        ))
-      )}
-    </svg>
-  ),
-  kisses: (
-    <svg viewBox="0 0 220 100" style={{ width: "100%", height: 90 }}>
-      <circle cx="55" cy="50" r="20" fill="none" stroke="#fff" strokeWidth="3" />
-      <circle cx="165" cy="50" r="20" fill="none" stroke="#fff" strokeWidth="3" />
-      {[95, 110, 125].map((x, i) => (
-        <text key={x} x={x} y={i === 1 ? 42 : 60} textAnchor="middle" fontSize="20" fontWeight="700" fill="#FF6B35">×</text>
-      ))}
-    </svg>
-  ),
-  abraham: (
-    <svg viewBox="0 0 220 100" style={{ width: "100%", height: 90 }}>
-      <line x1="30" y1="84" x2="190" y2="84" stroke="#DCE4F9" strokeWidth="3" />
-      <circle cx="100" cy="34" r="11" fill="none" stroke="#fff" strokeWidth="3" />
-      <rect x="89" y="49" width="22" height="35" rx="11" fill="none" stroke="#fff" strokeWidth="3" />
-      <line x1="150" y1="84" x2="150" y2="26" stroke="#fff" strokeWidth="3" />
-      <path d="M150 26 L182 34 L150 42 Z" fill="#FF6B35" />
-    </svg>
-  ),
-  bottle: (
-    <svg viewBox="0 0 220 100" style={{ width: "100%", height: 90 }}>
-      <rect x="82" y="42" width="30" height="44" rx="9" fill="none" stroke="#fff" strokeWidth="3" />
-      <rect x="91" y="26" width="12" height="16" fill="none" stroke="#fff" strokeWidth="3" />
-      <rect x="88" y="18" width="18" height="8" rx="3" fill="#FF6B35" />
-      <circle cx="152" cy="66" r="16" fill="none" stroke="#fff" strokeWidth="3" />
-      <text x="152" y="71" textAnchor="middle" fontSize="12" fontWeight="700" fill="#fff">15</text>
-    </svg>
-  ),
-  belowsea: (
-    <svg viewBox="0 0 220 100" style={{ width: "100%", height: 90 }}>
-      <circle cx="185" cy="18" r="8" fill="#FF6B35" />
-      <path d="M20 34 Q 35 26 50 32 T 80 32 T 110 32 T 140 32 T 170 32 T 200 30" fill="none" stroke="#fff" strokeWidth="3" />
-      <rect x="88" y="62" width="34" height="24" fill="none" stroke="#DCE4F9" strokeWidth="3" />
-      <path d="M84 62 L105 46 L126 62" fill="none" stroke="#DCE4F9" strokeWidth="3" />
-    </svg>
-  ),
+    height: (React.createElement("svg", { viewBox: "0 0 220 100", style: { width: "100%", height: 90 } },
+        React.createElement("line", { x1: "30", y1: "12", x2: "30", y2: "88", stroke: "#DCE4F9", strokeWidth: "2" }),
+        [12, 31, 50, 69, 88].map((y) => (React.createElement("line", { key: y, x1: "24", y1: y, x2: "36", y2: y, stroke: "#DCE4F9", strokeWidth: "2" }))),
+        React.createElement("line", { x1: "44", y1: "12", x2: "200", y2: "12", stroke: "#FF6B35", strokeWidth: "2", strokeDasharray: "5 5" }),
+        React.createElement("circle", { cx: "95", cy: "24", r: "10", fill: "none", stroke: "#fff", strokeWidth: "3" }),
+        React.createElement("rect", { x: "85", y: "38", width: "20", height: "46", rx: "10", fill: "none", stroke: "#fff", strokeWidth: "3" }),
+        React.createElement("circle", { cx: "160", cy: "46", r: "9", fill: "none", stroke: "#DCE4F9", strokeWidth: "3" }),
+        React.createElement("rect", { x: "151", y: "58", width: "18", height: "26", rx: "9", fill: "none", stroke: "#DCE4F9", strokeWidth: "3" }))),
+    parttime: (React.createElement("svg", { viewBox: "0 0 220 100", style: { width: "100%", height: 90 } },
+        React.createElement("rect", { x: "55", y: "14", width: "110", height: "72", rx: "8", fill: "none", stroke: "#fff", strokeWidth: "3" }),
+        React.createElement("line", { x1: "55", y1: "34", x2: "165", y2: "34", stroke: "#fff", strokeWidth: "3" }),
+        React.createElement("circle", { cx: "70", cy: "24", r: "3", fill: "#FF6B35" }),
+        [0, 1, 2, 3, 4].map((c) => [0, 1].map((r) => (React.createElement("rect", { key: `${c}-${r}`, x: 64 + c * 20, y: 42 + r * 20, width: "13", height: "13", rx: "3", fill: c < 2 || (c === 2 && r === 0) ? "#fff" : "none", stroke: "#DCE4F9", strokeWidth: "2" })))))),
+    kisses: (React.createElement("svg", { viewBox: "0 0 220 100", style: { width: "100%", height: 90 } },
+        React.createElement("circle", { cx: "55", cy: "50", r: "20", fill: "none", stroke: "#fff", strokeWidth: "3" }),
+        React.createElement("circle", { cx: "165", cy: "50", r: "20", fill: "none", stroke: "#fff", strokeWidth: "3" }),
+        [95, 110, 125].map((x, i) => (React.createElement("text", { key: x, x: x, y: i === 1 ? 42 : 60, textAnchor: "middle", fontSize: "20", fontWeight: "700", fill: "#FF6B35" }, "\u00D7"))))),
+    abraham: (React.createElement("svg", { viewBox: "0 0 220 100", style: { width: "100%", height: 90 } },
+        React.createElement("line", { x1: "30", y1: "84", x2: "190", y2: "84", stroke: "#DCE4F9", strokeWidth: "3" }),
+        React.createElement("circle", { cx: "100", cy: "34", r: "11", fill: "none", stroke: "#fff", strokeWidth: "3" }),
+        React.createElement("rect", { x: "89", y: "49", width: "22", height: "35", rx: "11", fill: "none", stroke: "#fff", strokeWidth: "3" }),
+        React.createElement("line", { x1: "150", y1: "84", x2: "150", y2: "26", stroke: "#fff", strokeWidth: "3" }),
+        React.createElement("path", { d: "M150 26 L182 34 L150 42 Z", fill: "#FF6B35" }))),
+    bottle: (React.createElement("svg", { viewBox: "0 0 220 100", style: { width: "100%", height: 90 } },
+        React.createElement("rect", { x: "82", y: "42", width: "30", height: "44", rx: "9", fill: "none", stroke: "#fff", strokeWidth: "3" }),
+        React.createElement("rect", { x: "91", y: "26", width: "12", height: "16", fill: "none", stroke: "#fff", strokeWidth: "3" }),
+        React.createElement("rect", { x: "88", y: "18", width: "18", height: "8", rx: "3", fill: "#FF6B35" }),
+        React.createElement("circle", { cx: "152", cy: "66", r: "16", fill: "none", stroke: "#fff", strokeWidth: "3" }),
+        React.createElement("text", { x: "152", y: "71", textAnchor: "middle", fontSize: "12", fontWeight: "700", fill: "#fff" }, "15"))),
+    belowsea: (React.createElement("svg", { viewBox: "0 0 220 100", style: { width: "100%", height: 90 } },
+        React.createElement("circle", { cx: "185", cy: "18", r: "8", fill: "#FF6B35" }),
+        React.createElement("path", { d: "M20 34 Q 35 26 50 32 T 80 32 T 110 32 T 140 32 T 170 32 T 200 30", fill: "none", stroke: "#fff", strokeWidth: "3" }),
+        React.createElement("rect", { x: "88", y: "62", width: "34", height: "24", fill: "none", stroke: "#DCE4F9", strokeWidth: "3" }),
+        React.createElement("path", { d: "M84 62 L105 46 L126 62", fill: "none", stroke: "#DCE4F9", strokeWidth: "3" }))),
 };
-
 const FACTS = {
-  work: [
-    { stat: "1.83 m", art: factArt.height, text: "Young Dutch men average about 1.83 m — the tallest people in the world. Now you know why the coat hooks feel mounted for giants." },
-    { stat: "±50%", art: factArt.parttime, text: "Roughly half of Dutch workers work part-time — a world record. ‘Papadag’ is not a myth. It's practically infrastructure." },
-  ],
-  birthday: [
-    { stat: "3", art: factArt.kisses, text: "Three cheek kisses per greeting. A birthday party with 20 guests means 60 kisses before you even reach the coffee." },
-    { stat: "50", art: factArt.abraham, text: "Turn 50 and you ‘see Abraham’ (or Sarah) — announced to the entire street with a giant doll in your front garden. Courtesy of the neighbours." },
-  ],
-  money: [
-    { stat: "€0.15", art: factArt.bottle, text: "Every small plastic bottle carries €0.15 statiegeld (deposit). No bottle is ever truly abandoned in the Netherlands." },
-    { stat: "26%", art: factArt.belowsea, text: "About 26% of the Netherlands lies below sea level. The frugality makes sense — this country literally had to build its own land." },
-  ],
+    work: [
+        { stat: "1.83 m", art: factArt.height, text: "Young Dutch men average about 1.83 m — the tallest people in the world. Now you know why the coat hooks feel mounted for giants." },
+        { stat: "±50%", art: factArt.parttime, text: "Roughly half of Dutch workers work part-time — a world record. ‘Papadag’ is not a myth. It's practically infrastructure." },
+    ],
+    birthday: [
+        { stat: "3", art: factArt.kisses, text: "Three cheek kisses per greeting. A birthday party with 20 guests means 60 kisses before you even reach the coffee." },
+        { stat: "50", art: factArt.abraham, text: "Turn 50 and you ‘see Abraham’ (or Sarah) — announced to the entire street with a giant doll in your front garden. Courtesy of the neighbours." },
+    ],
+    money: [
+        { stat: "€0.15", art: factArt.bottle, text: "Every small plastic bottle carries €0.15 statiegeld (deposit). No bottle is ever truly abandoned in the Netherlands." },
+        { stat: "26%", art: factArt.belowsea, text: "About 26% of the Netherlands lies below sea level. The frugality makes sense — this country literally had to build its own land." },
+    ],
 };
-
 // ---------- Dutchness meter (signature: rising water vs the dike) ----------
 function WaterMeter({ pct }) {
-  const level = Math.max(6, pct);
-  return (
-    <div className="relative w-full overflow-hidden rounded-2xl" style={{ background: C.sky, height: 116, border: `1px solid ${C.line}` }}>
-      {[25, 50, 75].map((m) => (
-        <div key={m} className="absolute left-0 right-0 flex items-center" style={{ bottom: `${m}%` }}>
-          <div style={{ height: 1, background: C.line, flex: 1 }} />
-          <span className="pr-2" style={{ color: "#8FA3C8", fontSize: 10 }}>{m}%</span>
-        </div>
-      ))}
-      <div className="absolute left-0 right-0 bottom-0" style={{ height: `${level}%`, background: C.blue, transition: "height 1.2s cubic-bezier(.22,1,.36,1)" }}>
-        <svg viewBox="0 0 120 8" preserveAspectRatio="none" className="absolute -top-2 left-0 w-full" style={{ height: 8 }}>
-          <path d="M0 8 Q 15 0 30 5 T 60 5 T 90 5 T 120 5 L 120 8 Z" fill={C.blue} />
-        </svg>
-      </div>
-      <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <div style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontWeight: 800, fontSize: 34, color: pct > 55 ? "#fff" : C.ink, lineHeight: 1 }}>
-          {pct}%
-        </div>
-        <div style={{ fontSize: 12, letterSpacing: 1.5, textTransform: "uppercase", color: pct > 40 ? "#fff" : "#5B6B92", fontWeight: 600, marginTop: 4 }}>
-          Dutch
-        </div>
-      </div>
-    </div>
-  );
+    const level = Math.max(6, pct);
+    return (React.createElement("div", { className: "relative w-full overflow-hidden rounded-2xl", style: { background: C.sky, height: 116, border: `1px solid ${C.line}` } },
+        [25, 50, 75].map((m) => (React.createElement("div", { key: m, className: "absolute left-0 right-0 flex items-center", style: { bottom: `${m}%` } },
+            React.createElement("div", { style: { height: 1, background: C.line, flex: 1 } }),
+            React.createElement("span", { className: "pr-2", style: { color: "#8FA3C8", fontSize: 10 } },
+                m,
+                "%")))),
+        React.createElement("div", { className: "absolute left-0 right-0 bottom-0", style: { height: `${level}%`, background: C.blue, transition: "height 1.2s cubic-bezier(.22,1,.36,1)" } },
+            React.createElement("svg", { viewBox: "0 0 120 8", preserveAspectRatio: "none", className: "absolute -top-2 left-0 w-full", style: { height: 8 } },
+                React.createElement("path", { d: "M0 8 Q 15 0 30 5 T 60 5 T 90 5 T 120 5 L 120 8 Z", fill: C.blue }))),
+        React.createElement("div", { className: "absolute inset-0 flex flex-col items-center justify-center" },
+            React.createElement("div", { style: { fontFamily: "'Bricolage Grotesque', sans-serif", fontWeight: 800, fontSize: 34, color: pct > 55 ? "#fff" : C.ink, lineHeight: 1 } },
+                pct,
+                "%"),
+            React.createElement("div", { style: { fontSize: 12, letterSpacing: 1.5, textTransform: "uppercase", color: pct > 40 ? "#fff" : "#5B6B92", fontWeight: 600, marginTop: 4 } }, "Dutch"))));
 }
-
 // ---------- App ----------
 function App() {
-  const [screen, setScreen] = useState("welcome");
-  const [worldId, setWorldId] = useState(null);
-  const [qIndex, setQIndex] = useState(0);
-  const [picked, setPicked] = useState(null);
-  const [results, setResults] = useState({});
-  const [toast, setToast] = useState("");
-
-  useEffect(() => {
-    if (!toast) return;
-    const t = setTimeout(() => setToast(""), 2200);
-    return () => clearTimeout(t);
-  }, [toast]);
-
-  const world = WORLDS.find((w) => w.id === worldId);
-  const correctCount = Object.values(results).flat().filter(Boolean).length;
-  const answeredCount = Object.values(results).flat().length;
-  const pct = Math.min(100, Math.round(8 + (correctCount / TOTAL_Q) * 92));
-
-  const startWorld = (id) => {
-    setWorldId(id);
-    setQIndex(0);
-    setPicked(null);
-    setResults((r) => ({ ...r, [id]: [] }));
-    setScreen("play");
-  };
-
-  const choose = (i) => {
-    if (picked !== null) return;
-    setPicked(i);
-    const ok = world.scenarios[qIndex].options[i].ok;
-    setResults((r) => ({ ...r, [worldId]: [...(r[worldId] || []), ok] }));
-  };
-
-  const next = () => {
-    const n = qIndex + 1;
-    if (n < world.scenarios.length) {
-      if (n % 5 === 0) {
-        setScreen("fact");
-      } else {
-        setQIndex(n);
+    const [screen, setScreen] = useState("welcome");
+    const [worldId, setWorldId] = useState(null);
+    const [qIndex, setQIndex] = useState(0);
+    const [picked, setPicked] = useState(null);
+    const [results, setResults] = useState({});
+    const [toast, setToast] = useState("");
+    useEffect(() => {
+        if (!toast)
+            return;
+        const t = setTimeout(() => setToast(""), 2200);
+        return () => clearTimeout(t);
+    }, [toast]);
+    const world = WORLDS.find((w) => w.id === worldId);
+    const correctCount = Object.values(results).flat().filter(Boolean).length;
+    const answeredCount = Object.values(results).flat().length;
+    const pct = Math.min(100, Math.round(8 + (correctCount / TOTAL_Q) * 92));
+    const startWorld = (id) => {
+        setWorldId(id);
+        setQIndex(0);
         setPicked(null);
-      }
-      window.scrollTo({ top: 0 });
-    } else {
-      setScreen("done");
-      window.scrollTo({ top: 0 });
-    }
-  };
-
-  const continueFromFact = () => {
-    setQIndex(qIndex + 1);
-    setPicked(null);
-    setScreen("play");
-    window.scrollTo({ top: 0 });
-  };
-
-  const share = async () => {
-    const text = `I'm officially ${pct}% Dutch 🧀 — tested by Almost Dutch 🇳🇱 I now bring my own birthday cake.`;
-    try {
-      if (navigator.share) {
-        await navigator.share({ text });
-        return;
-      }
-      await navigator.clipboard.writeText(text);
-      setToast("Copied — paste it anywhere!");
-    } catch {
-      setToast(text);
-    }
-  };
-
-  return (
-    <div className="min-h-screen w-full" style={{ background: C.bg, color: C.ink, fontFamily: "'Schibsted Grotesk', system-ui, sans-serif" }}>
-      <style>{`
+        setResults((r) => (Object.assign(Object.assign({}, r), { [id]: [] })));
+        setScreen("play");
+    };
+    const choose = (i) => {
+        if (picked !== null)
+            return;
+        setPicked(i);
+        const ok = world.scenarios[qIndex].options[i].ok;
+        setResults((r) => (Object.assign(Object.assign({}, r), { [worldId]: [...(r[worldId] || []), ok] })));
+    };
+    const next = () => {
+        const n = qIndex + 1;
+        if (n < world.scenarios.length) {
+            if (n % 5 === 0) {
+                setScreen("fact");
+            }
+            else {
+                setQIndex(n);
+                setPicked(null);
+            }
+            window.scrollTo({ top: 0 });
+        }
+        else {
+            setScreen("done");
+            window.scrollTo({ top: 0 });
+        }
+    };
+    const continueFromFact = () => {
+        setQIndex(qIndex + 1);
+        setPicked(null);
+        setScreen("play");
+        window.scrollTo({ top: 0 });
+    };
+    const share = async () => {
+        const text = `I'm officially ${pct}% Dutch 🧀 — tested by Almost Dutch 🇳🇱 I now bring my own birthday cake.`;
+        try {
+            if (navigator.share) {
+                await navigator.share({ text });
+                return;
+            }
+            await navigator.clipboard.writeText(text);
+            setToast("Copied — paste it anywhere!");
+        }
+        catch (_a) {
+            setToast(text);
+        }
+    };
+    return (React.createElement("div", { className: "min-h-screen w-full", style: { background: C.bg, color: C.ink, fontFamily: "'Schibsted Grotesk', system-ui, sans-serif" } },
+        React.createElement("style", null, `
         @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Schibsted+Grotesk:wght@400;500;700&display=swap');
         button { -webkit-tap-highlight-color: transparent; }
         .fade-in { animation: fadeIn .35s ease both; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
         @media (prefers-reduced-motion: reduce) { .fade-in { animation: none; } * { transition: none !important; } }
-      `}</style>
-
-      <div className="mx-auto max-w-md px-5 pb-10 pt-6">
-        {/* ---------- WELCOME ---------- */}
-        {screen === "welcome" && (
-          <div className="fade-in flex min-h-screen flex-col justify-center pb-16">
-            {/* logo mark: het golf-icoon (W3b) */}
-            <div className="mx-auto mb-6 overflow-hidden rounded-3xl" style={{ width: 88, height: 88, boxShadow: "0 6px 18px rgba(20,32,62,.15)" }}>
-              <svg viewBox="0 0 96 96" style={{ width: "100%", height: "100%", display: "block" }}>
-                <rect width="96" height="96" fill={C.orange} />
-                <path d="M-8 54 Q 20 44 48 50 T 104 46 L 104 104 L -8 104 Z" fill={C.blue} />
-                <path d="M-8 54 Q 20 44 48 50 T 104 46" stroke="#FAFBFD" strokeWidth="12" fill="none" />
-              </svg>
-            </div>
-
-            <div className="text-center">
-              <div style={{ fontSize: 12, letterSpacing: 2, fontWeight: 700, color: C.blue, textTransform: "uppercase" }}>Almost Dutch</div>
-              <h1 style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontWeight: 800, fontSize: 30, lineHeight: 1.15, margin: "8px 0 12px" }}>
-                Nobody warns you about the birthday circle.
-              </h1>
-              <p style={{ color: "#5B6B92", fontSize: 15.5, lineHeight: 1.55 }}>
-                The €0.87 Tikkie. The one cookie rule. We do. Survive real Dutch scenarios and watch your Dutchness rise — one awkward moment at a time.
-              </p>
-            </div>
-
-            <div className="mt-8 flex flex-col gap-3">
-              {[
-                { e: "🎭", t: "Real scenarios", d: "Pick your response, learn the unwritten rule" },
-                { e: "🤓", t: "Even serieus", d: "The genuine cultural explanation behind every joke" },
-                { e: "🧀", t: "Your Dutchness %", d: "Watch it rise — and share it with your friends" },
-              ].map((f) => (
-                <div key={f.t} className="flex items-center gap-4 rounded-2xl p-4" style={{ background: "#fff", border: `1px solid ${C.line}` }}>
-                  <div className="flex h-11 w-11 items-center justify-center rounded-xl" style={{ background: C.sky, fontSize: 22 }}>{f.e}</div>
-                  <div>
-                    <div style={{ fontWeight: 700, fontSize: 15 }}>{f.t}</div>
-                    <div style={{ fontSize: 13, color: "#5B6B92" }}>{f.d}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <button onClick={() => setScreen("home")} className="mt-8 w-full rounded-2xl py-4" style={{ background: C.blue, color: "#fff", fontWeight: 700, fontSize: 16 }}>
-              Let's go →
-            </button>
-            <p className="mt-3 text-center" style={{ fontSize: 12, color: "#8FA3C8" }}>
-              You're starting at 8%. That's for showing up. Very Dutch of you.
-            </p>
-          </div>
-        )}
-
-        {/* ---------- HOME ---------- */}
-        {screen === "home" && (
-          <div className="fade-in">
-            <div className="mb-1 flex items-center gap-2">
-              <span style={{ fontSize: 22 }}>🇳🇱</span>
-              <span style={{ fontSize: 12, letterSpacing: 2, fontWeight: 700, color: C.blue, textTransform: "uppercase" }}>Almost Dutch</span>
-            </div>
-            <h1 style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontWeight: 800, fontSize: 30, lineHeight: 1.1, marginBottom: 4 }}>
-              How Dutch are you, really?
-            </h1>
-            <p style={{ color: "#5B6B92", fontSize: 15, marginBottom: 20 }}>
-              Survive 45 real scenarios. Learn the unwritten rules. Nobody will warn you about the birthday circle — except us.
-            </p>
-
-            <WaterMeter pct={pct} />
-            <p className="mt-2 text-center" style={{ fontSize: 12, color: "#8FA3C8" }}>
-              {answeredCount === 0 ? "You start at 8% — that's for showing up. Very Dutch of you." : `${correctCount} of ${TOTAL_Q} scenarios survived`}
-            </p>
-
-            <div className="mt-6 flex flex-col gap-3">
-              {WORLDS.map((w) => {
-                const done = (results[w.id] || []).length >= w.scenarios.length;
-                const score = (results[w.id] || []).filter(Boolean).length;
-                return (
-                  <button
-                    key={w.id}
-                    onClick={() => startWorld(w.id)}
-                    className="flex w-full items-center gap-4 rounded-2xl p-4 text-left"
-                    style={{ background: "#fff", border: `1px solid ${done ? C.blue : C.line}` }}
-                  >
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl" style={{ background: C.sky, fontSize: 24 }}>{w.emoji}</div>
-                    <div className="flex-1">
-                      <div style={{ fontWeight: 700, fontSize: 16 }}>{w.title}</div>
-                      <div style={{ fontSize: 13, color: "#5B6B92" }}>{w.tagline} · {w.scenarios.length} scenarios</div>
-                    </div>
-                    <div style={{ fontSize: 13, fontWeight: 700, color: done ? C.blue : "#8FA3C8" }}>
-                      {done ? `${score}/${w.scenarios.length} ✓` : "Play"}
-                    </div>
-                  </button>
-                );
-              })}
-
-              {LOCKED.map((w) => (
-                <div key={w.title} className="flex w-full items-center gap-4 rounded-2xl p-4" style={{ border: `1px dashed ${C.line}`, opacity: 0.7 }}>
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl" style={{ background: C.sky, fontSize: 24 }}>{w.emoji}</div>
-                  <div className="flex-1">
-                    <div style={{ fontWeight: 700, fontSize: 16, color: "#5B6B92" }}>{w.title}</div>
-                    <div style={{ fontSize: 13, color: "#8FA3C8" }}>Coming in Premium</div>
-                  </div>
-                  <span style={{ fontSize: 16 }}>🔒</span>
-                </div>
-              ))}
-            </div>
-
-            {answeredCount > 0 && (
-              <button onClick={share} className="mt-6 w-full rounded-2xl py-4 text-center" style={{ background: C.orange, color: "#fff", fontWeight: 700, fontSize: 16 }}>
-                Share my {pct}% 🧀
-              </button>
-            )}
-          </div>
-        )}
-
-        {/* ---------- PLAY ---------- */}
-        {screen === "play" && world && (
-          <div className="fade-in" key={qIndex}>
-            <div className="mb-5 flex items-center justify-between">
-              <button onClick={() => setScreen("home")} style={{ color: C.blue, fontWeight: 600, fontSize: 14 }}>← Worlds</button>
-              <span style={{ fontSize: 13, fontWeight: 700, color: "#8FA3C8" }}>
-                {world.emoji} {qIndex + 1} / {world.scenarios.length}
-              </span>
-            </div>
-
-            <div className="mb-5 flex gap-1">
-              {world.scenarios.map((_, i) => (
-                <div key={i} className="h-1.5 flex-1 rounded-full" style={{ background: i < qIndex ? C.blue : i === qIndex ? C.orange : C.line }} />
-              ))}
-            </div>
-
-            <h2 style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontWeight: 800, fontSize: 21, lineHeight: 1.25, marginBottom: 18 }}>
-              {world.scenarios[qIndex].q}
-            </h2>
-
-            <div className="flex flex-col gap-3">
-              {world.scenarios[qIndex].options.map((o, i) => {
-                const isPicked = picked === i;
-                const reveal = picked !== null;
-                let border = C.line, bg = "#fff";
-                if (reveal && o.ok) { border = C.green; bg = "#EFFAF4"; }
-                else if (reveal && isPicked && !o.ok) { border = C.red; bg = "#FCF0F0"; }
-                return (
-                  <button
-                    key={i}
-                    onClick={() => choose(i)}
-                    disabled={picked !== null}
-                    className="w-full rounded-2xl p-4 text-left"
-                    style={{ background: bg, border: `1.5px solid ${border}`, fontWeight: 500, fontSize: 15.5, opacity: reveal && !o.ok && !isPicked ? 0.5 : 1 }}
-                  >
-                    {o.t}
-                    {reveal && (o.ok || isPicked) && (
-                      <div className="mt-2" style={{ fontSize: 13.5, color: o.ok ? C.green : C.red, fontWeight: 400 }}>
-                        {o.ok ? "✓ " : "✗ "}{o.r}
-                      </div>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-
-            {picked !== null && (
-              <div className="fade-in">
-                <div className="mt-4 rounded-2xl p-4" style={{ background: C.sky, border: `1px solid ${C.line}` }}>
-                  <div style={{ fontSize: 11, letterSpacing: 1.5, fontWeight: 700, color: C.blue, textTransform: "uppercase", marginBottom: 4 }}>Even serieus</div>
-                  <div style={{ fontSize: 14, lineHeight: 1.5, color: "#3A4A70" }}>{world.scenarios[qIndex].real}</div>
-                </div>
-                <button onClick={next} className="mt-4 w-full rounded-2xl py-4" style={{ background: C.blue, color: "#fff", fontWeight: 700, fontSize: 16 }}>
-                  {qIndex + 1 < world.scenarios.length ? "Next scenario →" : "Finish world 🏁"}
-                </button>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* ---------- FUN FACT ---------- */}
-        {screen === "fact" && world && (() => {
-          const fact = (FACTS[worldId] || [])[Math.floor((qIndex + 1) / 5) - 1] || FACTS.work[0];
-          return (
-            <div className="fade-in flex flex-col items-center pt-10 text-center">
-              <div style={{ fontSize: 11, letterSpacing: 2, fontWeight: 700, color: C.orange, textTransform: "uppercase" }}>
-                Wist je dat? · Did you know?
-              </div>
-              <div className="mt-6 w-full rounded-2xl px-6 py-8" style={{ background: C.blue }}>
-                {fact.art && <div className="mb-2">{fact.art}</div>}
-                <div style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontWeight: 800, fontSize: 56, color: "#fff", lineHeight: 1 }}>
-                  {fact.stat}
-                </div>
-                <div className="mt-4" style={{ fontSize: 15, lineHeight: 1.55, color: "#DCE4F9" }}>
-                  {fact.text}
-                </div>
-              </div>
-              <p className="mt-3" style={{ fontSize: 12, color: "#8FA3C8" }}>
-                A little break. Very un-Dutch of us — it's not even in the agenda.
-              </p>
-              <button onClick={continueFromFact} className="mt-6 w-full rounded-2xl py-4" style={{ background: C.blue, color: "#fff", fontWeight: 700, fontSize: 16 }}>
-                Continue →
-              </button>
-            </div>
-          );
-        })()}
-
-        {/* ---------- WORLD DONE ---------- */}
-        {screen === "done" && world && (
-          <div className="fade-in flex flex-col items-center pt-8 text-center">
-            <div className="flex h-20 w-20 items-center justify-center rounded-full" style={{ background: C.sky, fontSize: 40 }}>{world.emoji}</div>
-            <h2 style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontWeight: 800, fontSize: 26, marginTop: 16 }}>
-              World survived!
-            </h2>
-            <p style={{ color: "#5B6B92", fontSize: 15, marginTop: 6 }}>
-              {(results[worldId] || []).filter(Boolean).length} of {world.scenarios.length} correct in {world.title}.
-            </p>
-            <div className="mt-6 w-full">
-              <WaterMeter pct={pct} />
-              <p className="mt-2" style={{ fontSize: 13, color: "#8FA3C8" }}>Your Dutchness is rising. The dike is holding. For now.</p>
-            </div>
-            <button onClick={share} className="mt-6 w-full rounded-2xl py-4" style={{ background: C.orange, color: "#fff", fontWeight: 700, fontSize: 16 }}>
-              Share my {pct}% 🧀
-            </button>
-            <button onClick={() => setScreen("home")} className="mt-3 w-full rounded-2xl py-4" style={{ background: "#fff", border: `1.5px solid ${C.line}`, color: C.ink, fontWeight: 700, fontSize: 16 }}>
-              Back to worlds
-            </button>
-          </div>
-        )}
-      </div>
-
-      {toast && (
-        <div className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2 rounded-full px-5 py-3 text-center" style={{ background: C.ink, color: "#fff", fontSize: 13, maxWidth: "88%" }}>
-          {toast}
-        </div>
-      )}
-    </div>
-  );
+      `),
+        React.createElement("div", { className: "mx-auto max-w-md px-5 pb-10 pt-6" },
+            screen === "welcome" && (React.createElement("div", { className: "fade-in flex min-h-screen flex-col justify-center pb-16" },
+                React.createElement("div", { className: "mx-auto mb-6 overflow-hidden rounded-3xl", style: { width: 88, height: 88, boxShadow: "0 6px 18px rgba(20,32,62,.15)" } },
+                    React.createElement("svg", { viewBox: "0 0 96 96", style: { width: "100%", height: "100%", display: "block" } },
+                        React.createElement("rect", { width: "96", height: "96", fill: C.orange }),
+                        React.createElement("path", { d: "M-8 54 Q 20 44 48 50 T 104 46 L 104 104 L -8 104 Z", fill: C.blue }),
+                        React.createElement("path", { d: "M-8 54 Q 20 44 48 50 T 104 46", stroke: "#FAFBFD", strokeWidth: "12", fill: "none" }))),
+                React.createElement("div", { className: "text-center" },
+                    React.createElement("div", { style: { fontSize: 12, letterSpacing: 2, fontWeight: 700, color: C.blue, textTransform: "uppercase" } }, "Almost Dutch"),
+                    React.createElement("h1", { style: { fontFamily: "'Bricolage Grotesque', sans-serif", fontWeight: 800, fontSize: 30, lineHeight: 1.15, margin: "8px 0 12px" } }, "Nobody warns you about the birthday circle."),
+                    React.createElement("p", { style: { color: "#5B6B92", fontSize: 15.5, lineHeight: 1.55 } }, "The \u20AC0.87 Tikkie. The one cookie rule. We do. Survive real Dutch scenarios and watch your Dutchness rise \u2014 one awkward moment at a time.")),
+                React.createElement("div", { className: "mt-8 flex flex-col gap-3" }, [
+                    { e: "🎭", t: "Real scenarios", d: "Pick your response, learn the unwritten rule" },
+                    { e: "🤓", t: "Even serieus", d: "The genuine cultural explanation behind every joke" },
+                    { e: "🧀", t: "Your Dutchness %", d: "Watch it rise — and share it with your friends" },
+                ].map((f) => (React.createElement("div", { key: f.t, className: "flex items-center gap-4 rounded-2xl p-4", style: { background: "#fff", border: `1px solid ${C.line}` } },
+                    React.createElement("div", { className: "flex h-11 w-11 items-center justify-center rounded-xl", style: { background: C.sky, fontSize: 22 } }, f.e),
+                    React.createElement("div", null,
+                        React.createElement("div", { style: { fontWeight: 700, fontSize: 15 } }, f.t),
+                        React.createElement("div", { style: { fontSize: 13, color: "#5B6B92" } }, f.d)))))),
+                React.createElement("button", { onClick: () => setScreen("home"), className: "mt-8 w-full rounded-2xl py-4", style: { background: C.blue, color: "#fff", fontWeight: 700, fontSize: 16 } }, "Let's go \u2192"),
+                React.createElement("p", { className: "mt-3 text-center", style: { fontSize: 12, color: "#8FA3C8" } }, "You're starting at 8%. That's for showing up. Very Dutch of you."))),
+            screen === "home" && (React.createElement("div", { className: "fade-in" },
+                React.createElement("div", { className: "mb-1 flex items-center gap-2" },
+                    React.createElement("span", { style: { fontSize: 22 } }, "\uD83C\uDDF3\uD83C\uDDF1"),
+                    React.createElement("span", { style: { fontSize: 12, letterSpacing: 2, fontWeight: 700, color: C.blue, textTransform: "uppercase" } }, "Almost Dutch")),
+                React.createElement("h1", { style: { fontFamily: "'Bricolage Grotesque', sans-serif", fontWeight: 800, fontSize: 30, lineHeight: 1.1, marginBottom: 4 } }, "How Dutch are you, really?"),
+                React.createElement("p", { style: { color: "#5B6B92", fontSize: 15, marginBottom: 20 } }, "Survive 45 real scenarios. Learn the unwritten rules. Nobody will warn you about the birthday circle \u2014 except us."),
+                React.createElement(WaterMeter, { pct: pct }),
+                React.createElement("p", { className: "mt-2 text-center", style: { fontSize: 12, color: "#8FA3C8" } }, answeredCount === 0 ? "You start at 8% — that's for showing up. Very Dutch of you." : `${correctCount} of ${TOTAL_Q} scenarios survived`),
+                React.createElement("div", { className: "mt-6 flex flex-col gap-3" },
+                    WORLDS.map((w) => {
+                        const done = (results[w.id] || []).length >= w.scenarios.length;
+                        const score = (results[w.id] || []).filter(Boolean).length;
+                        return (React.createElement("button", { key: w.id, onClick: () => startWorld(w.id), className: "flex w-full items-center gap-4 rounded-2xl p-4 text-left", style: { background: "#fff", border: `1px solid ${done ? C.blue : C.line}` } },
+                            React.createElement("div", { className: "flex h-12 w-12 items-center justify-center rounded-xl", style: { background: C.sky, fontSize: 24 } }, w.emoji),
+                            React.createElement("div", { className: "flex-1" },
+                                React.createElement("div", { style: { fontWeight: 700, fontSize: 16 } }, w.title),
+                                React.createElement("div", { style: { fontSize: 13, color: "#5B6B92" } },
+                                    w.tagline,
+                                    " \u00B7 ",
+                                    w.scenarios.length,
+                                    " scenarios")),
+                            React.createElement("div", { style: { fontSize: 13, fontWeight: 700, color: done ? C.blue : "#8FA3C8" } }, done ? `${score}/${w.scenarios.length} ✓` : "Play")));
+                    }),
+                    LOCKED.map((w) => (React.createElement("div", { key: w.title, className: "flex w-full items-center gap-4 rounded-2xl p-4", style: { border: `1px dashed ${C.line}`, opacity: 0.7 } },
+                        React.createElement("div", { className: "flex h-12 w-12 items-center justify-center rounded-xl", style: { background: C.sky, fontSize: 24 } }, w.emoji),
+                        React.createElement("div", { className: "flex-1" },
+                            React.createElement("div", { style: { fontWeight: 700, fontSize: 16, color: "#5B6B92" } }, w.title),
+                            React.createElement("div", { style: { fontSize: 13, color: "#8FA3C8" } }, "Coming in Premium")),
+                        React.createElement("span", { style: { fontSize: 16 } }, "\uD83D\uDD12"))))),
+                answeredCount > 0 && (React.createElement("button", { onClick: share, className: "mt-6 w-full rounded-2xl py-4 text-center", style: { background: C.orange, color: "#fff", fontWeight: 700, fontSize: 16 } },
+                    "Share my ",
+                    pct,
+                    "% \uD83E\uDDC0")))),
+            screen === "play" && world && (React.createElement("div", { className: "fade-in", key: qIndex },
+                React.createElement("div", { className: "mb-5 flex items-center justify-between" },
+                    React.createElement("button", { onClick: () => setScreen("home"), style: { color: C.blue, fontWeight: 600, fontSize: 14 } }, "\u2190 Worlds"),
+                    React.createElement("span", { style: { fontSize: 13, fontWeight: 700, color: "#8FA3C8" } },
+                        world.emoji,
+                        " ",
+                        qIndex + 1,
+                        " / ",
+                        world.scenarios.length)),
+                React.createElement("div", { className: "mb-5 flex gap-1" }, world.scenarios.map((_, i) => (React.createElement("div", { key: i, className: "h-1.5 flex-1 rounded-full", style: { background: i < qIndex ? C.blue : i === qIndex ? C.orange : C.line } })))),
+                React.createElement("h2", { style: { fontFamily: "'Bricolage Grotesque', sans-serif", fontWeight: 800, fontSize: 21, lineHeight: 1.25, marginBottom: 18 } }, world.scenarios[qIndex].q),
+                React.createElement("div", { className: "flex flex-col gap-3" }, world.scenarios[qIndex].options.map((o, i) => {
+                    const isPicked = picked === i;
+                    const reveal = picked !== null;
+                    let border = C.line, bg = "#fff";
+                    if (reveal && o.ok) {
+                        border = C.green;
+                        bg = "#EFFAF4";
+                    }
+                    else if (reveal && isPicked && !o.ok) {
+                        border = C.red;
+                        bg = "#FCF0F0";
+                    }
+                    return (React.createElement("button", { key: i, onClick: () => choose(i), disabled: picked !== null, className: "w-full rounded-2xl p-4 text-left", style: { background: bg, border: `1.5px solid ${border}`, fontWeight: 500, fontSize: 15.5, opacity: reveal && !o.ok && !isPicked ? 0.5 : 1 } },
+                        o.t,
+                        reveal && (o.ok || isPicked) && (React.createElement("div", { className: "mt-2", style: { fontSize: 13.5, color: o.ok ? C.green : C.red, fontWeight: 400 } },
+                            o.ok ? "✓ " : "✗ ",
+                            o.r))));
+                })),
+                picked !== null && (React.createElement("div", { className: "fade-in" },
+                    React.createElement("div", { className: "mt-4 rounded-2xl p-4", style: { background: C.sky, border: `1px solid ${C.line}` } },
+                        React.createElement("div", { style: { fontSize: 11, letterSpacing: 1.5, fontWeight: 700, color: C.blue, textTransform: "uppercase", marginBottom: 4 } }, "Even serieus"),
+                        React.createElement("div", { style: { fontSize: 14, lineHeight: 1.5, color: "#3A4A70" } }, world.scenarios[qIndex].real)),
+                    React.createElement("button", { onClick: next, className: "mt-4 w-full rounded-2xl py-4", style: { background: C.blue, color: "#fff", fontWeight: 700, fontSize: 16 } }, qIndex + 1 < world.scenarios.length ? "Next scenario →" : "Finish world 🏁"))))),
+            screen === "fact" && world && (() => {
+                const fact = (FACTS[worldId] || [])[Math.floor((qIndex + 1) / 5) - 1] || FACTS.work[0];
+                return (React.createElement("div", { className: "fade-in flex flex-col items-center pt-10 text-center" },
+                    React.createElement("div", { style: { fontSize: 11, letterSpacing: 2, fontWeight: 700, color: C.orange, textTransform: "uppercase" } }, "Wist je dat? \u00B7 Did you know?"),
+                    React.createElement("div", { className: "mt-6 w-full rounded-2xl px-6 py-8", style: { background: C.blue } },
+                        fact.art && React.createElement("div", { className: "mb-2" }, fact.art),
+                        React.createElement("div", { style: { fontFamily: "'Bricolage Grotesque', sans-serif", fontWeight: 800, fontSize: 56, color: "#fff", lineHeight: 1 } }, fact.stat),
+                        React.createElement("div", { className: "mt-4", style: { fontSize: 15, lineHeight: 1.55, color: "#DCE4F9" } }, fact.text)),
+                    React.createElement("p", { className: "mt-3", style: { fontSize: 12, color: "#8FA3C8" } }, "A little break. Very un-Dutch of us \u2014 it's not even in the agenda."),
+                    React.createElement("button", { onClick: continueFromFact, className: "mt-6 w-full rounded-2xl py-4", style: { background: C.blue, color: "#fff", fontWeight: 700, fontSize: 16 } }, "Continue \u2192")));
+            })(),
+            screen === "done" && world && (React.createElement("div", { className: "fade-in flex flex-col items-center pt-8 text-center" },
+                React.createElement("div", { className: "flex h-20 w-20 items-center justify-center rounded-full", style: { background: C.sky, fontSize: 40 } }, world.emoji),
+                React.createElement("h2", { style: { fontFamily: "'Bricolage Grotesque', sans-serif", fontWeight: 800, fontSize: 26, marginTop: 16 } }, "World survived!"),
+                React.createElement("p", { style: { color: "#5B6B92", fontSize: 15, marginTop: 6 } },
+                    (results[worldId] || []).filter(Boolean).length,
+                    " of ",
+                    world.scenarios.length,
+                    " correct in ",
+                    world.title,
+                    "."),
+                React.createElement("div", { className: "mt-6 w-full" },
+                    React.createElement(WaterMeter, { pct: pct }),
+                    React.createElement("p", { className: "mt-2", style: { fontSize: 13, color: "#8FA3C8" } }, "Your Dutchness is rising. The dike is holding. For now.")),
+                React.createElement("button", { onClick: share, className: "mt-6 w-full rounded-2xl py-4", style: { background: C.orange, color: "#fff", fontWeight: 700, fontSize: 16 } },
+                    "Share my ",
+                    pct,
+                    "% \uD83E\uDDC0"),
+                React.createElement("button", { onClick: () => setScreen("home"), className: "mt-3 w-full rounded-2xl py-4", style: { background: "#fff", border: `1.5px solid ${C.line}`, color: C.ink, fontWeight: 700, fontSize: 16 } }, "Back to worlds")))),
+        toast && (React.createElement("div", { className: "fixed bottom-6 left-1/2 z-50 -translate-x-1/2 rounded-full px-5 py-3 text-center", style: { background: C.ink, color: "#fff", fontSize: 13, maxWidth: "88%" } }, toast))));
 }
+ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(App, null));
 
-
-ReactDOM.createRoot(document.getElementById("root")).render(<App />);
 </script>
 </body>
 </html>
