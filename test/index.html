@@ -202,7 +202,7 @@ const WORLDS = [
                 options: [
                     { t: "A leisurely two-course lunch with wine", ok: false, r: "Wine?! On a Tuesday?! This is not that kind of country." },
                     { t: "Elaborate takeaway for everyone", ok: false, r: "Takeaway daily? That costs money. See the Money world for why that's unthinkable." },
-                    { t: "A cheese sandwich and a glass of milk, in 20 minutes", ok: true, r: "The legendary broodje kaas. The glass of milk is the stereotype — in practice it's just as often water or coffee. The bread, however, is non-negotiable." },
+                    { t: "A cheese sandwich from home, in 30 minutes", ok: true, r: "The legendary broodje kaas. (The classic glass of milk? Mostly a stereotype these days — it's usually water or coffee.) The bread, however, is non-negotiable." },
                     { t: "Nobody eats — lunch is weakness", ok: false, r: "Oh no, they eat. Precisely at 12:30. It's just... bread. Always bread." },
                 ],
                 real: "Dutch lunch culture is famously sober: bread from home, quick, practical. The hot meal is dinner — early and warm, usually somewhere around 18:00.",
@@ -240,7 +240,7 @@ const WORLDS = [
             {
                 q: "Your manager doesn't work on Fridays. Ever. Why?",
                 options: [
-                    { t: "He's secretly been fired", ok: false, r: "He's fine. He's at the petting zoo with his toddler." },
+                    { t: "He's been stuck in the same meeting since 2019", ok: false, r: "Tempting theory. But no meeting survives past 17:00 — remember?" },
                     { t: "He works part-time — totally normal, even for bosses", ok: true, r: "Correct. Four-day weeks are mainstream, and ‘papadag’ (daddy day) is a proud institution." },
                     { t: "Religious reasons", ok: false, r: "The only thing sacred about Friday is that it's his papadag." },
                     { t: "He has a second job", ok: false, r: "A second job would require... more work. You misunderstand the goal entirely." },
@@ -251,7 +251,7 @@ const WORLDS = [
                 q: "The meeting starts at 10:00. You stroll in at 10:07. The room…",
                 options: [
                     { t: "Hasn't started yet — relax", ok: false, r: "They started at 10:00:00. There are already action points." },
-                    { t: "Started exactly on time, and everyone noticed you", ok: true, r: "Correct — it simply started without you. A few minutes late is forgivable; seven gets quietly noticed. Under ‘observations’." },
+                    { t: "Started exactly on time, and everyone noticed you", ok: true, r: "Correct — it simply started without you. A few minutes is forgivable; seven raises some friendly eyebrows." },
                     { t: "Applauds your arrival", ok: false, r: "The only applause is the passive-aggressive click of someone's pen." },
                     { t: "Doesn't care — 7 minutes is nothing", ok: false, r: "Seven minutes is 7 minutes of other people's planned time. That's theft, basically." },
                 ],
@@ -443,7 +443,7 @@ const WORLDS = [
                     { t: "Politics — heated debate", ok: false, r: "Politics happens too — the Dutch debate it freely and directly. It just shares the stage with house prices." },
                     { t: "Gossip about absent friends", ok: false, r: "Too indirect. If they had feedback about Piet, they'd have told Piet. Directly. At his own party." },
                 ],
-                real: "The Dutch holiday-to-France conversation is a national ritual. Bonus points if a caravan is involved.",
+                real: "Politics is perfectly normal table talk too — debated directly, then defeated by house prices. But the holiday-to-France conversation remains the national ritual. Bonus points if a caravan is involved.",
             },
             {
                 q: "A Dutch child turns 6. What happens at school?",
@@ -494,9 +494,9 @@ const WORLDS = [
         tagline: "Every cent finds its way home",
         scenarios: [
             {
-                q: "A friend buys you a coffee. That evening you receive a payment request: €0.87. You…",
+                q: "A colleague grabs you a coffee from the office vending machine. That evening you receive a payment request: €0.87. You…",
                 options: [
-                    { t: "Feel deeply insulted", ok: false, r: "Insulted? They did the math *for* you. That's friendship." },
+                    { t: "Feel deeply insulted", ok: false, r: "Insulted? They did the math *for* you. That's collegiality." },
                     { t: "Pay it immediately, no hard feelings", ok: true, r: "Correct. A Tikkie is not stinginess — it's fairness with a decimal point. Pay within 24 hours or expect a reminder." },
                     { t: "Ignore it — surely it's a joke", ok: false, r: "It is never a joke. There will be a reminder. Then a reminder about the reminder." },
                     { t: "Send them a Tikkie for €0.87 back", ok: false, r: "Creative! But now you both owe €0.87 forever, locked in an infinite loop of fairness." },
@@ -667,14 +667,21 @@ const factArt = {
         React.createElement("circle", { cx: "160", cy: "46", r: "9", fill: "none", stroke: "#DCE4F9", strokeWidth: "3" }),
         React.createElement("rect", { x: "151", y: "58", width: "18", height: "26", rx: "9", fill: "none", stroke: "#DCE4F9", strokeWidth: "3" }))),
     parttime: (React.createElement("svg", { viewBox: "0 0 220 100", style: { width: "100%", height: 90 } },
-        React.createElement("rect", { x: "55", y: "14", width: "110", height: "72", rx: "8", fill: "none", stroke: "#fff", strokeWidth: "3" }),
-        React.createElement("line", { x1: "55", y1: "34", x2: "165", y2: "34", stroke: "#fff", strokeWidth: "3" }),
-        React.createElement("circle", { cx: "70", cy: "24", r: "3", fill: "#FF6B35" }),
-        [0, 1, 2, 3, 4].map((c) => [0, 1].map((r) => (React.createElement("rect", { key: `${c}-${r}`, x: 64 + c * 20, y: 42 + r * 20, width: "13", height: "13", rx: "3", fill: c < 2 || (c === 2 && r === 0) ? "#fff" : "none", stroke: "#DCE4F9", strokeWidth: "2" })))))),
+        React.createElement("circle", { cx: "182", cy: "20", r: "8", fill: "#FF6B35" }),
+        React.createElement("line", { x1: "48", y1: "82", x2: "172", y2: "82", stroke: "#fff", strokeWidth: "3", strokeLinecap: "round" }),
+        React.createElement("rect", { x: "56", y: "34", width: "16", height: "48", rx: "4", fill: "#fff" }),
+        React.createElement("rect", { x: "80", y: "34", width: "16", height: "48", rx: "4", fill: "#fff" }),
+        React.createElement("rect", { x: "104", y: "58", width: "16", height: "24", rx: "4", fill: "#fff" }),
+        React.createElement("rect", { x: "104", y: "34", width: "16", height: "48", rx: "4", fill: "none", stroke: "#DCE4F9", strokeWidth: "2.5" }),
+        [0, 1].map((c) => [0].map((r) => (React.createElement("rect", { key: `${c}-${r}`, x: 128 + c * 24, y: 34, width: "16", height: "48", rx: "4", fill: "none", stroke: "#DCE4F9", strokeWidth: "2.5" })))))),
     kisses: (React.createElement("svg", { viewBox: "0 0 220 100", style: { width: "100%", height: 90 } },
-        React.createElement("circle", { cx: "55", cy: "50", r: "20", fill: "none", stroke: "#fff", strokeWidth: "3" }),
-        React.createElement("circle", { cx: "165", cy: "50", r: "20", fill: "none", stroke: "#fff", strokeWidth: "3" }),
-        [95, 110, 125].map((x, i) => (React.createElement("text", { key: x, x: x, y: i === 1 ? 42 : 60, textAnchor: "middle", fontSize: "20", fontWeight: "700", fill: "#FF6B35" }, "\u00D7"))))),
+        React.createElement("circle", { cx: "110", cy: "52", r: "28", fill: "none", stroke: "#fff", strokeWidth: "3" }),
+        React.createElement("circle", { cx: "100", cy: "45", r: "3", fill: "#fff" }),
+        React.createElement("circle", { cx: "120", cy: "45", r: "3", fill: "#fff" }),
+        React.createElement("path", { d: "M99 62 Q 110 70 121 62", fill: "none", stroke: "#fff", strokeWidth: "3", strokeLinecap: "round" }),
+        React.createElement("text", { x: "150", y: "42", textAnchor: "middle", fontSize: "20", fontWeight: "700", fill: "#FF6B35" }, "\u00D7"),
+        React.createElement("text", { x: "70", y: "58", textAnchor: "middle", fontSize: "20", fontWeight: "700", fill: "#FF6B35" }, "\u00D7"),
+        React.createElement("text", { x: "150", y: "72", textAnchor: "middle", fontSize: "20", fontWeight: "700", fill: "#FF6B35" }, "\u00D7"))),
     abraham: (React.createElement("svg", { viewBox: "0 0 220 100", style: { width: "100%", height: 90 } },
         React.createElement("line", { x1: "30", y1: "84", x2: "190", y2: "84", stroke: "#DCE4F9", strokeWidth: "3" }),
         React.createElement("circle", { cx: "100", cy: "34", r: "11", fill: "none", stroke: "#fff", strokeWidth: "3" }),
@@ -811,25 +818,33 @@ function App() {
     };
     const share = async () => {
         const text = `I'm officially ${pct}% Dutch 🧀 — tested by Almost Dutch 🇳🇱 I now bring my own birthday cake.`;
+        const url = "https://almostdutch.nl";
+        const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
         try {
-            if (navigator.share) {
-                await navigator.share({ text });
+            if (isMobile && navigator.share) {
+                await navigator.share({ text, url });
                 return;
             }
-            await navigator.clipboard.writeText(text);
+            await navigator.clipboard.writeText(`${text} ${url}`);
             setToast("Copied — paste it anywhere!");
         }
         catch (_a) {
-            setToast(text);
+            try {
+                await navigator.clipboard.writeText(`${text} ${url}`);
+                setToast("Copied — paste it anywhere!");
+            }
+            catch (_b) {
+                setToast(text);
+            }
         }
     };
     return (React.createElement("div", { className: "min-h-screen w-full", style: { background: C.bg, color: C.ink, fontFamily: "'Schibsted Grotesk', system-ui, sans-serif" } },
         React.createElement("style", null, `
         @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Schibsted+Grotesk:wght@400;500;700&display=swap');
         button { -webkit-tap-highlight-color: transparent; }
-        .fade-in { opacity: 1; animation: fadeIn .3s ease; }
-        @keyframes fadeIn { from { opacity: 0.01; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-        @media (prefers-reduced-motion: reduce) { .fade-in { animation: none; } * { transition: none !important; } }
+        /* Animaties bewust verwijderd: alle content is per direct en permanent zichtbaar. */
+        .fade-in { }
+        @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
       `),
         React.createElement("div", { className: "mx-auto max-w-md px-5 pb-10 pt-6" },
             screen === "welcome" && (React.createElement("div", { className: "fade-in flex min-h-screen flex-col justify-center pb-16" },
