@@ -191,21 +191,21 @@ const WORLDS = [
                 q: "It's 16:58. Tomorrow's deadline is looming. What do your Dutch colleagues do at 17:00?",
                 options: [
                     { t: "Order pizza and push through the night", ok: false, r: "Pizza? At the office? After five? Someone call a doctor." },
-                    { t: "Stand up, say “fijne avond!”, and leave", ok: true, r: "Correct. Chairs empty by 17:02. Not laziness — they were ruthlessly efficient all day for exactly this moment." },
-                    { t: "Quietly expect you to stay late", ok: false, r: "Staying late doesn't signal dedication here. It signals poor planning." },
+                    { t: "Stand up, say “fijne avond!”, and leave", ok: true, r: "Correct — most chairs empty around 17:05. Overtime exists when it's truly needed, but it's the exception, never the expectation." },
+                    { t: "Quietly expect you to stay late", ok: false, r: "Some stay when a deadline really demands it — but staying late as a *signal* impresses nobody here." },
                     { t: "Call an emergency crisis meeting", ok: false, r: "A meeting? Now? That would need to be scheduled at least a week ago." },
                 ],
-                real: "The Netherlands ranks among the best work-life balances in the world. Overtime is the exception, not a badge of honour.",
+                real: "The Netherlands ranks among the best work-life balances in the world. Overtime happens when it's genuinely needed — but it's never a badge of honour.",
             },
             {
                 q: "It's lunchtime at the office. What's on the menu?",
                 options: [
                     { t: "A leisurely two-course lunch with wine", ok: false, r: "Wine?! On a Tuesday?! This is not that kind of country." },
                     { t: "Elaborate takeaway for everyone", ok: false, r: "Takeaway daily? That costs money. See the Money world for why that's unthinkable." },
-                    { t: "A cheese sandwich and a glass of milk, in 20 minutes", ok: true, r: "The legendary broodje kaas. Possibly with buttermilk. Every single day. Forever." },
+                    { t: "A cheese sandwich and a glass of milk, in 20 minutes", ok: true, r: "The legendary broodje kaas. The glass of milk is the stereotype — in practice it's just as often water or coffee. The bread, however, is non-negotiable." },
                     { t: "Nobody eats — lunch is weakness", ok: false, r: "Oh no, they eat. Precisely at 12:30. It's just... bread. Always bread." },
                 ],
-                real: "Dutch lunch culture is famously sober: bread from home, quick, practical. Hot meals are for dinner — at 18:00 sharp.",
+                real: "Dutch lunch culture is famously sober: bread from home, quick, practical. The hot meal is dinner — early and warm, usually somewhere around 18:00.",
             },
             {
                 q: "In a meeting, your manager presents a plan you think is flawed. You should…",
@@ -251,11 +251,11 @@ const WORLDS = [
                 q: "The meeting starts at 10:00. You stroll in at 10:07. The room…",
                 options: [
                     { t: "Hasn't started yet — relax", ok: false, r: "They started at 10:00:00. There are already action points." },
-                    { t: "Started exactly on time, and everyone noticed you", ok: true, r: "Correct. Nobody says anything. But it's in their agenda now. Under ‘observations’." },
+                    { t: "Started exactly on time, and everyone noticed you", ok: true, r: "Correct — it simply started without you. A few minutes late is forgivable; seven gets quietly noticed. Under ‘observations’." },
                     { t: "Applauds your arrival", ok: false, r: "The only applause is the passive-aggressive click of someone's pen." },
                     { t: "Doesn't care — 7 minutes is nothing", ok: false, r: "Seven minutes is 7 minutes of other people's planned time. That's theft, basically." },
                 ],
-                real: "Punctuality is a serious virtue. ‘On time’ means slightly early — for meetings, parties and even coffee dates.",
+                real: "Punctuality is a real virtue, but not a religion: a few minutes is fine. The point is that Dutch meetings simply start — with or without you.",
             },
             {
                 q: "You receive an email: “Not possible. Groetjes, Kees.” How should you read this?",
@@ -349,11 +349,11 @@ const WORLDS = [
                 q: "You arrive at a Dutch birthday party. Who do you congratulate?",
                 options: [
                     { t: "The birthday person", ok: false, r: "A good start. But you are far, far from done." },
-                    { t: "Everyone in the room — parents, siblings, neighbours", ok: true, r: "Yes: “Gefeliciteerd met je moeder!” — congratulations on your mother. You congratulate people for *knowing* the birthday person." },
+                    { t: "Everyone in the room — parents, siblings, neighbours", ok: true, r: "Yes: “Gefeliciteerd met je moeder!” A general ‘gefeliciteerd!’ to the group is fine too — but the birthday person gets it personally. Always." },
                     { t: "Nobody — a card covers it", ok: false, r: "A card? Without a full round of handshakes? Chaos." },
                     { t: "Only people you already know", ok: false, r: "Strangers too! That's the fun part. You'll shake hands with someone's uncle. Twice." },
                 ],
-                real: "Congratulating the whole family circle is standard etiquette. Yes, entering the room takes fifteen minutes.",
+                real: "Congratulating the circle is standard etiquette — a general greeting to the room is fine, but the birthday person is always congratulated personally.",
             },
             {
                 q: "You enter the living room at the party. What do you see?",
@@ -363,7 +363,7 @@ const WORLDS = [
                     { t: "A buffet with unlimited food", ok: false, r: "Unlimited? You'll get one slice of vlaai and you'll be grateful." },
                     { t: "A karaoke machine", ok: false, r: "The only performance tonight is Uncle Henk's monologue about the A2 roadworks." },
                 ],
-                real: "The Dutch circle party is a real institution: coffee first, then one round of cake, then maybe — maybe — a beer.",
+                real: "The Dutch circle party is a real institution: coffee and cake first — and once the coffee round is done, soft drinks and beer appear like clockwork.",
             },
             {
                 q: "You visit the toilet and find a calendar hanging there, full of names and dates. This is…",
@@ -376,6 +376,16 @@ const WORLDS = [
                 real: "The toilet birthday calendar is a genuine Dutch tradition — practical, unmissable, and never a page out of date.",
             },
             {
+                q: "Greeting time. A Dutch acquaintance leans in. How many cheek kisses?",
+                options: [
+                    { t: "One — efficient", ok: false, r: "One? Now you're both stranded mid-air. Awkward." },
+                    { t: "Two — like the French", ok: false, r: "Pulling back after two causes a low-speed head-on collision. Brace." },
+                    { t: "Three — right, left, right", ok: true, r: "Correct — three kisses, alternating cheeks. Between women, and between men and women. Men greet men with a firm handshake. Commit fully or don't start." },
+                    { t: "Zero — firm handshake only", ok: false, r: "Handshakes work for strangers, colleagues — and between men. But greeting your friend's mother at a birthday? Prepare the cheeks." },
+                ],
+                real: "Three cheek kisses is the classic greeting among family and good friends — women with women, men with women. Men shake hands, and colleagues usually get a handshake too.",
+            },
+            {
                 q: "You meet the birthday person's sister at the party. What do you say?",
                 options: [
                     { t: "“Nice to meet you”", ok: false, r: "Polite! But incomplete. You've missed the crucial ritual." },
@@ -384,16 +394,6 @@ const WORLDS = [
                     { t: "Nothing — siblings don't count", ok: false, r: "Siblings count DOUBLE. Parents count triple. There may be a quiz later." },
                 ],
                 real: "‘Gefeliciteerd met…’ extends to relatives and friends of the birthday person. It baffles every newcomer, without exception.",
-            },
-            {
-                q: "Greeting time. A Dutch acquaintance leans in. How many cheek kisses?",
-                options: [
-                    { t: "One — efficient", ok: false, r: "One? Now you're both stranded mid-air. Awkward." },
-                    { t: "Two — like the French", ok: false, r: "Pulling back after two causes a low-speed head-on collision. Brace." },
-                    { t: "Three — right, left, right", ok: true, r: "Correct. Three kisses, alternating cheeks. Commit fully or don't start." },
-                    { t: "Zero — firm handshake only", ok: false, r: "Handshakes work for strangers. But at a birthday? Prepare the cheeks." },
-                ],
-                real: "Three cheek kisses is the standard Dutch greeting among friends and family — a frequent ambush for unprepared expats.",
             },
             {
                 q: "The invitation says “from 20:00”. When do you arrive?",
@@ -426,24 +426,24 @@ const WORLDS = [
                 real: "Dutch parties end on the host's schedule, and the signals are wonderfully clear. Everyone is in bed by 23:30.",
             },
             {
-                q: "You're seated in the kring. Which conversation topics will dominate the next two hours?",
-                options: [
-                    { t: "Philosophy and art", ok: false, r: "Lovely idea. But no. Sit tight." },
-                    { t: "Traffic, house prices, and holidays to France", ok: true, r: "Correct. The A2 roadworks, what the neighbours' house sold for, and the campsite in the Dordogne. Every. Single. Party." },
-                    { t: "Politics — heated debate", ok: false, r: "Some light politics may occur, but it will lose to house prices within minutes." },
-                    { t: "Gossip about absent friends", ok: false, r: "Too indirect. If they had feedback about Piet, they'd have told Piet. Directly. At his own party." },
-                ],
-                real: "The Dutch holiday-to-France conversation is a national ritual. Bonus points if a caravan is involved.",
-            },
-            {
                 q: "You pass a house with a giant inflatable doll in the front garden. What happened?",
                 options: [
                     { t: "A child's party got out of hand", ok: false, r: "No child could orchestrate this. It's far too organised." },
-                    { t: "Someone turned 50 — meet Abraham or Sarah", ok: true, r: "Correct. Turning 50 means the neighbours put a doll in your garden so the whole street knows. Congratulations, you're old now." },
+                    { t: "Someone turned 50 — meet Abraham or Sarah", ok: true, r: "Correct. Turning 50 means family and friends put a doll in your garden so the whole street knows. Congratulations, you're old now." },
                     { t: "A protest", ok: false, r: "The only thing being protested is the ageing process, and it's losing." },
                     { t: "Leftover Halloween decoration", ok: false, r: "Halloween barely exists here. This doll is celebrating something far scarier: your mortality." },
                 ],
                 real: "At 50, men ‘see Abraham’ and women ‘see Sarah’ — celebrated with garden dolls, banners, and zero subtlety.",
+            },
+            {
+                q: "You're seated in the kring. Which conversation topics will dominate the next two hours?",
+                options: [
+                    { t: "Philosophy and art", ok: false, r: "Lovely idea. But no. Sit tight." },
+                    { t: "Traffic, house prices, and holidays to France", ok: true, r: "Correct. The A2 roadworks, what the neighbours' house sold for, and the campsite in the Dordogne. Every. Single. Party." },
+                    { t: "Politics — heated debate", ok: false, r: "Politics happens too — the Dutch debate it freely and directly. It just shares the stage with house prices." },
+                    { t: "Gossip about absent friends", ok: false, r: "Too indirect. If they had feedback about Piet, they'd have told Piet. Directly. At his own party." },
+                ],
+                real: "The Dutch holiday-to-France conversation is a national ritual. Bonus points if a caravan is involved.",
             },
             {
                 q: "A Dutch child turns 6. What happens at school?",
@@ -458,32 +458,32 @@ const WORLDS = [
             {
                 q: "You forgot a Dutch friend's birthday entirely. What are the consequences?",
                 options: [
-                    { t: "Nothing — adults don't mind", ok: false, r: "They mind. The calendar was IN THE TOILET. You had every chance." },
+                    { t: "Nothing — adults don't mind", ok: false, r: "Many mind — the calendar was IN THE TOILET. (Relaxed friends exist too. But why risk it?)" },
                     { t: "They mention it, directly, possibly for years", ok: true, r: "Correct. “You forgot my birthday in 2023” will resurface at the 2026 barbecue. Directly. With eye contact." },
                     { t: "Silent resentment forever", ok: false, r: "Silent? Have you met these people? The resentment will be extremely audible." },
                     { t: "You're removed from the friend group", ok: false, r: "Removal is inefficient. Keeping you around to remind you is much more satisfying." },
                 ],
-                real: "Birthdays are taken surprisingly seriously. The famous toilet calendar exists precisely to make forgetting inexcusable.",
+                real: "Birthdays are taken surprisingly seriously — though good friends survive a forgotten one just fine. The teasing is the real punishment.",
             },
             {
                 q: "Drinks at the party follow a strict order. Which one?",
                 options: [
-                    { t: "Beer from the start — it's a party", ok: false, r: "Beer at 20:00? Before coffee? The kring would gasp in unison." },
-                    { t: "Coffee first, then maybe alcohol later", ok: true, r: "Correct. One or two coffee rounds with cake, and only then does someone whisper the magic words: “een biertje?”" },
+                    { t: "Beer from the start — it's a party", ok: false, r: "At a classic kring party? Gasps. At a younger crowd's birthday? Entirely possible. Read the room — and the average age." },
+                    { t: "Coffee first, then maybe alcohol later", ok: true, r: "Correct — classically. One or two coffee rounds with cake, then “een biertje?”. Though the younger generation increasingly skips straight to the beer." },
                     { t: "Cocktails all night", ok: false, r: "The most exotic drink here is coffee with WHOLE milk. Adjust your expectations." },
                     { t: "Whatever you grab from the fridge", ok: false, r: "You do not open the fridge. The host controls the fridge. The fridge is sovereign territory." },
                 ],
-                real: "Coffee opens every Dutch gathering. The switch to beer or wine happens later — usually announced as a group decision.",
+                real: "Coffee traditionally opens Dutch gatherings, with the switch to beer or wine later. Younger crowds often skip the ritual — but at family birthdays, the coffee pot still rules.",
             },
             {
                 q: "Time to leave the party. What's the correct exit procedure?",
                 options: [
-                    { t: "Wave from the door: “bye everyone!”", ok: false, r: "A group wave? After all those individual hellos? The math must balance." },
-                    { t: "Say goodbye to every single person, individually", ok: true, r: "Correct. Full circle, every hand, three kisses where applicable. Leaving takes 25 minutes. Plan for it. In your agenda." },
+                    { t: "Wave from the door: “bye everyone!”", ok: false, r: "Close! A general “bye everyone” is fine — as long as the birthday person got a personal goodbye first." },
+                    { t: "Say goodbye to every single person, individually", ok: true, r: "Correct — the thorough classic. In practice, a personal goodbye to the birthday person plus a general wave to the room is fine too. Vanishing, however, is not." },
                     { t: "Slip out unnoticed — the Irish exit", ok: false, r: "The Irish exit is considered a minor crime here. They will notice. See: birthday forgetting, consequences of." },
                     { t: "Only say bye to the birthday person", ok: false, r: "You congratulated everyone on arrival. Symmetry demands you decongratulate— sorry, *say goodbye* to everyone too." },
                 ],
-                real: "Dutch goodbyes mirror Dutch hellos: personal, complete, and time-consuming. Factor it into your departure time.",
+                real: "Dutch goodbyes lean personal — at minimum, the birthday person gets an individual farewell. A general “bye everyone” covers the rest. The Irish exit remains the only true crime.",
             },
         ],
     },
@@ -517,11 +517,11 @@ const WORLDS = [
                 q: "You're invited for ‘koffie drinken’. What are you actually getting?",
                 options: [
                     { t: "Coffee, cake, snacks, maybe dinner", ok: false, r: "Dinner?! You were invited for coffee. Read the invitation again." },
-                    { t: "One coffee and exactly one cookie", ok: true, r: "Correct. The tin opens, you take ONE, and the lid goes straight back on. That click you hear is Dutch culture." },
+                    { t: "One coffee and exactly one cookie", ok: true, r: "Correct — according to legend. Most hosts happily offer a second one these days... but the one-cookie stereotype exists for a reason, and every Dutch person knows it." },
                     { t: "Just coffee — cookies cost extra", ok: false, r: "No no, you get a cookie. One. Singular. The tin closes at the speed of light." },
                     { t: "An open buffet of treats", ok: false, r: "A buffet? The tin isn't even fully open. It hovers, briefly, then seals like an airlock." },
                 ],
-                real: "‘Eén koekje bij de koffie’ is legendary Calvinist thrift: hospitality yes, excess never. And leave before 18:00 — dinner is not implied.",
+                real: "‘Eén koekje bij de koffie’ is a beloved national stereotype — more legend than daily practice these days, but rooted in real Calvinist thrift. One rule does hold: leave before 18:00, dinner is not implied.",
             },
             {
                 q: "Your Dutch friend shows off a new winter coat. What are they proudest of?",
@@ -634,7 +634,7 @@ const WORLDS = [
                 real: "The Netherlands has among the highest insurance density in the world. Frugality and risk-aversion turn out to be best friends.",
             },
             {
-                q: "You're about to throw away an empty water bottle. Your Dutch friend lunges. Why?",
+                q: "You're about to toss an empty water bottle into a trash can. Your Dutch friend lunges. Why?",
                 options: [
                     { t: "Environmental panic", ok: false, r: "The environment matters, sure. But look closer at their eyes: those are euro signs." },
                     { t: "Statiegeld — that bottle is worth €0.15", ok: true, r: "Correct. Bottle deposits get returned. Always. There are people whose entire festival strategy is collecting other people's cups." },
@@ -692,6 +692,12 @@ const factArt = {
         React.createElement("path", { d: "M20 34 Q 35 26 50 32 T 80 32 T 110 32 T 140 32 T 170 32 T 200 30", fill: "none", stroke: "#fff", strokeWidth: "3" }),
         React.createElement("rect", { x: "88", y: "62", width: "34", height: "24", fill: "none", stroke: "#DCE4F9", strokeWidth: "3" }),
         React.createElement("path", { d: "M84 62 L105 46 L126 62", fill: "none", stroke: "#DCE4F9", strokeWidth: "3" }))),
+    tikkie: (React.createElement("svg", { viewBox: "0 0 220 100", style: { width: "100%", height: 90 } },
+        React.createElement("rect", { x: "94", y: "14", width: "32", height: "58", rx: "7", fill: "none", stroke: "#DCE4F9", strokeWidth: "3" }),
+        React.createElement("line", { x1: "104", y1: "64", x2: "116", y2: "64", stroke: "#DCE4F9", strokeWidth: "3", strokeLinecap: "round" }),
+        React.createElement("text", { x: "110", y: "48", textAnchor: "middle", fill: "#fff", fontSize: "20", fontWeight: "700" }, "\u20AC"),
+        React.createElement("circle", { cx: "126", cy: "16", r: "7", fill: "#FF6B35" }),
+        React.createElement("path", { d: "M30 84 Q 50 76 70 82 T 110 82 T 150 82 T 190 80", fill: "none", stroke: "#fff", strokeWidth: "3", opacity: "0.5" }))),
 };
 const FACTS = {
     work: [
@@ -700,11 +706,11 @@ const FACTS = {
     ],
     birthday: [
         { stat: "3", art: factArt.kisses, text: "Three cheek kisses per greeting. A birthday party with 20 guests means 60 kisses before you even reach the coffee." },
-        { stat: "50", art: factArt.abraham, text: "Turn 50 and you ‘see Abraham’ (or Sarah) — announced to the entire street with a giant doll in your front garden. Courtesy of the neighbours." },
+        { stat: "50", art: factArt.abraham, text: "Turn 50 and you ‘see Abraham’ (or Sarah) — announced to the entire street with a giant doll in your front garden. Courtesy of family and friends." },
     ],
     money: [
         { stat: "€0.15", art: factArt.bottle, text: "Every small plastic bottle carries €0.15 statiegeld (deposit). No bottle is ever truly abandoned in the Netherlands." },
-        { stat: "26%", art: factArt.belowsea, text: "About 26% of the Netherlands lies below sea level. The frugality makes sense — this country literally had to build its own land." },
+        { stat: "170 mln", art: factArt.tikkie, text: "Tikkies sent in 2025 alone. The payment-request app is so dominant that ‘tikkie’ is now a regular word in the Van Dale dictionary." },
     ],
 };
 // ---------- Dutchness meter (signature: rising water vs the dike) ----------
@@ -731,6 +737,7 @@ function App() {
     const [worldId, setWorldId] = useState(null);
     const [qIndex, setQIndex] = useState(0);
     const [picked, setPicked] = useState(null);
+    const [history, setHistory] = useState({});
     const [results, setResults] = useState({});
     const [toast, setToast] = useState("");
     useEffect(() => {
@@ -747,6 +754,7 @@ function App() {
         setWorldId(id);
         setQIndex(0);
         setPicked(null);
+        setHistory({});
         setResults((r) => (Object.assign(Object.assign({}, r), { [id]: [] })));
         setScreen("play");
     };
@@ -754,18 +762,30 @@ function App() {
         if (picked !== null)
             return;
         setPicked(i);
+        setHistory((h) => (Object.assign(Object.assign({}, h), { [qIndex]: i })));
         const ok = world.scenarios[qIndex].options[i].ok;
         setResults((r) => (Object.assign(Object.assign({}, r), { [worldId]: [...(r[worldId] || []), ok] })));
     };
+    // na antwoorden: reactie + next-knop in beeld scrollen (knop blijft op dezelfde plek)
+    useEffect(() => {
+        if (picked === null)
+            return;
+        const t = setTimeout(() => {
+            const el = document.getElementById("next-btn");
+            if (el)
+                el.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }, 80);
+        return () => clearTimeout(t);
+    }, [picked]);
     const next = () => {
         const n = qIndex + 1;
         if (n < world.scenarios.length) {
-            if (n % 5 === 0) {
+            if (n % 5 === 0 && history[n] === undefined) {
                 setScreen("fact");
             }
             else {
                 setQIndex(n);
-                setPicked(null);
+                setPicked(history[n] !== undefined ? history[n] : null);
             }
             window.scrollTo({ top: 0 });
         }
@@ -774,9 +794,18 @@ function App() {
             window.scrollTo({ top: 0 });
         }
     };
+    const back = () => {
+        if (qIndex === 0)
+            return;
+        const p = qIndex - 1;
+        setQIndex(p);
+        setPicked(history[p] !== undefined ? history[p] : null);
+        window.scrollTo({ top: 0 });
+    };
     const continueFromFact = () => {
-        setQIndex(qIndex + 1);
-        setPicked(null);
+        const n = qIndex + 1;
+        setQIndex(n);
+        setPicked(history[n] !== undefined ? history[n] : null);
         setScreen("play");
         window.scrollTo({ top: 0 });
     };
@@ -859,7 +888,9 @@ function App() {
                     "% \uD83E\uDDC0")))),
             screen === "play" && world && (React.createElement("div", { className: "fade-in", key: qIndex },
                 React.createElement("div", { className: "mb-5 flex items-center justify-between" },
-                    React.createElement("button", { onClick: () => setScreen("home"), style: { color: C.blue, fontWeight: 600, fontSize: 14 } }, "\u2190 Worlds"),
+                    React.createElement("div", { className: "flex items-center gap-3" },
+                        React.createElement("button", { onClick: () => setScreen("home"), style: { color: C.blue, fontWeight: 600, fontSize: 14 } }, "\u2190 Worlds"),
+                        qIndex > 0 && (React.createElement("button", { onClick: back, style: { color: "#8FA3C8", fontWeight: 600, fontSize: 14 } }, "\u2039 Previous"))),
                     React.createElement("span", { style: { fontSize: 13, fontWeight: 700, color: "#8FA3C8" } },
                         world.emoji,
                         " ",
@@ -890,7 +921,7 @@ function App() {
                     React.createElement("div", { className: "mt-4 rounded-2xl p-4", style: { background: C.sky, border: `1px solid ${C.line}` } },
                         React.createElement("div", { style: { fontSize: 11, letterSpacing: 1.5, fontWeight: 700, color: C.blue, textTransform: "uppercase", marginBottom: 4 } }, "Even serieus"),
                         React.createElement("div", { style: { fontSize: 14, lineHeight: 1.5, color: "#3A4A70" } }, world.scenarios[qIndex].real)),
-                    React.createElement("button", { onClick: next, className: "mt-4 w-full rounded-2xl py-4", style: { background: C.blue, color: "#fff", fontWeight: 700, fontSize: 16 } }, qIndex + 1 < world.scenarios.length ? "Next scenario →" : "Finish world 🏁"))))),
+                    React.createElement("button", { id: "next-btn", onClick: next, className: "mt-4 w-full rounded-2xl py-4", style: { background: C.blue, color: "#fff", fontWeight: 700, fontSize: 16 } }, qIndex + 1 < world.scenarios.length ? "Next scenario →" : "Finish world 🏁"))))),
             screen === "fact" && world && (() => {
                 const fact = (FACTS[worldId] || [])[Math.floor((qIndex + 1) / 5) - 1] || FACTS.work[0];
                 return (React.createElement("div", { className: "fade-in flex flex-col items-center pt-10 text-center" },
