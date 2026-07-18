@@ -712,7 +712,7 @@ const FACTS = {
         { stat: "±50%", art: factArt.parttime, text: "Roughly half of Dutch workers work part-time — a world record. ‘Papadag’ is not a myth. It's practically infrastructure." },
     ],
     birthday: [
-        { stat: "3", art: factArt.kisses, text: "Three cheek kisses per greeting. A birthday party with 20 guests means 60 kisses before you even reach the coffee." },
+        { stat: "3", art: factArt.kisses, text: "Three cheek kisses per greeting — right, left, right. At a busy birthday party the kiss count spirals fast. (Men escape with a handshake.)" },
         { stat: "50", art: factArt.abraham, text: "Turn 50 and you ‘see Abraham’ (or Sarah) — announced to the entire street with a giant doll in your front garden. Courtesy of family and friends." },
     ],
     money: [
@@ -816,12 +816,13 @@ function App() {
         setScreen("play");
         window.scrollTo({ top: 0 });
     };
+    const canNativeShare = typeof navigator.share === "function" &&
+        (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.maxTouchPoints || 0) > 1);
     const share = async () => {
         const text = `I'm officially ${pct}% Dutch 🧀 — tested by Almost Dutch 🇳🇱 I now bring my own birthday cake.`;
         const url = "https://almostdutch.nl";
-        const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
         try {
-            if (isMobile && navigator.share) {
+            if (canNativeShare) {
                 await navigator.share({ text, url });
                 return;
             }
@@ -897,10 +898,7 @@ function App() {
                             React.createElement("div", { style: { fontWeight: 700, fontSize: 16, color: "#5B6B92" } }, w.title),
                             React.createElement("div", { style: { fontSize: 13, color: "#8FA3C8" } }, "Coming in Premium")),
                         React.createElement("span", { style: { fontSize: 16 } }, "\uD83D\uDD12"))))),
-                answeredCount > 0 && (React.createElement("button", { onClick: share, className: "mt-6 w-full rounded-2xl py-4 text-center", style: { background: C.orange, color: "#fff", fontWeight: 700, fontSize: 16 } },
-                    "Share my ",
-                    pct,
-                    "% \uD83E\uDDC0")))),
+                answeredCount > 0 && (React.createElement("button", { onClick: share, className: "mt-6 w-full rounded-2xl py-4 text-center", style: { background: C.orange, color: "#fff", fontWeight: 700, fontSize: 16 } }, canNativeShare ? `Share my ${pct}% 🧀` : `Copy my ${pct}% 📋`)))),
             screen === "play" && world && (React.createElement("div", { className: "fade-in", key: qIndex },
                 React.createElement("div", { className: "mb-5 flex items-center justify-between" },
                     React.createElement("div", { className: "flex items-center gap-3" },
@@ -934,7 +932,7 @@ function App() {
                 })),
                 picked !== null && (React.createElement("div", { className: "fade-in" },
                     React.createElement("div", { className: "mt-4 rounded-2xl p-4", style: { background: C.sky, border: `1px solid ${C.line}` } },
-                        React.createElement("div", { style: { fontSize: 11, letterSpacing: 1.5, fontWeight: 700, color: C.blue, textTransform: "uppercase", marginBottom: 4 } }, "Even serieus"),
+                        React.createElement("div", { style: { fontSize: 11, letterSpacing: 1.5, fontWeight: 700, color: C.blue, textTransform: "uppercase", marginBottom: 4 } }, "Even serieus \u00B7 seriously though"),
                         React.createElement("div", { style: { fontSize: 14, lineHeight: 1.5, color: "#3A4A70" } }, world.scenarios[qIndex].real)),
                     React.createElement("button", { id: "next-btn", onClick: next, className: "mt-4 w-full rounded-2xl py-4", style: { background: C.blue, color: "#fff", fontWeight: 700, fontSize: 16 } }, qIndex + 1 < world.scenarios.length ? "Next scenario →" : "Finish world 🏁"))))),
             screen === "fact" && world && (() => {
@@ -961,12 +959,9 @@ function App() {
                 React.createElement("div", { className: "mt-6 w-full" },
                     React.createElement(WaterMeter, { pct: pct }),
                     React.createElement("p", { className: "mt-2", style: { fontSize: 13, color: "#8FA3C8" } }, "Your Dutchness is rising. The dike is holding. For now.")),
-                React.createElement("button", { onClick: share, className: "mt-6 w-full rounded-2xl py-4", style: { background: C.orange, color: "#fff", fontWeight: 700, fontSize: 16 } },
-                    "Share my ",
-                    pct,
-                    "% \uD83E\uDDC0"),
+                React.createElement("button", { onClick: share, className: "mt-6 w-full rounded-2xl py-4", style: { background: C.orange, color: "#fff", fontWeight: 700, fontSize: 16 } }, canNativeShare ? `Share my ${pct}% 🧀` : `Copy my ${pct}% 📋`),
                 React.createElement("button", { onClick: () => setScreen("home"), className: "mt-3 w-full rounded-2xl py-4", style: { background: "#fff", border: `1.5px solid ${C.line}`, color: C.ink, fontWeight: 700, fontSize: 16 } }, "Back to worlds")))),
-        toast && (React.createElement("div", { className: "fixed bottom-6 left-1/2 z-50 -translate-x-1/2 rounded-full px-5 py-3 text-center", style: { background: C.ink, color: "#fff", fontSize: 13, maxWidth: "88%" } }, toast))));
+        toast && (React.createElement("div", { className: "fixed left-1/2 -translate-x-1/2 rounded-full px-5 py-3 text-center", style: { position: "fixed", bottom: 84, zIndex: 60, background: C.ink, color: "#fff", fontSize: 13, maxWidth: "88%", boxShadow: "0 4px 14px rgba(20,32,62,.3)" } }, toast))));
 }
 ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(App, null));
 
