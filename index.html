@@ -16,7 +16,6 @@
 <meta property="og:description" content="Nobody warns you about the birthday circle. The €0.50 Tikkie. The birthday calendar in the toilet. We do. The fun way for expats to learn Dutch culture." />
 <meta property="og:url" content="https://almostdutch.nl/" />
 <meta property="og:locale" content="en_US" />
-<meta property="og:locale:alternate" content="nl_NL" />
 <meta property="og:image" content="https://almostdutch.nl/og-image.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
@@ -166,8 +165,8 @@
       Almost Dutch
     </a>
     <div class="langs" role="group" aria-label="Language">
-      <button id="btn-en" class="on" onclick="setLang('en')">EN</button>
-      <button id="btn-nl" onclick="setLang('nl')">NL</button>
+      <button id="btn-en" class="on" onclick="setLang('en', 'click')">EN</button>
+      <button id="btn-nl" onclick="setLang('nl', 'click')">NL</button>
     </div>
   </div>
 </header>
@@ -366,16 +365,47 @@ const T = {
 document.querySelectorAll("[data-i]").forEach(el => { T.en[el.dataset.i] = el.innerHTML; });
 document.querySelectorAll("[data-i-ph]").forEach(el => { T.en[el.dataset.iPh] = el.placeholder; });
 
-function setLang(l) {
+// De site deelt localStorage met de app op /app/, dus een eigen sleutel
+const LANGS = ["en", "nl"];
+const LANG_KEY = "almostdutch_site_lang";
+
+// localStorage kan gooien (Safari privémodus, geblokkeerde cookies) — dan gewoon zonder
+function readStoredLang() {
+  try { return localStorage.getItem(LANG_KEY); } catch (e) { return null; }
+}
+
+// source: "click" (knop), "url" (?lang=), "stored" (eerdere keuze) of "auto" (browsertaal).
+// Alleen een expliciete keuze wordt onthouden — een detectie is een aanname, geen keuze.
+// Alleen een klik werkt de adresbalk bij; bij "url" klopt die al.
+function setLang(l, source) {
   document.documentElement.lang = l;
   document.getElementById("btn-en").classList.toggle("on", l === "en");
   document.getElementById("btn-nl").classList.toggle("on", l === "nl");
   document.querySelectorAll("[data-i]").forEach(el => { const t = T[l][el.dataset.i]; if (t) el.innerHTML = t; });
   document.querySelectorAll("[data-i-ph]").forEach(el => { const t = T[l][el.dataset.iPh]; if (t) el.placeholder = t; });
+  if (source === "click" || source === "url") {
+    try { localStorage.setItem(LANG_KEY, l); } catch (e) {}
+  }
+  if (source === "click") {
+    const url = new URL(location.href);
+    url.searchParams.set("lang", l);
+    history.replaceState(null, "", url);  // geen herlaad, alleen de adresbalk
+  }
 }
 
-// Browser op NL? Start dan in het Nederlands
-if ((navigator.language || "").toLowerCase().startsWith("nl")) setLang("nl");
+// Volgorde: ?lang= uit de URL, dan de opgeslagen keuze, dan pas de browsertaal.
+// De eerste die een geldige taal oplevert wint; een onbekende waarde valt door.
+const urlLang = (new URLSearchParams(location.search).get("lang") || "").toLowerCase();
+const savedLang = readStoredLang();
+let startLang = null, startSource = "auto";
+if (LANGS.includes(urlLang)) {
+  startLang = urlLang; startSource = "url";
+} else if (LANGS.includes(savedLang)) {
+  startLang = savedLang; startSource = "stored";
+} else if ((navigator.language || "").toLowerCase().startsWith("nl")) {
+  startLang = "nl"; startSource = "auto";
+}
+if (startLang) setLang(startLang, startSource);
 
 // Wachtlijst via Formspree — vervang JOUW_FORM_ID door je eigen code (de 8 tekens achter /f/)
 const FORMSPREE_ENDPOINT = "https://formspree.io/f/maqrwlnl";
