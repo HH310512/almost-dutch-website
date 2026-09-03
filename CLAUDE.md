@@ -26,6 +26,7 @@ cultuurapp voor expats. Statische site, geen backend, geen build-stap.
 - Geen wachtwoorden of sleutels in de code.
 - Leg bij elke wijziging in twee zinnen uit wat je hebt gedaan en waarom.
 - Antwoord in het Nederlands.
+- Sessie-instructies staan in docs/. Lees alleen het bestand dat ik noem, niets anders uit die map.
 
 ## Klaar is
 Site laadt onder 2 seconden, werkt op telefoon, formulieren komen aan.
