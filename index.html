@@ -26,12 +26,13 @@
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
 <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-<meta name="theme-color" content="#2743B0" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Schibsted+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+<meta name="theme-color" content="#16204F" />
 
-<!-- Structured data: app + FAQ (helpt Google de pagina begrijpen) -->
+<!-- Eén zelf-gehost lettertype voor de koppen; de lopende tekst gebruikt de systeemfontstack.
+     Geen font-CDN: de pagina doet geen enkele request naar derden. -->
+<link rel="preload" href="/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin />
+
+<!-- Structured data: app + site + FAQ (helpt Google de pagina begrijpen). Geen prijsmarkup: de pagina verkoopt niets. -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -68,216 +69,313 @@
 </script>
 
 <style>
+  /* ===== Huisstijl (definitief, uit icoon W3b) ===== */
   :root {
-    --bg:#FAFBFD; --ink:#14203E; --blue:#2743B0; --blue-dark:#1B2F7E;
-    --sky:#EAF0FB; --orange:#FF6B35; --line:#D9E2F2; --muted:#5B6B92; --green:#1E9E6A;
+    --orange:#FF6B35;      /* alleen de primaire actie: wachtlijst */
+    --blue:#2743B0;        /* links, secundaire acties, accenten */
+    --wit:#FAFBFD;         /* witband, lichte basis */
+    --navy:#16204F;        /* donkere basis, tekst */
+    --paper:#F6F2E9;       /* papier, afwisselende secties */
+    --sky:#D3DCF5;         /* lichtblauw, lijnen en tekst op navy */
+    --deep:#C9520B;        /* diep oranje, accenten op lichte grond (niet voor kleine tekst) */
+    --ink-soft:rgb(22 32 79 / .78);   /* navy, iets lichter, voor bijtekst op lichte grond */
+    --measure:42rem;       /* ±70 tekens bij 17px */
+    --radius:18px;
   }
-  * { box-sizing:border-box; margin:0; }
-  html { scroll-behavior:smooth; }
-  body { background:var(--bg); color:var(--ink); font-family:'Schibsted Grotesk',system-ui,sans-serif; line-height:1.55; -webkit-font-smoothing:antialiased; }
-  h1,h2,h3 { font-family:'Bricolage Grotesque',sans-serif; font-weight:800; line-height:1.12; }
-  a { color:var(--blue); }
-  .wrap { max-width:920px; margin:0 auto; padding:0 24px; }
+  @font-face {
+    font-family:'Bricolage Grotesque';
+    font-style:normal;
+    font-weight:200 800;
+    font-display:swap;
+    src:url('/fonts/bricolage-grotesque-latin.woff2') format('woff2');
+  }
+  *, *::before, *::after { box-sizing:border-box; margin:0; }
+  html { scroll-behavior:smooth; -webkit-text-size-adjust:100%; }
+  @media (prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } }
+  body {
+    background:var(--wit); color:var(--navy);
+    font-family:system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size:17px; line-height:1.6; -webkit-font-smoothing:antialiased;
+  }
+  h1, h2, h3, .display { font-family:'Bricolage Grotesque', system-ui, sans-serif; font-weight:800; line-height:1.1; letter-spacing:-0.015em; text-wrap:balance; }
+  h2 { font-size:clamp(1.75rem, 1.3rem + 2vw, 2.5rem); }
+  h3 { font-size:1.2rem; line-height:1.3; }
+  p { max-width:var(--measure); }
+  a { color:var(--blue); text-underline-offset:.15em; }
+  a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visible { outline:3px solid var(--blue); outline-offset:3px; }
+  .wrap { width:min(100% - 2.5rem, 64rem); margin-inline:auto; }
+  .narrow { width:min(100% - 2.5rem, var(--measure)); margin-inline:auto; }
+  section { padding:3.5rem 0; }
+  @media (min-width:768px) { section { padding:5rem 0; } }
+  .eyebrow { display:block; font-size:.8125rem; letter-spacing:.14em; font-weight:700; text-transform:uppercase; color:var(--blue); margin-bottom:.75rem; }
+  .lead { color:var(--ink-soft); font-size:1.0625rem; margin-top:.75rem; }
+  .paper { background:var(--paper); }
 
-  /* ---- nav ---- */
-  header { position:sticky; top:0; z-index:20; background:rgba(250,251,253,.92); backdrop-filter:blur(10px); border-bottom:1px solid var(--line); }
-  .nav { display:flex; align-items:center; justify-content:space-between; padding:14px 20px; max-width:960px; margin:0 auto; }
-  .logo { display:flex; align-items:center; gap:10px; font-weight:800; font-family:'Bricolage Grotesque',sans-serif; font-size:17px; text-decoration:none; color:var(--ink); }
-  .mark { width:34px; height:34px; border-radius:9px; position:relative; overflow:hidden; flex-shrink:0; box-shadow:0 2px 6px rgba(20,32,62,.18); }
+  /* ===== Knoppen ===== */
+  .btn {
+    display:inline-flex; align-items:center; justify-content:center; gap:.5rem;
+    font:inherit; font-weight:700; font-size:1.0625rem; line-height:1.2;
+    padding:.95rem 1.5rem; border-radius:14px; border:2px solid transparent;
+    text-decoration:none; cursor:pointer; min-height:48px;
+  }
+  .btn-primary { background:var(--orange); color:var(--navy); border-color:var(--orange); }
+  .btn-primary:hover { background:#ff7a4a; border-color:#ff7a4a; }
+  .btn-secondary { background:transparent; color:var(--blue); border-color:var(--blue); }
+  .btn-secondary:hover { background:var(--sky); }
+  .on-dark .btn-secondary { color:var(--wit); border-color:var(--sky); }
+  .on-dark .btn-secondary:hover { background:rgb(211 220 245 / .16); }
+  .btn[disabled] { cursor:default; opacity:.85; }
+
+  /* ===== Navigatie ===== */
+  header { background:var(--navy); color:var(--wit); }
+  .nav { display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:.9rem 0; }
+  .logo { display:inline-flex; align-items:center; gap:.65rem; text-decoration:none; color:var(--wit); font-family:'Bricolage Grotesque', system-ui, sans-serif; font-weight:800; font-size:1.125rem; }
+  .mark { width:36px; height:36px; border-radius:9px; overflow:hidden; flex-shrink:0; }
   .mark svg { display:block; width:100%; height:100%; }
-  .langs { display:flex; gap:2px; background:#fff; border:1px solid var(--line); border-radius:99px; padding:3px; }
-  .langs button { font-family:inherit; font-size:12.5px; font-weight:700; border:0; background:transparent; color:var(--muted); border-radius:99px; padding:5px 12px; cursor:pointer; }
-  .langs button.on { background:var(--blue); color:#fff; }
+  .nav-links { display:flex; align-items:center; gap:1.25rem; }
+  /* Sessie B: hier komt <a href="/guide/" data-i="nav_guide">Guide</a> — nog niet plaatsen, de gids bestaat pas na sessie B. */
+  .langs { display:inline-flex; gap:2px; border:1px solid var(--sky); border-radius:99px; padding:3px; }
+  .langs button { font:inherit; font-size:.8125rem; font-weight:700; border:0; background:transparent; color:var(--sky); border-radius:99px; padding:.4rem .8rem; cursor:pointer; min-height:32px; }
+  .langs button.on { background:var(--wit); color:var(--navy); }
 
-  /* ---- hero ---- */
-  .hero { padding:60px 0 40px; text-align:center; }
-  @media (max-width:520px){ .hero { padding:44px 0 32px; } section { padding:44px 0; } }
-  .eyebrow { font-size:12px; letter-spacing:2px; font-weight:700; color:var(--blue); text-transform:uppercase; }
-  .hero h1 { font-size:clamp(30px,6vw,50px); margin:12px auto 14px; max-width:760px; letter-spacing:-0.02em; }
-  .hero p.sub { font-size:17px; color:var(--muted); max-width:600px; margin:0 auto 28px; }
-  .cta-form { display:flex; gap:8px; max-width:440px; margin:0 auto; }
-  .cta-form input { flex:1; font-family:inherit; font-size:16px; padding:14px 16px; border:1.5px solid var(--line); border-radius:14px; background:#fff; color:var(--ink); min-width:0; }
+  /* ===== Hero ===== */
+  .hero { background:var(--navy); color:var(--wit); padding:2.5rem 0 3.5rem; }
+  .hero .eyebrow { color:var(--sky); }
+  .hero h1 { font-size:clamp(2.25rem, 1.5rem + 4.5vw, 4.25rem); max-width:16ch; margin-bottom:1.25rem; hyphens:auto; overflow-wrap:break-word; }
+  .hero .sub { color:var(--sky); font-size:1.125rem; max-width:34rem; margin-bottom:2rem; }
+  .hero-grid { display:grid; gap:2rem; align-items:center; }
+  .hero-art { display:flex; justify-content:center; }
+  .hero-art svg { display:block; width:min(60vw, 220px); height:auto; border-radius:22%; overflow:hidden; }
+  .hero-actions { display:flex; flex-direction:column; gap:.75rem; align-items:flex-start; }
+  .hero-note { color:var(--sky); font-size:.9375rem; }
+  @media (min-width:768px) { .hero { padding:4rem 0 5rem; } }
+  @media (min-width:900px) {
+    .hero-grid { grid-template-columns:minmax(0, 1fr) auto; gap:3rem; }
+    .hero-art { order:2; }
+    .hero-art svg { width:min(26vw, 260px); }
+  }
+  @media (min-width:1100px) { .hero-art svg { width:320px; } }
+
+  /* ===== Scenario (statisch voorbeeld) ===== */
+  .scenario { border:1px solid var(--sky); border-radius:var(--radius); background:var(--wit); padding:1.5rem; margin-top:1.75rem; }
+  .scenario .world { display:inline-flex; align-items:center; gap:.5rem; font-size:.8125rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--blue); margin-bottom:1rem; }
+  .scenario .world::before { content:""; width:10px; height:10px; border-radius:50%; background:var(--deep); }
+  .scenario .situation { font-family:'Bricolage Grotesque', system-ui, sans-serif; font-weight:700; font-size:1.25rem; line-height:1.35; margin-bottom:1.25rem; }
+  .options { list-style:none; padding:0; display:grid; gap:.6rem; }
+  .options li { display:flex; gap:.85rem; align-items:flex-start; padding:.9rem 1rem; border:1px solid var(--sky); border-radius:12px; background:var(--paper); }
+  .options .k { flex-shrink:0; width:1.75rem; height:1.75rem; border-radius:50%; background:var(--navy); color:var(--wit); font-weight:700; font-size:.875rem; display:inline-flex; align-items:center; justify-content:center; }
+  .scenario .after { margin-top:1.25rem; color:var(--ink-soft); font-size:.9375rem; }
+  .scenario .after b { color:var(--navy); }
+  @media (min-width:768px) { .scenario { padding:2rem; } }
+
+  /* ===== Hoe het werkt ===== */
+  .steps { list-style:none; padding:0; display:grid; gap:1rem; counter-reset:step; margin-top:2rem; }
+  .steps li { padding:1.25rem 1.25rem 1.25rem 3.5rem; position:relative; background:var(--wit); border:1px solid var(--sky); border-radius:var(--radius); }
+  .steps li::before { counter-increment:step; content:counter(step); position:absolute; left:1.25rem; top:1.3rem; width:1.75rem; height:1.75rem; border-radius:8px; background:var(--blue); color:var(--wit); font-family:'Bricolage Grotesque', system-ui, sans-serif; font-weight:800; display:flex; align-items:center; justify-content:center; }
+  .steps p { color:var(--ink-soft); font-size:1rem; margin-top:.35rem; }
+  @media (min-width:860px) { .steps { grid-template-columns:repeat(3, 1fr); } }
+
+  /* ===== Gratis ===== */
+  .free-grid { display:grid; gap:1rem; margin-top:2rem; }
+  .free-card { border:1px solid var(--sky); background:var(--wit); border-radius:var(--radius); padding:1.25rem; display:flex; gap:.9rem; align-items:center; }
+  .free-card .e { font-size:1.75rem; line-height:1; flex-shrink:0; }
+  .free-card .t { font-weight:700; }
+  .free-card .tag { display:block; font-size:.75rem; letter-spacing:.1em; text-transform:uppercase; font-weight:700; color:var(--blue); margin-top:.15rem; }
+  .free-actions { margin-top:1.75rem; display:flex; flex-wrap:wrap; gap:1rem; align-items:center; }
+  .free-note { color:var(--ink-soft); font-size:.9375rem; }
+  .more-worlds { margin-top:2.5rem; }
+  .more-worlds p { color:var(--ink-soft); font-size:.9375rem; }
+  .chips { list-style:none; padding:0; display:flex; flex-wrap:wrap; gap:.5rem; margin-top:.75rem; }
+  .chips li { font-size:.9375rem; font-weight:600; padding:.4rem .8rem; border-radius:99px; border:1px solid var(--sky); background:var(--wit); }
+  @media (min-width:700px) { .free-grid { grid-template-columns:repeat(3, 1fr); } }
+
+  /* ===== Store + wachtlijst ===== */
+  .store { background:var(--navy); color:var(--wit); }
+  .store .eyebrow { color:var(--sky); }
+  .store .lead { color:var(--sky); }
+  .store h2 { max-width:20ch; }
+  .waitlist { background:var(--paper); }
+  .waitlist h2 { max-width:18ch; }
+  .cta-form { display:flex; flex-direction:column; gap:.75rem; margin-top:1.75rem; max-width:32rem; }
+  .cta-form input { font:inherit; font-size:1.0625rem; padding:.9rem 1rem; border:2px solid var(--sky); border-radius:14px; background:var(--wit); color:var(--navy); min-width:0; min-height:48px; }
   .cta-form input:focus { outline:none; border-color:var(--blue); }
-  .btn { font-family:inherit; font-size:15.5px; font-weight:700; color:#fff; background:var(--blue); border:0; border-radius:14px; padding:14px 22px; cursor:pointer; white-space:nowrap; transition:transform .12s ease, filter .12s ease; }
-  .btn:hover { filter:brightness(1.06); transform:translateY(-1px); }
-  .btn:active { transform:translateY(0); }
-  .btn.orange { background:var(--orange); }
-  .tiny { font-size:12.5px; color:#8FA3C8; margin-top:10px; }
-  .free-note { display:inline-block; margin-top:26px; font-size:13px; font-weight:700; color:var(--green); background:#EFFAF4; border:1px solid var(--green); border-radius:99px; padding:6px 14px; }
+  .cta-form input::placeholder { color:var(--ink-soft); opacity:1; }
+  .promise { margin-top:1.25rem; display:grid; gap:.5rem; color:var(--ink-soft); font-size:.9375rem; }
+  .promise .shield { color:var(--navy); font-weight:700; }
+  @media (min-width:640px) { .cta-form { flex-direction:row; } .cta-form input { flex:1; } }
 
-  /* ---- meter demo ---- */
-  .meter { max-width:340px; margin:36px auto 0; background:var(--orange); border-radius:26px; height:150px; position:relative; overflow:hidden; box-shadow:0 10px 28px rgba(20,32,62,.16); }
-  .meter .water { position:absolute; left:0; right:0; bottom:0; height:10%; background:var(--blue); animation:rise 2.2s .5s cubic-bezier(.22,1,.36,1) forwards; }
-  .meter .water svg { position:absolute; top:-13px; left:0; width:100%; height:14px; display:block; }
-  @keyframes rise { to { height:66%; } }
-  .meter .label { position:absolute; left:0; right:0; bottom:14px; display:flex; flex-direction:column; align-items:center; }
-  .meter .pct { font-family:'Bricolage Grotesque',sans-serif; font-weight:800; font-size:34px; color:#fff; line-height:1; }
-  .meter .d { font-size:11px; letter-spacing:2px; text-transform:uppercase; font-weight:700; color:rgba(250,251,253,.75); margin-top:4px; }
-  @media (prefers-reduced-motion:reduce){ .meter .water{ animation:none; height:66%; } }
-
-  /* ---- sections ---- */
-  section { padding:56px 0; }
-  section h2 { font-size:clamp(24px,4vw,34px); text-align:center; margin-bottom:8px; }
-  .lead { text-align:center; color:var(--muted); max-width:560px; margin:0 auto 36px; }
-  .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:14px; }
-  .card { background:#fff; border:1px solid var(--line); border-radius:18px; padding:22px; }
-  .card .q { font-weight:700; font-size:15.5px; margin-bottom:10px; }
-  .card .a { font-size:14px; color:var(--muted); }
-  .card .a b { color:var(--green); }
-  .es-tag { display:inline-block; font-size:10.5px; letter-spacing:1.5px; font-weight:700; color:var(--blue); text-transform:uppercase; background:var(--sky); border-radius:99px; padding:3px 10px; margin-bottom:10px; }
-
-  .steps { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; counter-reset:step; }
-  .step { background:#fff; border:1px solid var(--line); border-radius:18px; padding:22px; }
-  .step::before { counter-increment:step; content:counter(step); display:flex; align-items:center; justify-content:center; width:34px; height:34px; border-radius:10px; background:var(--blue); color:#fff; font-weight:800; font-family:'Bricolage Grotesque',sans-serif; margin-bottom:12px; }
-  .step h3 { font-size:17px; margin-bottom:6px; }
-  .step p { font-size:14px; color:var(--muted); }
-
-  .worlds { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:12px; }
-  .world { background:#fff; border:1px solid var(--line); border-radius:16px; padding:16px 12px 12px; font-size:13.5px; font-weight:700; display:flex; flex-direction:column; align-items:center; text-align:center; gap:8px; min-height:126px; }
-  .world span.e { font-size:24px; line-height:1; }
-  .world .t { flex:1; display:flex; align-items:center; justify-content:center; line-height:1.3; }
-  .world .fr { font-size:10px; letter-spacing:1px; font-weight:800; color:var(--green); background:#EFFAF4; border:1px solid var(--green); border-radius:99px; padding:3px 11px; }
-  .world .pr { font-size:17px; color:#8FA3C8; line-height:1; padding:2px 0; }
-
-  .deal { background:var(--blue); color:#DCE4F9; border-radius:24px; padding:40px 28px; text-align:center; }
-  .deal h2 { color:#fff; }
-  .deal .price { font-family:'Bricolage Grotesque',sans-serif; font-weight:800; font-size:44px; color:#fff; margin:12px 0 2px; }
-  .deal .was { text-decoration:line-through; color:#8FA3C8; font-size:16px; margin-right:8px; }
-  .deal p { max-width:480px; margin:8px auto 20px; font-size:14.5px; }
-
-  .faq details { background:#fff; border:1px solid var(--line); border-radius:14px; margin-bottom:10px; padding:0 18px; }
-  .faq summary { cursor:pointer; font-weight:700; font-size:15px; padding:16px 0; list-style:none; }
+  /* ===== FAQ ===== */
+  .faq { margin-top:2rem; display:grid; gap:.75rem; }
+  .faq details { background:var(--wit); border:1px solid var(--sky); border-radius:14px; padding:0 1.25rem; }
+  .faq summary { cursor:pointer; font-weight:700; font-size:1.0625rem; padding:1rem 0; list-style:none; display:flex; justify-content:space-between; gap:1rem; align-items:center; min-height:48px; }
   .faq summary::-webkit-details-marker { display:none; }
-  .faq p { font-size:14px; color:var(--muted); padding-bottom:16px; }
+  .faq summary::after { content:"+"; font-family:'Bricolage Grotesque', system-ui, sans-serif; font-weight:800; font-size:1.5rem; color:var(--blue); line-height:1; flex-shrink:0; }
+  .faq details[open] summary::after { content:"–"; }
+  .faq p { color:var(--ink-soft); padding-bottom:1.1rem; }
 
-  footer { border-top:1px solid var(--line); padding:32px 0 48px; text-align:center; font-size:13px; color:var(--muted); }
-  footer .shield { font-weight:700; color:var(--ink); margin-bottom:6px; }
-
-  @media (max-width:520px){ .cta-form { flex-direction:column; } }
+  /* ===== Footer ===== */
+  footer { background:var(--navy); color:var(--sky); padding:2.5rem 0 3rem; font-size:.9375rem; }
+  footer .foot { display:grid; gap:1rem; }
+  footer .foot-links { display:flex; flex-wrap:wrap; gap:1.25rem; }
+  /* Sessie B: hier komt <a href="/guide/" data-i="ft_guide">Guide</a> in .foot-links — nog niet plaatsen. */
+  footer .shield { color:var(--wit); font-weight:700; }
+  footer a { color:var(--wit); }
+  @media (min-width:768px) { footer .foot { grid-template-columns:1fr auto; align-items:end; } }
 </style>
 </head>
 <body>
 
 <header>
-  <div class="nav">
-    <a class="logo" href="#">
-      <span class="mark"><svg viewBox="0 0 96 96"><rect width="96" height="96" fill="#FF6B35"/><path d="M-8 54 Q 20 44 48 50 T 104 46 L 104 104 L -8 104 Z" fill="#2743B0"/><path d="M-8 54 Q 20 44 48 50 T 104 46" stroke="#FAFBFD" stroke-width="12" fill="none"/></svg></span>
+  <div class="wrap nav">
+    <a class="logo" href="#" aria-label="Almost Dutch">
+      <span class="mark" aria-hidden="true"><svg viewBox="0 0 96 96"><use href="#wave-mark"/></svg></span>
       Almost Dutch
     </a>
-    <div class="langs" role="group" aria-label="Language">
-      <button id="btn-en" class="on" onclick="setLang('en', 'click')">EN</button>
-      <button id="btn-nl" onclick="setLang('nl', 'click')">NL</button>
+    <div class="nav-links">
+      <!-- Sessie B: <a href="/guide/" data-i="nav_guide">Guide</a> -->
+      <div class="langs" role="group" aria-label="Language">
+        <button id="btn-en" class="on" onclick="setLang('en', 'click')">EN</button>
+        <button id="btn-nl" onclick="setLang('nl', 'click')">NL</button>
+      </div>
     </div>
   </div>
 </header>
 
+<!-- Het merk: oranje grond, blauw water, witte golflijn. Eén definitie, twee keer gebruikt. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="wave-mark" viewBox="0 0 96 96">
+    <rect width="96" height="96" fill="#FF6B35"/>
+    <path d="M-8 52 C 14 40, 30 42, 48 50 S 84 58, 104 46 L 104 104 L -8 104 Z" fill="#2743B0"/>
+    <path d="M-8 52 C 14 40, 30 42, 48 50 S 84 58, 104 46" stroke="#FAFBFD" stroke-width="11" fill="none" stroke-linecap="round"/>
+  </symbol>
+</svg>
+
 <main>
-  <!-- HERO -->
-  <div class="hero wrap">
-    <div class="eyebrow" data-i="hero_eyebrow">The survival guide for expats in the Netherlands</div>
-    <h1 data-i="hero_h1">Nobody warns you about the birthday circle.</h1>
-    <p class="sub" data-i="hero_sub">The €0.50 Tikkie. The birthday calendar in the toilet. Dutch directness at 9 a.m. — Almost Dutch teaches you the unwritten rules of Dutch culture through hilarious real-life scenarios. And yes, there's a genuine explanation under every joke.</p>
-
-    <!-- TODO: koppel dit formulier aan Formspree, Supabase of je e-maildienst -->
-    <form class="cta-form" onsubmit="joinList(event)">
-      <input type="email" required placeholder="your@email.com" data-i-ph="hero_ph" aria-label="Email address" />
-      <button class="btn orange" type="submit" data-i="hero_btn">Join the waitlist</button>
-    </form>
-    <div class="tiny" data-i="hero_tiny">One email. When it launches. I'll write once, the day Almost Dutch is in the App Store and Google Play. No newsletter, no reminders, no second email.</div>
-    <div class="tiny" data-i="hero_privacy">🛡️ Your email address, nothing else</div>
-
-    <div class="meter" aria-hidden="true">
-      <div class="water">
-        <svg viewBox="0 0 120 14" preserveAspectRatio="none">
-          <path d="M-4 10 Q 26 3 60 7 T 124 5 L 124 14 L -4 14 Z" fill="#2743B0"/>
-          <path d="M-4 10 Q 26 3 60 7 T 124 5" stroke="#FAFBFD" stroke-width="6" fill="none"/>
-        </svg>
+  <!-- HERO: één claim, één actie -->
+  <section class="hero on-dark">
+    <div class="wrap hero-grid">
+      <div class="hero-art">
+        <svg viewBox="0 0 96 96" role="img" aria-label="Almost Dutch wave mark"><use href="#wave-mark"/></svg>
       </div>
-      <div class="label"><div class="pct">73%</div><div class="d">Dutch</div></div>
-    </div>
-    <div class="tiny" data-i="hero_meter">Your Dutchness rises like water against a dike. Very on-brand for this country.</div>
-
-    <div class="free-note" data-i="hero_free">✓ 45 scenarios free forever — no account needed</div>
-  </div>
-
-  <!-- SAMPLE SCENARIOS -->
-  <section>
-    <div class="wrap">
-      <h2 data-i="sc_h2">Sound familiar yet?</h2>
-      <p class="lead" data-i="sc_lead">Three of the 150 real-life situations you'll learn to survive:</p>
-      <div class="cards">
-        <div class="card">
-          <div class="q" data-i="sc1_q">It's your birthday at the office. Who brings the cake?</div>
-          <div class="a" data-i="sc1_a"><b>You do.</b> You treat them on your birthday. Forget it once and you'll hear about it for a year.</div>
-        </div>
-        <div class="card">
-          <div class="q" data-i="sc2_q">A friend sends you a payment request for €0.50. This is…</div>
-          <div class="a" data-i="sc2_a"><b>Completely normal.</b> A Tikkie isn't stinginess — it's fairness, calculated. Pay within 24 hours.</div>
-        </div>
-        <div class="card">
-          <div class="q" data-i="sc3_q">Your colleague says your report is "not good." Are you fired?</div>
-          <div class="a" data-i="sc3_a"><b>No — congratulations.</b> Direct feedback means they take you seriously. Vague praise is the real danger.</div>
+      <div>
+        <span class="eyebrow" data-i="hero_eyebrow">The survival guide for expats in the Netherlands</span>
+        <h1 data-i="hero_h1">Nobody warns you about the birthday circle.</h1>
+        <p class="sub" data-i="hero_sub">The €0.50 Tikkie. The birthday calendar in the toilet. Dutch directness at 9 a.m. — Almost Dutch teaches you the unwritten rules of Dutch culture through hilarious real-life scenarios. And yes, there's a genuine explanation under every joke.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#waitlist" data-i="hero_cta">Join the waitlist</a>
+          <p class="hero-note" data-i="hero_privacy">🛡️ Your email address, nothing else</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- HOW IT WORKS -->
-  <section style="background:#fff; border-top:1px solid var(--line); border-bottom:1px solid var(--line);">
+  <!-- SCENARIO: één statisch voorbeeld uit wereld 3 -->
+  <section>
+    <div class="narrow">
+      <span class="eyebrow" data-i="sc_eyebrow">Try one</span>
+      <h2 data-i="sc_h2">Sound familiar yet?</h2>
+      <p class="lead" data-i="sc_lead">One of the 150 real-life situations you'll learn to survive:</p>
+
+      <div class="scenario">
+        <div class="world" data-i="sc_world">World 3 · Money &amp; Tikkie</div>
+        <p class="situation" data-i="sc_situation">A colleague grabs you a coffee from the office vending machine. That evening you receive a payment request: €0.50. You…</p>
+        <ol class="options">
+          <li><span class="k" aria-hidden="true">A</span><span data-i="sc_opt1">Pay it immediately, no hard feelings</span></li>
+          <li><span class="k" aria-hidden="true">B</span><span data-i="sc_opt2">Feel deeply insulted</span></li>
+          <li><span class="k" aria-hidden="true">C</span><span data-i="sc_opt3">Ignore it — surely it's a joke</span></li>
+          <li><span class="k" aria-hidden="true">D</span><span data-i="sc_opt4">Send them a Tikkie for €0.50 back</span></li>
+        </ol>
+        <p class="after" data-i="sc_after"><b>Which one is right, and why?</b> That's in the app. Every scenario ends with "Even serieus" — the genuine cultural explanation.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOE HET WERKT -->
+  <section class="paper">
     <div class="wrap">
-      <h2 data-i="how_h2">How it works</h2>
-      <p class="lead" data-i="how_lead">Learn Dutch customs, etiquette and culture — one awkward moment at a time.</p>
-      <div class="steps">
-        <div class="step">
+      <div class="narrow" style="margin-inline:0;">
+        <span class="eyebrow" data-i="how_eyebrow">The app</span>
+        <h2 data-i="how_h2">How it works</h2>
+        <p class="lead" data-i="how_lead">Learn Dutch customs, etiquette and culture — one awkward moment at a time.</p>
+      </div>
+      <ol class="steps">
+        <li>
           <h3 data-i="how1_h">Play real scenarios</h3>
           <p data-i="how1_p">Pick your response to true-to-life Dutch situations, from the vrijmibo to the huisarts. 150 scenarios across 10 themed worlds.</p>
-        </div>
-        <div class="step">
+        </li>
+        <li>
           <h3 data-i="how2_h">Get the real explanation</h3>
           <p data-i="how2_p">Every joke ends with "Even serieus" — the genuine cultural context, so you actually understand why the Dutch do what they do.</p>
-        </div>
-        <div class="step">
+        </li>
+        <li>
           <h3 data-i="how3_h">Watch your Dutchness rise</h3>
           <p data-i="how3_p">Earn your percentage, collect badges, and share your score. 100% unlocks your "Certified Almost Dutch" certificate.</p>
-        </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- GRATIS: werelden 1–3 in de browser -->
+  <section>
+    <div class="wrap">
+      <div class="narrow" style="margin-inline:0;">
+        <span class="eyebrow" data-i="free_eyebrow">Free</span>
+        <h2 data-i="free_h2">Three worlds free, in your browser</h2>
+        <p class="lead" data-i="free_lead">Start with the three most painfully recognisable ones. 45 scenarios, no account needed.</p>
+      </div>
+      <div class="free-grid">
+        <div class="free-card"><span class="e" aria-hidden="true">💼</span><div><span class="t" data-i="w1">Work &amp; The Office</span><span class="tag" data-i="free_tag1">World 1 · Free</span></div></div>
+        <div class="free-card"><span class="e" aria-hidden="true">🎂</span><div><span class="t" data-i="w2">Birthdays</span><span class="tag" data-i="free_tag2">World 2 · Free</span></div></div>
+        <div class="free-card"><span class="e" aria-hidden="true">💶</span><div><span class="t" data-i="w3">Money &amp; Tikkie</span><span class="tag" data-i="free_tag3">World 3 · Free</span></div></div>
+      </div>
+      <div class="free-actions">
+        <a class="btn btn-secondary" href="/app/" data-i="free_btn">Play the free worlds</a>
+        <p class="free-note" data-i="free_note">Works on your phone, right now. No download, no sign-up.</p>
+      </div>
+      <div class="more-worlds narrow" style="margin-inline:0;">
+        <p data-i="more_lead">Seven more worlds come with the app:</p>
+        <ul class="chips">
+          <li data-i="w4">Bikes &amp; Traffic</li>
+          <li data-i="w5">Neighbours &amp; Home</li>
+          <li data-i="w6">Weather &amp; Small Talk</li>
+          <li data-i="w7">Food &amp; Borrel</li>
+          <li data-i="w8">Holidays &amp; King's Day</li>
+          <li data-i="w9">Healthcare &amp; Bureaucracy</li>
+          <li data-i="w10">Language &amp; Expressions</li>
+        </ul>
       </div>
     </div>
   </section>
 
-  <!-- WORLDS -->
-  <section>
-    <div class="wrap">
-      <h2 data-i="w_h2">Ten worlds of Dutch life</h2>
-      <p class="lead" data-i="w_lead">Start free with the three most painfully recognisable ones.</p>
-      <div class="worlds">
-        <div class="world"><span class="e">💼</span><span class="t" data-i="w1">Work &amp; The Office</span><span class="fr">FREE</span></div>
-        <div class="world"><span class="e">🎂</span><span class="t" data-i="w2">Birthdays</span><span class="fr">FREE</span></div>
-        <div class="world"><span class="e">💶</span><span class="t" data-i="w3">Money &amp; Tikkie</span><span class="fr">FREE</span></div>
-        <div class="world"><span class="e">🚲</span><span class="t" data-i="w4">Bikes &amp; Traffic</span><span class="pr">🔒</span></div>
-        <div class="world"><span class="e">🏠</span><span class="t" data-i="w5">Neighbours &amp; Home</span><span class="pr">🔒</span></div>
-        <div class="world"><span class="e">🌧️</span><span class="t" data-i="w6">Weather &amp; Small Talk</span><span class="pr">🔒</span></div>
-        <div class="world"><span class="e">🍟</span><span class="t" data-i="w7">Food &amp; Borrel</span><span class="pr">🔒</span></div>
-        <div class="world"><span class="e">🎉</span><span class="t" data-i="w8">Holidays &amp; King's Day</span><span class="pr">🔒</span></div>
-        <div class="world"><span class="e">🏥</span><span class="t" data-i="w9">Healthcare &amp; Bureaucracy</span><span class="pr">🔒</span></div>
-        <div class="world"><span class="e">🗣️</span><span class="t" data-i="w10">Language &amp; Expressions</span><span class="pr">🔒</span></div>
-      </div>
+  <!-- STOREAANKONDIGING -->
+  <section class="store on-dark">
+    <div class="narrow">
+      <span class="eyebrow" data-i="deal_eyebrow">Autumn 2026</span>
+      <h2 data-i="deal_h2">Coming to the App Store and Google Play</h2>
+      <p class="lead" data-i="deal_p">All ten worlds, one payment of €11.99. No subscription, no account, no ads. iOS and Android, autumn 2026.</p>
     </div>
   </section>
 
-  <!-- STORE LAUNCH -->
-  <section>
-    <div class="wrap">
-      <div class="deal">
-        <h2 data-i="deal_h2">Coming to the App Store and Google Play</h2>
-        <p data-i="deal_p">All ten worlds, one payment of €11.99. No subscription, no account, no ads. iOS and Android, autumn 2026.</p>
-        <button class="btn orange" onclick="document.querySelector('.cta-form input').focus(); window.scrollTo({top:0,behavior:'smooth'})" data-i="deal_btn">Join the waitlist</button>
+  <!-- WACHTLIJST -->
+  <section class="waitlist" id="waitlist">
+    <div class="narrow">
+      <span class="eyebrow" data-i="wl_eyebrow">Waitlist</span>
+      <h2 data-i="wl_h2">One email, the day it launches</h2>
+      <p class="lead" data-i="hero_tiny">One email. When it launches. I'll write once, the day Almost Dutch is in the App Store and Google Play. No newsletter, no reminders, no second email.</p>
+      <form class="cta-form" onsubmit="joinList(event)">
+        <input type="email" name="email" required placeholder="your@email.com" data-i-ph="hero_ph" aria-label="Email address" autocomplete="email" />
+        <button class="btn btn-primary" type="submit" data-i="hero_btn">Join the waitlist</button>
+      </form>
+      <div class="promise">
+        <div class="shield" data-i="wl_privacy">🛡️ Your email address, nothing else</div>
       </div>
     </div>
   </section>
 
   <!-- FAQ -->
   <section>
-    <div class="wrap" style="max-width:680px;">
+    <div class="narrow">
+      <span class="eyebrow" data-i="faq_eyebrow">FAQ</span>
       <h2 data-i="faq_h2">Questions, answered directly</h2>
       <p class="lead" data-i="faq_lead">It's the Dutch way, after all.</p>
       <div class="faq">
@@ -303,9 +401,15 @@
 </main>
 
 <footer>
-  <div class="wrap">
-    <div class="shield" data-i="ft_shield">🛡️ Your email address, nothing else</div>
-    <div data-i="ft_line">Almost Dutch © 2026 · Made with stroopwafels in the Netherlands</div>
+  <div class="wrap foot">
+    <div>
+      <div class="shield" data-i="ft_shield">🛡️ Your email address, nothing else</div>
+      <div data-i="ft_line">Almost Dutch © 2026 · Made with stroopwafels in the Netherlands</div>
+    </div>
+    <div class="foot-links">
+      <!-- Sessie B: <a href="/guide/" data-i="ft_guide">Guide</a> -->
+      <a href="#waitlist" data-i="ft_waitlist">Waitlist</a>
+    </div>
   </div>
 </footer>
 
@@ -315,20 +419,19 @@ const T = {
     hero_eyebrow: "De survivalgids voor expats in Nederland",
     hero_h1: "Niemand waarschuwt je voor de verjaardagskring.",
     hero_sub: "De Tikkie van €0,50. De verjaardagskalender op de wc. Hollandse directheid om 9 uur 's ochtends — Almost Dutch leert je de ongeschreven regels van de Nederlandse cultuur met hilarische, levensechte scenario's. En ja, onder elke grap zit een echte uitleg.",
-    hero_ph: "jouw@email.nl",
-    hero_btn: "Meld je aan",
-    hero_tiny: "Eén mail. Als hij live gaat. Je hoort één keer van me, op de dag dat Almost Dutch in de App Store en Google Play staat. Geen nieuwsbrief, geen herinneringen, geen tweede mail.",
+    hero_cta: "Zet me op de wachtlijst",
     hero_privacy: "🛡️ Je e-mailadres, verder niets",
-    hero_meter: "Je Dutchness stijgt als water tegen een dijk. Heel toepasselijk voor dit land.",
-    hero_free: "✓ 45 scenario's voor altijd gratis — geen account nodig",
+    sc_eyebrow: "Probeer er één",
     sc_h2: "Komt dit al bekend voor?",
-    sc_lead: "Drie van de 150 levensechte situaties die je leert overleven:",
-    sc1_q: "Je bent jarig op kantoor. Wie neemt de taart mee?",
-    sc1_a: "<b>Jij zelf.</b> Jij trakteert op jouw verjaardag. Vergeet het één keer en je hoort het nog een jaar.",
-    sc2_q: "Een vriend stuurt je een betaalverzoek van €0,50. Dit is…",
-    sc2_a: "<b>Volkomen normaal.</b> Een Tikkie is geen gierigheid — het is eerlijkheid, uitgerekend. Betaal binnen 24 uur.",
-    sc3_q: "Je collega zegt dat je rapport \"niet goed\" is. Ben je ontslagen?",
-    sc3_a: "<b>Nee — gefeliciteerd.</b> Directe feedback betekent dat ze je serieus nemen. Vage complimenten zijn het échte gevaar.",
+    sc_lead: "Eén van de 150 levensechte situaties die je leert overleven:",
+    sc_world: "Wereld 3 · Geld &amp; Tikkie",
+    sc_situation: "Een collega haalt een koffie voor je uit de automaat op kantoor. Die avond krijg je een betaalverzoek: €0,50. Jij…",
+    sc_opt1: "Betaalt meteen, zonder wrok",
+    sc_opt2: "Voelt je diep beledigd",
+    sc_opt3: "Negeert het — het is vast een grap",
+    sc_opt4: "Stuurt een Tikkie van €0,50 terug",
+    sc_after: "<b>Welke klopt, en waarom?</b> Dat staat in de app. Elk scenario eindigt met \"Even serieus\" — de echte culturele uitleg.",
+    how_eyebrow: "De app",
     how_h2: "Hoe het werkt",
     how_lead: "Leer Nederlandse gewoonten, etiquette en cultuur — één ongemakkelijk moment tegelijk.",
     how1_h: "Speel echte scenario's",
@@ -337,14 +440,28 @@ const T = {
     how2_p: "Elke grap eindigt met \"Even serieus\" — de echte culturele context, zodat je écht begrijpt waarom Nederlanders doen wat ze doen.",
     how3_h: "Zie je Dutchness stijgen",
     how3_p: "Verdien je percentage, verzamel badges en deel je score. Bij 100% wacht je \"Certified Almost Dutch\"-certificaat.",
-    w_h2: "Tien werelden Nederlands leven",
-    w_lead: "Begin gratis met de drie meest pijnlijk herkenbare.",
+    free_eyebrow: "Gratis",
+    free_h2: "Drie werelden gratis, in je browser",
+    free_lead: "Begin met de drie meest pijnlijk herkenbare. 45 scenario's, geen account nodig.",
     w1: "Werk & Kantoor", w2: "Verjaardagen", w3: "Geld & Tikkie", w4: "Fiets & Verkeer",
     w5: "Buren & Wonen", w6: "Weer & Smalltalk", w7: "Eten & Borrel", w8: "Feestdagen & Koningsdag",
     w9: "Zorg & Bureaucratie", w10: "Taal & Uitdrukkingen",
+    free_tag1: "Wereld 1 · Gratis",
+    free_tag2: "Wereld 2 · Gratis",
+    free_tag3: "Wereld 3 · Gratis",
+    free_btn: "Speel de gratis werelden",
+    free_note: "Werkt nu op je telefoon. Geen download, geen account.",
+    more_lead: "Zeven werelden extra zitten in de app:",
+    deal_eyebrow: "Najaar 2026",
     deal_h2: "Binnenkort in de App Store en Google Play",
     deal_p: "Alle tien de werelden, één keer €11,99. Geen abonnement, geen account, geen advertenties. iOS en Android, najaar 2026.",
-    deal_btn: "Zet me op de wachtlijst",
+    wl_eyebrow: "Wachtlijst",
+    wl_h2: "Eén mail, op de dag dat hij live gaat",
+    hero_tiny: "Eén mail. Als hij live gaat. Je hoort één keer van me, op de dag dat Almost Dutch in de App Store en Google Play staat. Geen nieuwsbrief, geen herinneringen, geen tweede mail.",
+    hero_ph: "jouw@email.nl",
+    hero_btn: "Meld je aan",
+    wl_privacy: "🛡️ Je e-mailadres, verder niets",
+    faq_eyebrow: "FAQ",
     faq_h2: "Vragen, direct beantwoord",
     faq_lead: "Zo doen we dat hier, tenslotte.",
     f1_q: "Wat is Almost Dutch?",
@@ -356,7 +473,8 @@ const T = {
     f5_q: "Wanneer lanceert het?",
     f5_a: "Najaar 2026, in de App Store en Google Play. De wachtlijst krijgt één mail op de dag dat hij er staat. Het staat bovenaan mijn agenda, en je weet hoe serieus agenda's hier worden genomen.",
     ft_shield: "🛡️ Je e-mailadres, verder niets",
-    ft_line: "Almost Dutch © 2026 · Gemaakt met stroopwafels in Nederland"
+    ft_line: "Almost Dutch © 2026 · Gemaakt met stroopwafels in Nederland",
+    ft_waitlist: "Wachtlijst"
   },
   en: {} // Engels staat al in de HTML zelf
 };
@@ -407,7 +525,7 @@ if (LANGS.includes(urlLang)) {
 }
 if (startLang) setLang(startLang, startSource);
 
-// Wachtlijst via Formspree — vervang JOUW_FORM_ID door je eigen code (de 8 tekens achter /f/)
+// Wachtlijst via Formspree (formulier-ID maqrwlnl)
 const FORMSPREE_ENDPOINT = "https://formspree.io/f/maqrwlnl";
 
 async function joinList(e) {
@@ -426,7 +544,9 @@ async function joinList(e) {
     });
     if (!res.ok) throw new Error("submit failed");
     btn.textContent = nl ? "✓ Je staat op de lijst!" : "✓ You're on the list!";
-    btn.style.background = "var(--green)";
+    btn.style.background = "var(--blue)";
+    btn.style.borderColor = "var(--blue)";
+    btn.style.color = "var(--wit)";
     input.disabled = true;
   } catch (err) {
     btn.disabled = false;
