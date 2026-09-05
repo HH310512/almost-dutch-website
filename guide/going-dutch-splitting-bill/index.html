@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dinner with Dutch friends: who pays the bill? · Almost Dutch</title>
+<meta name="description" content="The Dutch answer: the bill is split — precisely. Splitting costs isn't rudeness — it keeps friendships free of debt and awkwardness." />
+<link rel="canonical" href="https://almostdutch.nl/guide/going-dutch-splitting-bill/" />
+<meta name="robots" content="index, follow, max-image-preview:large" />
+<meta property="og:site_name" content="Almost Dutch" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Dinner with Dutch friends: who pays the bill? · Almost Dutch" />
+<meta property="og:description" content="The Dutch answer: the bill is split — precisely. Splitting costs isn't rudeness — it keeps friendships free of debt and awkwardness." />
+<meta property="og:url" content="https://almostdutch.nl/guide/going-dutch-splitting-bill/" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:image" content="https://almostdutch.nl/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Dinner with Dutch friends: who pays the bill? · Almost Dutch" />
+<meta name="twitter:description" content="The Dutch answer: the bill is split — precisely. Splitting costs isn't rudeness — it keeps friendships free of debt and awkwardness." />
+<meta name="twitter:image" content="https://almostdutch.nl/og-image.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<meta name="theme-color" content="#16204F" />
+
+<!-- Eén zelf-gehost lettertype voor de koppen; de lopende tekst gebruikt de systeemfontstack.
+     Geen font-CDN: de pagina doet geen enkele request naar derden. -->
+<link rel="preload" href="/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Dinner with Dutch friends: who pays the bill?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Splitting costs isn't rudeness — it keeps friendships free of debt and awkwardness. Equal footing is the whole point."
+      }
+    }
+  ]
+}
+</script>
+
+<style>
+:root {
+    --orange:#FF6B35;      /* alleen de primaire actie: naar de app */
+    --blue:#2743B0;        /* links, secundaire acties, accenten */
+    --wit:#FAFBFD;         /* witband, lichte basis */
+    --navy:#16204F;        /* donkere basis, tekst */
+    --paper:#F6F2E9;       /* papier, afwisselende secties */
+    --sky:#D3DCF5;         /* lichtblauw, lijnen en tekst op navy */
+    --deep:#C9520B;        /* diep oranje, accenten op lichte grond (niet voor kleine tekst) */
+    --ink-soft:rgb(22 32 79 / .78);   /* navy, iets lichter, voor bijtekst op lichte grond */
+    --measure:42rem;       /* ±70 tekens bij 17px */
+    --radius:18px;
+  }
+  @font-face {
+    font-family:'Bricolage Grotesque';
+    font-style:normal;
+    font-weight:200 800;
+    font-display:swap;
+    src:url('/fonts/bricolage-grotesque-latin.woff2') format('woff2');
+  }
+  *, *::before, *::after { box-sizing:border-box; margin:0; }
+  html { -webkit-text-size-adjust:100%; }
+  body {
+    background:var(--wit); color:var(--navy);
+    font-family:system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size:17px; line-height:1.6; -webkit-font-smoothing:antialiased;
+  }
+  h1, h2, h3 { font-family:'Bricolage Grotesque', system-ui, sans-serif; font-weight:800; line-height:1.1; letter-spacing:-0.015em; text-wrap:balance; }
+  h1 { font-size:clamp(1.9rem, 1.3rem + 2.6vw, 2.75rem); max-width:22ch; margin-bottom:1.25rem; overflow-wrap:break-word; }
+  h2 { font-size:clamp(1.5rem, 1.2rem + 1.4vw, 2rem); }
+  p { max-width:var(--measure); }
+  a { color:var(--blue); text-underline-offset:.15em; }
+  a:focus-visible { outline:3px solid var(--blue); outline-offset:3px; }
+  .wrap { width:min(100% - 2.5rem, 64rem); margin-inline:auto; }
+  .narrow { width:min(100% - 2.5rem, var(--measure)); margin-inline:auto; }
+  section { padding:2.5rem 0; }
+  @media (min-width:768px) { section { padding:3.5rem 0; } }
+  .eyebrow { display:block; font-size:.8125rem; letter-spacing:.14em; font-weight:700; text-transform:uppercase; color:var(--blue); margin-bottom:.75rem; }
+  .lead { color:var(--ink-soft); font-size:1.0625rem; margin-top:.75rem; }
+  .paper { background:var(--paper); }
+
+  /* ===== Knoppen ===== */
+  .btn {
+    display:inline-flex; align-items:center; justify-content:center; gap:.5rem;
+    font:inherit; font-weight:700; font-size:1.0625rem; line-height:1.2;
+    padding:.95rem 1.5rem; border-radius:14px; border:2px solid transparent;
+    text-decoration:none; cursor:pointer; min-height:48px; text-align:center;
+  }
+  .btn-primary { background:var(--orange); color:var(--navy); border-color:var(--orange); }
+  .btn-primary:hover { background:#ff7a4a; border-color:#ff7a4a; }
+
+  /* ===== Navigatie ===== */
+  header { background:var(--navy); color:var(--wit); }
+  .nav { display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:.9rem 0; }
+  .logo { display:inline-flex; align-items:center; gap:.65rem; text-decoration:none; color:var(--wit); font-family:'Bricolage Grotesque', system-ui, sans-serif; font-weight:800; font-size:1.125rem; }
+  .mark { width:36px; height:36px; border-radius:9px; overflow:hidden; flex-shrink:0; }
+  .mark svg { display:block; width:100%; height:100%; }
+  .nav-links { display:flex; align-items:center; gap:1.25rem; }
+  .nav-links a { color:var(--wit); font-weight:700; text-decoration:none; padding:.5rem 0; }
+  .nav-links a:hover, .nav-links a[aria-current] { text-decoration:underline; text-underline-offset:.25em; }
+
+  /* ===== Scenario (statisch, zonder interactie) ===== */
+  .scenario { border:1px solid var(--sky); border-radius:var(--radius); background:var(--wit); padding:1.5rem; margin-top:1.75rem; }
+  .scenario .world { display:inline-flex; align-items:center; gap:.5rem; font-size:.8125rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--blue); margin-bottom:1rem; }
+  .scenario .world::before { content:""; width:10px; height:10px; border-radius:50%; background:var(--deep); }
+  .scenario .situation { font-family:'Bricolage Grotesque', system-ui, sans-serif; font-weight:700; font-size:1.25rem; line-height:1.35; margin-bottom:1.25rem; }
+  .options { list-style:none; padding:0; display:grid; gap:.6rem; }
+  .options li { display:flex; gap:.85rem; align-items:flex-start; padding:.9rem 1rem; border:1px solid var(--sky); border-radius:12px; background:var(--paper); }
+  .options .k { flex-shrink:0; width:1.75rem; height:1.75rem; border-radius:50%; background:var(--navy); color:var(--wit); font-weight:700; font-size:.875rem; display:inline-flex; align-items:center; justify-content:center; }
+  .options li.correct { border:2px solid var(--blue); background:var(--wit); padding:calc(.9rem - 1px) calc(1rem - 1px); }
+  .options li.correct .k { background:var(--blue); }
+  .answer { margin-top:1.25rem; padding-top:1.25rem; border-top:1px solid var(--sky); }
+  .answer .label { display:block; font-size:.8125rem; letter-spacing:.14em; font-weight:700; text-transform:uppercase; color:var(--blue); margin-bottom:.35rem; }
+  .answer .pick { font-weight:700; }
+  .answer .reaction { margin-top:.35rem; color:var(--ink-soft); font-size:.9375rem; }
+  .answer .reaction em { color:var(--navy); }
+  @media (min-width:768px) { .scenario { padding:2rem; } }
+
+  /* ===== Uitleg + actie ===== */
+  .serious h2 { margin-bottom:.9rem; }
+  .serious p + p { margin-top:1rem; }
+  .cta { margin-top:2.25rem; display:flex; flex-direction:column; gap:.75rem; align-items:flex-start; }
+  .cta .note { color:var(--ink-soft); font-size:.9375rem; }
+
+  /* ===== Overzichtslijst ===== */
+  .guide-list { list-style:none; padding:0; display:grid; gap:.75rem; margin-top:2rem; counter-reset:q; }
+  .guide-list li { background:var(--wit); border:1px solid var(--sky); border-radius:14px; padding:1rem 1.25rem 1rem 3.5rem; position:relative; }
+  .guide-list li::before { counter-increment:q; content:counter(q); position:absolute; left:1.25rem; top:1.05rem; width:1.75rem; height:1.75rem; border-radius:8px; background:var(--blue); color:var(--wit); font-family:'Bricolage Grotesque', system-ui, sans-serif; font-weight:800; display:flex; align-items:center; justify-content:center; }
+  .guide-list a { font-weight:700; font-size:1.0625rem; }
+  .guide-list .tag { display:block; font-size:.75rem; letter-spacing:.1em; text-transform:uppercase; font-weight:700; color:var(--blue); margin-top:.25rem; }
+  .more { margin-top:2.5rem; }
+  .more ul { padding-left:1.25rem; margin-top:.5rem; }
+  .more li + li { margin-top:.35rem; }
+
+  /* ===== Footer ===== */
+  footer { background:var(--navy); color:var(--sky); padding:2.5rem 0 3rem; font-size:.9375rem; }
+  footer .foot { display:grid; gap:1rem; }
+  footer .foot-links { display:flex; flex-wrap:wrap; gap:1.25rem; }
+  footer a { color:var(--wit); }
+  @media (min-width:768px) { footer .foot { grid-template-columns:1fr auto; align-items:end; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="/" aria-label="Almost Dutch — home">
+      <span class="mark" aria-hidden="true"><svg viewBox="0 0 96 96"><use href="#wave-mark"/></svg></span>
+      Almost Dutch
+    </a>
+    <nav class="nav-links" aria-label="Site">
+      <a href="/guide/">Guide</a>
+    </nav>
+  </div>
+</header>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="wave-mark" viewBox="0 0 96 96">
+    <rect width="96" height="96" fill="#FF6B35"/>
+    <path d="M-8 52 C 14 40, 30 42, 48 50 S 84 58, 104 46 L 104 104 L -8 104 Z" fill="#2743B0"/>
+    <path d="M-8 52 C 14 40, 30 42, 48 50 S 84 58, 104 46" stroke="#FAFBFD" stroke-width="11" fill="none" stroke-linecap="round"/>
+  </symbol>
+</svg>
+
+<main>
+  <section>
+    <div class="narrow">
+      <span class="eyebrow">Dutch culture guide · Money &amp; Tikkie</span>
+      <h1>Dinner with Dutch friends: who pays the bill?</h1>
+
+      <div class="scenario">
+        <div class="world">World 3 · Money &amp; Tikkie</div>
+        <p class="situation">Dinner with six Dutch friends. The bill arrives. What happens?</p>
+        <ol class="options" aria-label="Answer options">
+          <li><span class="k" aria-hidden="true">A</span><span>One person generously pays for all</span></li>
+          <li><span class="k" aria-hidden="true">B</span><span>Whoever earns most pays most</span></li>
+          <li><span class="k" aria-hidden="true">C</span><span>You argue over who gets to pay</span></li>
+          <li class="correct"><span class="k" aria-hidden="true">D</span><span>The bill is split — precisely</span></li>
+        </ol>
+        <div class="answer">
+          <span class="label">Correct answer: D</span>
+          <p class="pick">The bill is split — precisely</p>
+          <p class="reaction">‘Going Dutch’ exists for a reason. You had the salad, Joris had the steak: the Tikkies will reflect this reality.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="paper">
+    <div class="narrow serious">
+      <span class="eyebrow">Even serieus</span>
+      <h2>Seriously though</h2>
+      <p>Splitting costs isn't rudeness — it keeps friendships free of debt and awkwardness. Equal footing is the whole point.</p>
+<div class="cta">
+        <a class="btn btn-primary" href="/?src=guide#waitlist">This is one of 150. The rest are in the app.</a>
+        <p class="note"><a href="/app/">Three worlds free in your browser</a>, no account needed.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="narrow more">
+      <h2>More from the guide</h2>
+      <ul>
+          <li><a href="/guide/tipping-in-the-netherlands/">How much do you tip in the Netherlands?</a></li>
+          <li><a href="/guide/overtime-in-the-netherlands/">Do the Dutch work overtime when a deadline is looming?</a></li>
+          <li><a href="/guide/">All ten situations in the guide</a></li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <div>Almost Dutch © 2026 · Made with stroopwafels in the Netherlands</div>
+    <div class="foot-links">
+      <a href="/">Home</a>
+      <a href="/guide/">Guide</a>
+      <a href="/#waitlist">Waitlist</a>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

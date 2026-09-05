@@ -133,7 +133,8 @@
   .mark { width:36px; height:36px; border-radius:9px; overflow:hidden; flex-shrink:0; }
   .mark svg { display:block; width:100%; height:100%; }
   .nav-links { display:flex; align-items:center; gap:1.25rem; }
-  /* Sessie B: hier komt <a href="/guide/" data-i="nav_guide">Guide</a> — nog niet plaatsen, de gids bestaat pas na sessie B. */
+  .nav-links > a { color:var(--wit); font-weight:700; text-decoration:none; padding:.5rem 0; }
+  .nav-links > a:hover { text-decoration:underline; text-underline-offset:.25em; }
   .langs { display:inline-flex; gap:2px; border:1px solid var(--sky); border-radius:99px; padding:3px; }
   .langs button { font:inherit; font-size:.8125rem; font-weight:700; border:0; background:transparent; color:var(--sky); border-radius:99px; padding:.4rem .8rem; cursor:pointer; min-height:32px; }
   .langs button.on { background:var(--wit); color:var(--navy); }
@@ -217,7 +218,6 @@
   footer { background:var(--navy); color:var(--sky); padding:2.5rem 0 3rem; font-size:.9375rem; }
   footer .foot { display:grid; gap:1rem; }
   footer .foot-links { display:flex; flex-wrap:wrap; gap:1.25rem; }
-  /* Sessie B: hier komt <a href="/guide/" data-i="ft_guide">Guide</a> in .foot-links — nog niet plaatsen. */
   footer .shield { color:var(--wit); font-weight:700; }
   footer a { color:var(--wit); }
   @media (min-width:768px) { footer .foot { grid-template-columns:1fr auto; align-items:end; } }
@@ -232,7 +232,7 @@
       Almost Dutch
     </a>
     <div class="nav-links">
-      <!-- Sessie B: <a href="/guide/" data-i="nav_guide">Guide</a> -->
+      <a href="/guide/" data-i="nav_guide">Guide</a>
       <div class="langs" role="group" aria-label="Language">
         <button id="btn-en" class="on" onclick="setLang('en', 'click')">EN</button>
         <button id="btn-nl" onclick="setLang('nl', 'click')">NL</button>
@@ -407,7 +407,7 @@
       <div data-i="ft_line">Almost Dutch © 2026 · Made with stroopwafels in the Netherlands</div>
     </div>
     <div class="foot-links">
-      <!-- Sessie B: <a href="/guide/" data-i="ft_guide">Guide</a> -->
+      <a href="/guide/" data-i="ft_guide">Guide</a>
       <a href="#waitlist" data-i="ft_waitlist">Waitlist</a>
     </div>
   </div>
@@ -474,7 +474,9 @@ const T = {
     f5_a: "Najaar 2026, in de App Store en Google Play. De wachtlijst krijgt één mail op de dag dat hij er staat. Het staat bovenaan mijn agenda, en je weet hoe serieus agenda's hier worden genomen.",
     ft_shield: "🛡️ Je e-mailadres, verder niets",
     ft_line: "Almost Dutch © 2026 · Gemaakt met stroopwafels in Nederland",
-    ft_waitlist: "Wachtlijst"
+    ft_waitlist: "Wachtlijst",
+    nav_guide: "Gids",
+    ft_guide: "Gids"
   },
   en: {} // Engels staat al in de HTML zelf
 };
