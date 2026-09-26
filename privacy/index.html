@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>App privacy · Almost Dutch</title>
+<meta name="description" content="Privacy policy for the Almost Dutch app on the App Store and Google Play." />
+<link rel="canonical" href="https://almostdutch.nl/privacy/" />
+<meta name="robots" content="index, follow, max-image-preview:large" />
+<meta property="og:site_name" content="Almost Dutch" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="App privacy · Almost Dutch" />
+<meta property="og:description" content="Privacy policy for the Almost Dutch app on the App Store and Google Play." />
+<meta property="og:url" content="https://almostdutch.nl/privacy/" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:image" content="https://almostdutch.nl/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="App privacy · Almost Dutch" />
+<meta name="twitter:description" content="Privacy policy for the Almost Dutch app on the App Store and Google Play." />
+<meta name="twitter:image" content="https://almostdutch.nl/og-image.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<meta name="theme-color" content="#16204F" />
+
+<!-- Eén zelf-gehost lettertype voor de koppen; de lopende tekst gebruikt de systeemfontstack.
+     Geen font-CDN: de pagina doet geen enkele request naar derden. -->
+<link rel="preload" href="/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin />
+
+<style>
+:root {
+    --orange:#FF6B35;      /* alleen de primaire actie: naar de app */
+    --blue:#2743B0;        /* links, secundaire acties, accenten */
+    --wit:#FAFBFD;         /* witband, lichte basis */
+    --navy:#16204F;        /* donkere basis, tekst */
+    --paper:#F6F2E9;       /* papier, afwisselende secties */
+    --sky:#D3DCF5;         /* lichtblauw, lijnen en tekst op navy */
+    --deep:#C9520B;        /* diep oranje, accenten op lichte grond (niet voor kleine tekst) */
+    --ink-soft:rgb(22 32 79 / .78);   /* navy, iets lichter, voor bijtekst op lichte grond */
+    --measure:42rem;       /* ±70 tekens bij 17px */
+    --radius:18px;
+  }
+  @font-face {
+    font-family:'Bricolage Grotesque';
+    font-style:normal;
+    font-weight:200 800;
+    font-display:swap;
+    src:url('/fonts/bricolage-grotesque-latin.woff2') format('woff2');
+  }
+  *, *::before, *::after { box-sizing:border-box; margin:0; }
+  html { -webkit-text-size-adjust:100%; }
+  body {
+    background:var(--wit); color:var(--navy);
+    font-family:system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size:17px; line-height:1.6; -webkit-font-smoothing:antialiased;
+  }
+  h1, h2, h3 { font-family:'Bricolage Grotesque', system-ui, sans-serif; font-weight:800; line-height:1.1; letter-spacing:-0.015em; text-wrap:balance; }
+  h1 { font-size:clamp(1.9rem, 1.3rem + 2.6vw, 2.75rem); max-width:22ch; margin-bottom:1.25rem; overflow-wrap:break-word; }
+  h2 { font-size:clamp(1.5rem, 1.2rem + 1.4vw, 2rem); }
+  p { max-width:var(--measure); }
+  a { color:var(--blue); text-underline-offset:.15em; }
+  a:focus-visible { outline:3px solid var(--blue); outline-offset:3px; }
+  .wrap { width:min(100% - 2.5rem, 64rem); margin-inline:auto; }
+  .narrow { width:min(100% - 2.5rem, var(--measure)); margin-inline:auto; }
+  section { padding:2.5rem 0; }
+  @media (min-width:768px) { section { padding:3.5rem 0; } }
+  .eyebrow { display:block; font-size:.8125rem; letter-spacing:.14em; font-weight:700; text-transform:uppercase; color:var(--blue); margin-bottom:.75rem; }
+  .lead { color:var(--ink-soft); font-size:1.0625rem; margin-top:.75rem; }
+  .paper { background:var(--paper); }
+
+  /* ===== Knoppen ===== */
+  .btn {
+    display:inline-flex; align-items:center; justify-content:center; gap:.5rem;
+    font:inherit; font-weight:700; font-size:1.0625rem; line-height:1.2;
+    padding:.95rem 1.5rem; border-radius:14px; border:2px solid transparent;
+    text-decoration:none; cursor:pointer; min-height:48px; text-align:center;
+  }
+  .btn-primary { background:var(--orange); color:var(--navy); border-color:var(--orange); }
+  .btn-primary:hover { background:#ff7a4a; border-color:#ff7a4a; }
+
+  /* ===== Navigatie ===== */
+  header { background:var(--navy); color:var(--wit); }
+  .nav { display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:.9rem 0; }
+  .logo { display:inline-flex; align-items:center; gap:.65rem; text-decoration:none; color:var(--wit); font-family:'Bricolage Grotesque', system-ui, sans-serif; font-weight:800; font-size:1.125rem; }
+  .mark { width:36px; height:36px; border-radius:9px; overflow:hidden; flex-shrink:0; }
+  .mark svg { display:block; width:100%; height:100%; }
+  .nav-links { display:flex; align-items:center; gap:1.25rem; }
+  .nav-links a { color:var(--wit); font-weight:700; text-decoration:none; padding:.5rem 0; }
+  .nav-links a:hover, .nav-links a[aria-current] { text-decoration:underline; text-underline-offset:.25em; }
+
+  /* ===== Privacyverklaring ===== */
+  .langs { display:flex; gap:1.25rem; font-weight:700; margin-bottom:1.75rem; }
+  .for { color:var(--ink-soft); font-size:.9375rem; margin-bottom:.75rem; }
+  .policy .title { font-size:clamp(1.9rem, 1.3rem + 2.6vw, 2.75rem); margin-bottom:.5rem; }
+  .policy .updated { color:var(--ink-soft); font-size:.9375rem; }
+  .policy .lead { margin-top:1.25rem; }
+  .policy .sec { font-size:1.25rem; line-height:1.3; margin-top:2.25rem; margin-bottom:.6rem; }
+  .policy p + p { margin-top:1rem; }
+
+  /* ===== Footer ===== */
+  footer { background:var(--navy); color:var(--sky); padding:2.5rem 0 3rem; font-size:.9375rem; }
+  footer .foot { display:grid; gap:1rem; }
+  footer .foot-links { display:flex; flex-wrap:wrap; gap:1.25rem; }
+  footer a { color:var(--wit); }
+  @media (min-width:768px) { footer .foot { grid-template-columns:1fr auto; align-items:end; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="/" aria-label="Almost Dutch — home">
+      <span class="mark" aria-hidden="true"><svg viewBox="0 0 96 96"><use href="#wave-mark"/></svg></span>
+      Almost Dutch
+    </a>
+    <nav class="nav-links" aria-label="Site">
+      <a href="/guide/">Guide</a>
+    </nav>
+  </div>
+</header>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="wave-mark" viewBox="0 0 96 96">
+    <rect width="96" height="96" fill="#FF6B35"/>
+    <path d="M-8 52 C 14 40, 30 42, 48 50 S 84 58, 104 46 L 104 104 L -8 104 Z" fill="#2743B0"/>
+    <path d="M-8 52 C 14 40, 30 42, 48 50 S 84 58, 104 46" stroke="#FAFBFD" stroke-width="11" fill="none" stroke-linecap="round"/>
+  </symbol>
+</svg>
+
+<main>
+  <section>
+    <div class="narrow">
+      <nav class="langs" aria-label="Language">
+        <a href="#en" lang="en">English</a>
+        <a href="#nl" lang="nl">Nederlands</a>
+      </nav>
+      <article class="policy" id="en" lang="en">
+        <p class="for">Privacy policy for the Almost Dutch app on the App Store and Google Play.</p>
+        <h1 class="title">Privacy</h1>
+        <p class="updated">Last updated: 26 September 2026</p>
+        <p class="lead">The short version: no accounts, no cookies, no tracking. Your progress stays on your own phone and never reaches us. Below is the long version, because “trust us” is not a privacy policy.</p>
+        <h2 class="sec">Who we are</h2>
+        <p>Almost Dutch is an app by Byte Company, registered with the Dutch Chamber of Commerce under number 89199073. Byte Company is the controller for the little data this app involves.</p>
+        <p>Questions or requests: info@bytecompany.nl.</p>
+        <h2 class="sec">What the app stores</h2>
+        <p>Your progress is saved on your phone, in the app’s own storage. It holds your answers, where you left off, which fun facts you have already seen, and whether you bought All 10 Worlds.</p>
+        <p>That data stays on your device. It is not sent to us, and there is no server waiting for it. “Reset my progress” erases it, and so does deleting the app. Reset does not remove your purchase: that is a right, not progress, and the app checks it with the store again anyway.</p>
+        <h2 class="sec">What we do not do</h2>
+        <p>No accounts and no login — you never give us an email address to play. No cookies. No analytics, no tracking pixels, no advertising, no profiling.</p>
+        <p>We do not know who you are, how often you play, or how far you get. That is not modesty. We genuinely do not collect it.</p>
+        <h2 class="sec">Apple, Google and RevenueCat</h2>
+        <p>Everything the app needs is in the app: the fonts, the icons and all scenarios. It makes no requests to anyone else’s servers for playing, which is also why it keeps working with your phone in flight mode.</p>
+        <p>The one exception is buying All 10 Worlds. Payment goes through Apple’s App Store or Google Play; we never see your card or your Apple or Google account. To check whether that purchase exists — when you buy, when you tap Restore purchases, and briefly when the app starts — the app talks to RevenueCat (RevenueCat, Inc., United States, so outside the EU). RevenueCat gets a random ID the app makes up on your phone, the purchase receipt and technical details such as platform and app version. Like any server, it also sees your IP address; it uses that to work out which country you are in and does not keep the address. Not your name, not your email: it cannot tell who you are, and neither can we. From RevenueCat we only see sales figures: how many people bought All 10 Worlds, and roughly where. Apple and Google also show us download totals and, if you have allowed this on your phone, anonymous statistics such as crashes and how often the app is opened. We don’t measure how you play ourselves. Refunds go through Apple or Google, not through us — ask for one in the App Store or Google Play. If a refund is granted, worlds 4–10 lock again at the next check; your progress stays.</p>
+        <h2 class="sec">Sharing your score</h2>
+        <p>The share button hands your text to your phone’s own share menu, or copies it to your clipboard. You decide where it goes. We do not see it and we do not count it.</p>
+        <h2 class="sec">Where the app comes from</h2>
+        <p>You got the app from the App Store or Google Play, and it runs entirely on your phone. Apple’s and Google’s own privacy policies cover the download and the payment; we see neither.</p>
+        <h2 class="sec">The forms on almostdutch.nl</h2>
+        <p>The waitlist and feedback forms are on the website, not in this app. Playing sends nothing anywhere.</p>
+        <p>If you do fill in one of those forms, your email address and message go to Formspree (Formspree, Inc.), a service based in the United States, which means your data is transferred outside the EU. We use it only to reach you about Almost Dutch. One message to info@bytecompany.nl removes you from the list.</p>
+        <h2 class="sec">Your rights</h2>
+        <p>Under the GDPR you can ask what we hold about you, have it corrected or deleted, and object to its use.</p>
+        <p>What exists about you depends on what you did. If you bought All 10 Worlds, RevenueCat keeps, on our behalf, the random ID from your phone, the purchase receipt, your country and technical details such as the app version. None of that is linked to your name or email address, so we have no way to look you up by name. For a refund, ask Apple or Google, as described above. If you want the purchase record at RevenueCat removed, email info@bytecompany.nl; because no name is attached, we will ask for details from your receipt to try to find it. The app also checks in with RevenueCat each time it starts while you are online, so the removal only sticks if you delete the app as well. If your phone later restores the app from a backup, the old ID can come back with it. Your purchase with Apple or Google stays: Restore purchases brings the worlds back.</p>
+        <p>If you joined the waitlist or used the feedback form on almostdutch.nl, we have your email address and anything you wrote to us. One email to info@bytecompany.nl is enough to see it, correct it or have it deleted.</p>
+        <p>You can also file a complaint with the Dutch Data Protection Authority (Autoriteit Persoonsgegevens).</p>
+        <h2 class="sec">If this changes</h2>
+        <p>If the app ever starts collecting something more — analytics, accounts — this page will say so, and the date at the top will change with it. Right now the purchase above is the only thing to report.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="paper">
+    <div class="narrow">
+      <article class="policy" id="nl" lang="nl">
+        <p class="for">Privacyverklaring van de Almost Dutch-app in de App Store en Google Play.</p>
+        <h2 class="title">Privacy</h2>
+        <p class="updated">Laatst bijgewerkt: 26 september 2026</p>
+        <p class="lead">De korte versie: geen accounts, geen cookies, geen tracking. Je voortgang blijft op je eigen telefoon en bereikt ons nooit. Hieronder de lange versie, want “vertrouw ons maar” is geen privacyverklaring.</p>
+        <h3 class="sec">Wie we zijn</h3>
+        <p>Almost Dutch is een app van Byte Company, ingeschreven bij de Kamer van Koophandel onder nummer 89199073. Byte Company is de verwerkingsverantwoordelijke voor de weinige gegevens waar deze app mee te maken heeft.</p>
+        <p>Vragen of verzoeken: info@bytecompany.nl.</p>
+        <h3 class="sec">Wat de app opslaat</h3>
+        <p>Je voortgang wordt bewaard op je telefoon, in de eigen opslag van de app. Daarin staan je antwoorden, waar je gebleven was, welke fun facts je al hebt gezien, en of je All 10 Worlds hebt gekocht.</p>
+        <p>Die gegevens blijven op je toestel. Ze worden niet naar ons gestuurd, en er staat ook geen server op te wachten. “Reset my progress” wist ze, net als het verwijderen van de app. Reset haalt je aankoop niet weg: dat is een recht, geen voortgang, en de app controleert het toch weer bij de store.</p>
+        <h3 class="sec">Wat we niet doen</h3>
+        <p>Geen accounts en geen inloggen — je geeft ons nooit een e-mailadres om te kunnen spelen. Geen cookies. Geen analytics, geen trackingpixels, geen advertenties, geen profilering.</p>
+        <p>We weten niet wie je bent, hoe vaak je speelt of hoe ver je komt. Dat is geen bescheidenheid. We verzamelen het echt niet.</p>
+        <h3 class="sec">Apple, Google en RevenueCat</h3>
+        <p>Alles wat de app nodig heeft zit in de app: de fonts, de iconen en alle scenario’s. Om te spelen gaat er geen enkel verzoek naar servers van anderen, en daarom blijft de app ook werken met je telefoon in vliegtuigstand.</p>
+        <p>De ene uitzondering is het kopen van All 10 Worlds. De betaling loopt via Apple’s App Store of Google Play; wij zien je kaart en je Apple- of Google-account nooit. Om te controleren of die aankoop bestaat — als je koopt, als je op Restore purchases tikt, en kort bij het starten van de app — praat de app met RevenueCat (RevenueCat, Inc., Verenigde Staten, dus buiten de EU). RevenueCat krijgt een willekeurig ID dat de app op je telefoon verzint, het aankoopbewijs en technische gegevens zoals platform en app-versie. Zoals elke server ziet het ook je IP-adres; daarmee bepaalt het in welk land je bent, en het adres zelf bewaart het niet. Niet je naam, niet je e-mailadres: het kan niet zien wie je bent, en wij ook niet. Van RevenueCat zien we alleen verkoopcijfers: hoeveel mensen All 10 Worlds hebben gekocht, en ongeveer waar. Apple en Google laten ons ook downloadtotalen zien en, als je dat op je telefoon hebt toegestaan, anonieme statistieken zoals crashes en hoe vaak de app wordt geopend. Zelf meten we niet hoe je speelt. Terugbetalingen lopen via Apple of Google, niet via ons — vraag ze aan in de App Store of Google Play. Wordt een terugbetaling toegekend, dan gaan wereld 4–10 bij de volgende controle weer op slot; je voortgang blijft.</p>
+        <h3 class="sec">Je score delen</h3>
+        <p>De deelknop geeft je tekst door aan het deelvenster van je eigen telefoon, of zet hem op je klembord. Jij bepaalt waar hij heen gaat. Wij zien het niet en tellen het niet.</p>
+        <h3 class="sec">Waar de app vandaan komt</h3>
+        <p>Je hebt de app uit de App Store of Google Play, en hij draait helemaal op je telefoon. De eigen privacyverklaringen van Apple en Google dekken het downloaden en de betaling; wij zien geen van beide.</p>
+        <h3 class="sec">De formulieren op almostdutch.nl</h3>
+        <p>De wachtlijst en het feedbackformulier staan op de website, niet in deze app. Spelen stuurt nergens iets heen.</p>
+        <p>Vul je zo’n formulier wél in, dan gaan je e-mailadres en bericht naar Formspree (Formspree, Inc.), een dienst in de Verenigde Staten. Je gegevens worden daarmee buiten de EU doorgegeven. We gebruiken ze alleen om je over Almost Dutch te bereiken. Eén bericht aan info@bytecompany.nl haalt je van de lijst.</p>
+        <h3 class="sec">Je rechten</h3>
+        <p>Op grond van de AVG mag je opvragen wat we van je hebben, het laten corrigeren of verwijderen, en bezwaar maken tegen het gebruik ervan.</p>
+        <p>Wat er over je bestaat, hangt af van wat je hebt gedaan. Heb je All 10 Worlds gekocht, dan bewaart RevenueCat in onze opdracht het willekeurige ID van je telefoon, het aankoopbewijs, je land en technische gegevens zoals de app-versie. Dat is niet gekoppeld aan je naam of e-mailadres, dus op naam kunnen we je niet terugvinden. Wil je je geld terug, vraag het dan aan Apple of Google, zoals hierboven staat. Wil je dat de aankoopgegevens bij RevenueCat worden verwijderd, mail dan naar info@bytecompany.nl; omdat er geen naam aan hangt, vragen we je om gegevens van je aankoopbewijs, zodat we ze kunnen proberen te vinden. De app maakt bij elke start ook weer contact met RevenueCat als je online bent; verwijderen blijft dus alleen zo als je de app zelf ook verwijdert. Zet je telefoon de app later terug uit een back-up, dan kan het oude ID mee terugkomen. Je aankoop bij Apple of Google blijft bestaan: met Restore purchases krijg je de werelden terug.</p>
+        <p>Heb je je op almostdutch.nl aangemeld voor de wachtlijst of het feedbackformulier gebruikt, dan hebben we je e-mailadres en wat je ons schreef. Eén mailtje aan info@bytecompany.nl is genoeg om dat in te zien, te laten aanpassen of te laten verwijderen.</p>
+        <p>Je kunt ook een klacht indienen bij de Autoriteit Persoonsgegevens.</p>
+        <h3 class="sec">Als dit verandert</h3>
+        <p>Gaat de app ooit méér verzamelen — analytics, accounts — dan staat dat hier, en verandert de datum bovenaan mee. Op dit moment is de aankoop hierboven het enige dat er te melden valt.</p>
+      </article>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <div>Almost Dutch © 2026 · Made with stroopwafels in the Netherlands</div>
+    <div class="foot-links">
+      <a href="/">Home</a>
+      <a href="/guide/">Guide</a>
+      <a href="/#waitlist">Waitlist</a>
+      <a href="/privacy/">App privacy</a>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
