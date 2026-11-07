@@ -27,6 +27,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 <meta name="theme-color" content="#16204F" />
+<meta name="apple-itunes-app" content="app-id=6812622872" />
 
 <!-- Eén zelf-gehost lettertype voor de koppen; de lopende tekst gebruikt de systeemfontstack.
      Geen font-CDN: de pagina doet geen enkele request naar derden. -->
@@ -41,7 +42,7 @@
   "url": "https://almostdutch.nl/",
   "image": "https://almostdutch.nl/og-image.png",
   "applicationCategory": "EducationalApplication",
-  "operatingSystem": "Android, Web",
+  "operatingSystem": "Android, iOS, Web",
   "downloadUrl": "https://play.google.com/store/apps/details?id=nl.bytecompany.almostdutch",
   "inLanguage": ["en", "nl"],
   "description": "A playful app that teaches expats the unwritten rules of Dutch culture through 150 real-life scenarios — from the birthday circle to the €0.50 Tikkie. Three worlds are free to play; the other seven unlock with a single in-app purchase.",
@@ -63,7 +64,7 @@
   "@type": "FAQPage",
   "mainEntity": [
     { "@type": "Question", "name": "What is Almost Dutch?", "acceptedAnswer": { "@type": "Answer", "text": "Almost Dutch is a playful app that teaches expats the unwritten rules of Dutch culture through 150 real-life scenarios — from the birthday circle to the €0.50 Tikkie. Every joke comes with a genuine cultural explanation." } },
-    { "@type": "Question", "name": "Is Almost Dutch free?", "acceptedAnswer": { "@type": "Answer", "text": "Three full worlds (45 scenarios) are free forever — no account, no ads, no tricks. The other seven worlds unlock with one payment of €12.99 in the app: on Android via Google Play now, on iPhone once it's in the App Store." } },
+    { "@type": "Question", "name": "Is it free?", "acceptedAnswer": { "@type": "Answer", "text": "Three full worlds (45 scenarios) are free forever — no account, no ads, no tricks. The other seven worlds unlock with one payment of €12.99 in the app, via the App Store or Google Play." } },
     { "@type": "Question", "name": "Who is Almost Dutch for?", "acceptedAnswer": { "@type": "Answer", "text": "Expats, internationals and newcomers living in (or moving to) the Netherlands — and Dutchies who want to laugh at how accurate it is." } }
   ]
 }
@@ -72,7 +73,7 @@
 <style>
   /* ===== Huisstijl (definitief, uit icoon W3b) ===== */
   :root {
-    --orange:#FF6B35;      /* alleen primaire acties: app downloaden, iPhone-melding */
+    --orange:#FF6B35;      /* alleen primaire acties: app downloaden */
     --blue:#2743B0;        /* links, secundaire acties, accenten */
     --wit:#FAFBFD;         /* witband, lichte basis */
     --navy:#16204F;        /* donkere basis, tekst */
@@ -190,24 +191,20 @@
   .chips li { font-size:.9375rem; font-weight:600; padding:.4rem .8rem; border-radius:99px; border:1px solid var(--sky); background:var(--wit); }
   @media (min-width:700px) { .free-grid { grid-template-columns:repeat(3, 1fr); } }
 
-  /* ===== Store + wachtlijst ===== */
+  /* ===== Store ===== */
   .store { background:var(--navy); color:var(--wit); }
   .store .eyebrow { color:var(--sky); }
   .store .lead { color:var(--sky); }
   .store h2 { max-width:20ch; }
-  /* Officiële badge, onbewerkt. 176px breed = 48px zichtbare badge; de transparante rand
-     geeft ±33px vrije ruimte boven/onder, de marge vult links/rechts aan tot ≥12px. */
-  .store-badge { display:inline-block; margin:1rem 6px 0; line-height:0; }
-  .store-badge img { display:block; width:176px; height:auto; }
-  .waitlist { background:var(--paper); }
-  .waitlist h2 { max-width:18ch; }
-  .cta-form { display:flex; flex-direction:column; gap:.75rem; margin-top:1.75rem; max-width:32rem; }
-  .cta-form input { font:inherit; font-size:1.0625rem; padding:.9rem 1rem; border:2px solid var(--sky); border-radius:14px; background:var(--wit); color:var(--navy); min-width:0; min-height:48px; }
-  .cta-form input:focus { outline:none; border-color:var(--blue); }
-  .cta-form input::placeholder { color:var(--ink-soft); opacity:1; }
-  .promise { margin-top:1.25rem; display:grid; gap:.5rem; color:var(--ink-soft); font-size:.9375rem; }
-  .promise .shield { color:var(--navy); font-weight:700; }
-  @media (min-width:640px) { .cta-form { flex-direction:row; } .cta-form input { flex:1; } }
+  /* Officiële badges, onbewerkt, beide 48px zichtbaar hoog.
+     App Store: SVG zonder rand, 48px hoog = 144px breed.
+     Google Play: PNG met transparante rand; 176px breed = 48px zichtbaar, ±7px rand links/rechts, ±33px boven/onder.
+     Gap 12px = minstens 12px vrije ruimte tussen de zichtbare badges, ook als ze onder elkaar springen. */
+  .store-badges { display:flex; flex-wrap:wrap; align-items:center; gap:12px; margin-top:1rem; }
+  .store-badge { display:block; line-height:0; }
+  .store-badge img { display:block; height:auto; }
+  .store-badge-apple img { width:144px; height:48px; }
+  .store-badge-google img { width:176px; }
 
   /* ===== FAQ ===== */
   .faq { margin-top:2rem; display:grid; gap:.75rem; }
@@ -354,25 +351,12 @@
   <!-- STOREAANKONDIGING -->
   <section class="store on-dark" id="get-app">
     <div class="narrow">
-      <span class="eyebrow" data-i="deal_eyebrow">Out now on Android</span>
-      <h2 data-i="deal_h2">Now on Google Play</h2>
-      <p class="lead" data-i="deal_p">Three worlds free, the other seven for one payment of €12.99. No subscription, no account, no ads. On Android now; iPhone follows.</p>
-      <a class="store-badge" href="https://play.google.com/store/apps/details?id=nl.bytecompany.almostdutch&amp;referrer=utm_source%3Dalmostdutch.nl%26utm_medium%3Dhomepage%26utm_campaign%3Dlaunch"><img src="/image/badges/google-play-en.png" alt="Get it on Google Play" width="176" height="114" loading="lazy" decoding="async" /></a>
-    </div>
-  </section>
-
-  <!-- WACHTLIJST -->
-  <section class="waitlist" id="waitlist">
-    <div class="narrow">
-      <span class="eyebrow" data-i="wl_eyebrow">Using an iPhone?</span>
-      <h2 data-i="wl_h2">iPhone: coming soon to the App Store</h2>
-      <p class="lead" data-i="hero_tiny">Leave your email and I'll write once, the day Almost Dutch is in the App Store. No newsletter, no reminders, no second email.</p>
-      <form class="cta-form" onsubmit="joinList(event)">
-        <input type="email" name="email" required placeholder="your@email.com" data-i-ph="hero_ph" aria-label="Email address" autocomplete="email" />
-        <button class="btn btn-primary" type="submit" data-i="hero_btn">Notify me</button>
-      </form>
-      <div class="promise">
-        <div class="shield" data-i="wl_privacy">🛡️ Your email address, nothing else</div>
+      <span class="eyebrow" data-i="deal_eyebrow">Out now</span>
+      <h2 data-i="deal_h2">On the App Store and Google Play</h2>
+      <p class="lead" data-i="deal_p">Three worlds free, the other seven for one payment of €12.99. No subscription, no account, no ads.</p>
+      <div class="store-badges">
+      <a class="store-badge store-badge-apple" href="https://apps.apple.com/app/id6812622872"><img src="/image/badges/app-store-en.svg" alt="Download on the App Store" width="144" height="48" loading="lazy" decoding="async" /></a>
+      <a class="store-badge store-badge-google" href="https://play.google.com/store/apps/details?id=nl.bytecompany.almostdutch&amp;referrer=utm_source%3Dalmostdutch.nl%26utm_medium%3Dhomepage%26utm_campaign%3Dlaunch"><img src="/image/badges/google-play-en.png" alt="Get it on Google Play" width="176" height="114" loading="lazy" decoding="async" /></a>
       </div>
     </div>
   </section>
@@ -390,15 +374,15 @@
         </details>
         <details>
           <summary data-i="f2_q">Is it free?</summary>
-          <p data-i="f2_a">Three full worlds (45 scenarios) are free forever — no account, no ads, no tricks. The other seven worlds unlock with one payment of €12.99 in the app: on Android via Google Play now, on iPhone once it's in the App Store.</p>
+          <p data-i="f2_a">Three full worlds (45 scenarios) are free forever — no account, no ads, no tricks. The other seven worlds unlock with one payment of €12.99 in the app, via the App Store or Google Play.</p>
         </details>
         <details>
           <summary data-i="f4_q">What about my data?</summary>
-          <p data-i="f4_a">Privacy-first, genuinely: I only ask for an email address, there's no third-party tracking, and removing your data takes one message. That's the whole policy, more or less.</p>
+          <p data-i="f4_a">Privacy-first, genuinely: this site and the browser version ask for nothing — no account, no email address, no cookies or analytics, no tracking. The app works the same way: no account, no tracking, and the one purchase goes through the App Store or Google Play. The details are in the privacy policy; that's the whole story, more or less.</p>
         </details>
         <details>
-          <summary data-i="f5_q">When does it launch?</summary>
-          <p data-i="f5_a">Android: now, in Google Play. iPhone: coming to the App Store. Leave your email above and you'll get one email the day it's there. It's at the top of my agenda, and you know how seriously agendas are taken here.</p>
+          <summary data-i="f5_q">Where can I get it?</summary>
+          <p data-i="f5_a">On iPhone via the App Store, on Android via Google Play — both live now. Not ready to install anything? The three free worlds run in your browser too.</p>
         </details>
       </div>
     </div>
@@ -408,13 +392,12 @@
 <footer>
   <div class="wrap foot">
     <div>
-      <div class="shield" data-i="ft_shield">🛡️ Your email address, nothing else</div>
+      <div class="shield" data-i="ft_shield">🛡️ No account. No tracking.</div>
       <div data-i="ft_line">Almost Dutch © 2026 · Made with stroopwafels in the Netherlands · a product of <a href="https://bytecompany.nl">Byte Company</a> · KvK 89199073</div>
-      <div class="legal" data-i="ft_legal">Google Play and the Google Play logo are trademarks of Google LLC.</div>
+      <div class="legal" data-i="ft_legal">App Store is a service mark of Apple Inc. Google Play and the Google Play logo are trademarks of Google LLC.</div>
     </div>
     <div class="foot-links">
       <a href="/guide/" data-i="ft_guide">Guide</a>
-      <a href="#waitlist" data-i="ft_waitlist">iPhone waitlist</a>
       <a href="/support/" data-i="ft_support">Support</a>
       <a href="/privacy/" data-i="ft_privacy">App privacy</a>
     </div>
@@ -459,30 +442,23 @@ const T = {
     free_btn: "Speel de gratis werelden",
     free_note: "Werkt nu op je telefoon. Geen download, geen account.",
     more_lead: "Zeven werelden extra zitten in de app:",
-    deal_eyebrow: "Nu op Android",
-    deal_h2: "Nu in Google Play",
-    deal_p: "Drie werelden gratis, de andere zeven voor één keer €12,99. Geen abonnement, geen account, geen advertenties. Nu op Android; iPhone volgt.",
-    wl_eyebrow: "Heb je een iPhone?",
-    wl_h2: "iPhone: binnenkort in de App Store",
-    hero_tiny: "Laat je e-mailadres achter en je hoort één keer van me, op de dag dat Almost Dutch in de App Store staat. Geen nieuwsbrief, geen herinneringen, geen tweede mail.",
-    hero_ph: "jouw@email.nl",
-    hero_btn: "Laat het me weten",
-    wl_privacy: "🛡️ Je e-mailadres, verder niets",
+    deal_eyebrow: "Nu te downloaden",
+    deal_h2: "In de App Store en Google Play",
+    deal_p: "Drie werelden gratis, de andere zeven voor één keer €12,99. Geen abonnement, geen account, geen advertenties.",
     faq_eyebrow: "FAQ",
     faq_h2: "Vragen, direct beantwoord",
     faq_lead: "Zo doen we dat hier, tenslotte.",
     f1_q: "Wat is Almost Dutch?",
     f1_a: "Een speelse app die je de ongeschreven regels van de Nederlandse cultuur leert met 150 levensechte scenario's — de verjaardagskring, Hollandse directheid, de agenda-cultuur. Gemaakt voor expats en internationals in Nederland.",
     f2_q: "Is het gratis?",
-    f2_a: "Drie volledige werelden (45 scenario's) zijn voor altijd gratis — geen account, geen advertenties, geen trucs. De andere zeven werelden ontgrendel je met één betaling van €12,99 in de app: op Android nu via Google Play, op iPhone zodra hij in de App Store staat.",
+    f2_a: "Drie volledige werelden (45 scenario's) zijn voor altijd gratis — geen account, geen advertenties, geen trucs. De andere zeven werelden ontgrendel je met één betaling van €12,99 in de app, via de App Store of Google Play.",
     f4_q: "En mijn gegevens?",
-    f4_a: "Privacy-first, echt: ik vraag alleen om een e-mailadres, er is geen tracking van derden, en je gegevens laten verwijderen kost één berichtje. Dat is min of meer het hele beleid.",
-    f5_q: "Wanneer lanceert het?",
-    f5_a: "Android: nu, in Google Play. iPhone: komt naar de App Store. Laat hierboven je e-mailadres achter en je krijgt één mail op de dag dat hij er staat. Het staat bovenaan mijn agenda, en je weet hoe serieus agenda's hier worden genomen.",
-    ft_shield: "🛡️ Je e-mailadres, verder niets",
+    f4_a: "Privacy-first, echt: deze site en de browserversie vragen niets van je — geen account, geen e-mailadres, geen cookies of analytics, geen tracking. De app werkt net zo: geen account, geen tracking, en de ene aankoop loopt via de App Store of Google Play. De details staan in de privacyverklaring; dat is min of meer het hele verhaal.",
+    f5_q: "Waar download ik hem?",
+    f5_a: "Op iPhone via de App Store, op Android via Google Play — allebei nu live. Nog geen zin om iets te installeren? De drie gratis werelden draaien ook gewoon in je browser.",
+    ft_shield: "🛡️ Geen account. Geen tracking.",
     ft_line: "Almost Dutch © 2026 · Gemaakt met stroopwafels in Nederland · een product van <a href=\"https://bytecompany.nl\">Byte Company</a> · KvK 89199073",
-    ft_legal: "Google Play en het Google Play-logo zijn handelsmerken van Google LLC.",
-    ft_waitlist: "iPhone-wachtlijst",
+    ft_legal: "App Store is een dienstmerk van Apple Inc. Google Play en het Google Play-logo zijn handelsmerken van Google LLC.",
     nav_guide: "Gids",
     ft_guide: "Gids",
     ft_support: "Support",
@@ -536,35 +512,6 @@ if (LANGS.includes(urlLang)) {
   startLang = "nl"; startSource = "auto";
 }
 if (startLang) setLang(startLang, startSource);
-
-// Wachtlijst via Formspree (formulier-ID maqrwlnl)
-const FORMSPREE_ENDPOINT = "https://formspree.io/f/maqrwlnl";
-
-async function joinList(e) {
-  e.preventDefault();
-  const form = e.target;
-  const input = form.querySelector("input");
-  const btn = form.querySelector("button");
-  const nl = document.documentElement.lang === "nl";
-  btn.disabled = true;
-  btn.textContent = nl ? "Even geduld…" : "One sec…";
-  try {
-    const res = await fetch(FORMSPREE_ENDPOINT, {
-      method: "POST",
-      headers: { "Accept": "application/json", "Content-Type": "application/json" },
-      body: JSON.stringify({ email: input.value })
-    });
-    if (!res.ok) throw new Error("submit failed");
-    btn.textContent = nl ? "✓ Je staat op de lijst!" : "✓ You're on the list!";
-    btn.style.background = "var(--blue)";
-    btn.style.borderColor = "var(--blue)";
-    btn.style.color = "var(--wit)";
-    input.disabled = true;
-  } catch (err) {
-    btn.disabled = false;
-    btn.textContent = nl ? "Mislukt — probeer opnieuw" : "Failed — try again";
-  }
-}
 </script>
 </body>
 </html>
